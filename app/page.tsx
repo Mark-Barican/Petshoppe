@@ -65,38 +65,6 @@ const HomePage: React.FC = () => {
   return (
     <div className="flex justify-center py-5">
       <div className="layout-content-container flex flex-col w-full max-w-[960px] flex-1 px-4 sm:px-0">
-        {/* 🔹 Top-right Auth Controls */}
-        <div className="flex justify-end gap-3 mb-4">
-          {user ? (
-            <>
-              <span className="text-sm font-medium text-gray-700 flex items-center">
-                Welcome, <span className="ml-1 font-semibold">{user.email}</span>
-              </span>
-              <button
-                onClick={handleLogout}
-                className="px-4 py-2 text-sm font-semibold bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
-              >
-                Logout
-              </button>
-            </>
-          ) : (
-            <>
-              <a
-                href="/login"
-                className="px-4 py-2 text-sm font-semibold bg-[#e7f3eb] text-[#0d1b12] rounded-full hover:bg-[#d8e9df] transition-colors"
-              >
-                Login
-              </a>
-              <a
-                href="/register"
-                className="px-4 py-2 text-sm font-semibold bg-[#13ec5b] text-[#0d1b12] rounded-full hover:opacity-90 transition-opacity"
-              >
-                Register
-              </a>
-            </>
-          )}
-        </div>
-
         {/* 🔹 Main content */}
         <div className="relative flex items-center justify-center bg-black aspect-video rounded-lg overflow-hidden"></div>
         <h1 className="text-[#0d1b12] tracking-light text-2xl md:text-[32px] font-bold leading-tight px-4 text-center pb-3 pt-6">

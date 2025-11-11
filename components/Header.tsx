@@ -5,11 +5,17 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LogoIcon, CartIcon, MenuIcon, CloseIcon } from "./icons";
 import { useCart } from "../app/providers";
+import { useAuth } from "../hooks/useAuth";
+import LoginModal from "./LoginModal";
+import RegisterModal from "./RegisterModal";
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const pathname = usePathname();
   const { cartCount } = useCart();
+  const { user, loading } = useAuth();
 
   const linkStyle =
     "text-[#0d1b12] text-sm font-medium leading-normal hover:text-[#4c9a66] transition-colors";
@@ -18,7 +24,7 @@ const Header: React.FC = () => {
   const isActive = (path: string) => pathname === path;
 
   return (
-    <header className="sticky top-0 z-50 bg-[#f8fcf9]/80 backdrop-blur-sm">
+    <header className="sticky top-0 z-50 bg-[#f8fcf9]/80 backdrop-blur-sm border-b border-solid border-b-[#e7f3eb]">
       <div className="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#e7f3eb] px-4 sm:px-10 py-3">
         <Link href="/" className="flex items-center gap-4 text-[#0d1b12]">
           <div className="size-6">
@@ -28,7 +34,7 @@ const Header: React.FC = () => {
             Petshoppe
           </h2>
         </Link>
-        <nav className="hidden md:flex items-center gap-9">
+        <nav className="hidden md:flex items-center gap-9 justify-center absolute left-1/2 transform -translate-x-1/2">
           <Link
             href="/"
             className={`${linkStyle} ${isActive("/") ? activeLinkStyle : ""}`}
@@ -51,14 +57,46 @@ const Header: React.FC = () => {
           >
             Products
           </Link>
-          <Link
-            href="/"
-            className={`${linkStyle} ${isActive("/") ? activeLinkStyle : ""}`}
-          >
-            Contact
-          </Link>
         </nav>
         <div className="flex items-center gap-2">
+          {user ? (
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-[#0d1b12] hidden sm:block">
+                Welcome, {user.email}
+              </span>
+              <button
+                onClick={async () => {
+                  try {
+                    await fetch("/api/auth/logout", {
+                      method: "POST",
+                      credentials: "include",
+                    });
+                    window.location.reload(); // Refresh to update UI
+                  } catch (err) {
+                    console.error("Logout error:", err);
+                  }
+                }}
+                className="bg-[#0d1b12] text-white text-sm font-medium leading-normal hover:bg-[#4c9a66] transition-colors px-4 py-2 rounded"
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <>
+              <button
+                onClick={() => setIsLoginModalOpen(true)}
+                className="bg-[#13ec5b] text-[#0d1b12] text-sm font-medium leading-normal hover:bg-[#0d1b12] hover:text-white transition-colors mr-2 px-4 py-2 rounded"
+              >
+                Login
+              </button>
+              <button
+                onClick={() => setIsRegisterModalOpen(true)}
+                className="bg-[#0d1b12] text-white text-sm font-medium leading-normal hover:bg-[#4c9a66] hover:text-white transition-colors mr-4 px-4 py-2 rounded"
+              >
+                Register
+              </button>
+            </>
+          )}
           <button className="relative flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-[#e7f3eb] text-[#0d1b12] gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5">
             <div className="text-[#0d1b12]">
               <CartIcon />
@@ -105,15 +143,74 @@ const Header: React.FC = () => {
             >
               Products
             </Link>
-            <Link
-              href="/"
-              className={`${linkStyle} ${isActive("/") ? activeLinkStyle : ""}`}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Contact
-            </Link>
+            {user ? (
+              <div className="flex flex-col gap-2">
+                <span className="text-sm text-[#0d1b12]">
+                  Welcome, {user.email}
+                </span>
+                <button
+                  onClick={async () => {
+                    try {
+                      await fetch("/api/auth/logout", {
+                        method: "POST",
+                        credentials: "include",
+                      });
+                      window.location.reload(); // Refresh to update UI
+                    } catch (err) {
+                      console.error("Logout error:", err);
+                    }
+                  }}
+                  className="bg-[#0d1b12] text-white text-sm font-medium leading-normal hover:bg-[#4c9a66] transition-colors px-4 py-2 rounded w-full text-center"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <>
+                <button
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    setIsLoginModalOpen(true);
+                  }}
+                  className="bg-[#13ec5b] text-[#0d1b12] text-sm font-medium leading-normal hover:bg-[#0d1b12] hover:text-white transition-colors mr-2 px-4 py-2 rounded w-full text-center"
+                >
+                  Login
+                </button>
+                <button
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    setIsRegisterModalOpen(true);
+                  }}
+                  className="bg-[#0d1b12] text-white text-sm font-medium leading-normal hover:bg-[#4c9a66] hover:text-white transition-colors mr-2 px-4 py-2 rounded w-full text-center"
+                >
+                  Register
+                </button>
+              </>
+            )}
           </nav>
         </div>
+      )}
+
+      {isLoginModalOpen && (
+        <LoginModal
+          isOpen={isLoginModalOpen}
+          onClose={() => setIsLoginModalOpen(false)}
+          onSwitchToRegister={() => {
+            setIsLoginModalOpen(false);
+            setIsRegisterModalOpen(true);
+          }}
+        />
+      )}
+
+      {isRegisterModalOpen && (
+        <RegisterModal
+          isOpen={isRegisterModalOpen}
+          onClose={() => setIsRegisterModalOpen(false)}
+          onSwitchToLogin={() => {
+            setIsRegisterModalOpen(false);
+            setIsLoginModalOpen(true);
+          }}
+        />
       )}
     </header>
   );

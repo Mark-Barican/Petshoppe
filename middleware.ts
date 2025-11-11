@@ -2,15 +2,21 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { jwtVerify } from "jose";
 
-const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET || "supersecretkey");
+const JWT_SECRET = new TextEncoder().encode(
+  process.env.JWT_SECRET || "supersecretkey"
+);
 
 export async function middleware(req: NextRequest) {
   const token = req.cookies.get("token")?.value;
 
   // Public routes
-  if (req.nextUrl.pathname.startsWith("/login") || 
-      req.nextUrl.pathname.startsWith("/register") || 
-      req.nextUrl.pathname === "/") {
+  if (
+    req.nextUrl.pathname.startsWith("/login") ||
+    req.nextUrl.pathname.startsWith("/register") ||
+    req.nextUrl.pathname === "/" ||
+    req.nextUrl.pathname.startsWith("/products") ||
+    req.nextUrl.pathname.startsWith("/booking")
+  ) {
     return NextResponse.next();
   }
 
@@ -29,5 +35,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/booking/:path*", "/services/:path*", "/products/:path*", "/profile/:path*"],
+  matcher: ["/booking/:path*", "/products/:path*", "/profile/:path*"],
 };
