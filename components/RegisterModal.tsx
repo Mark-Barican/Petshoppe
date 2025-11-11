@@ -19,7 +19,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [role, setRole] = useState("USER");
+  const [role] = useState("USER");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -44,7 +44,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, role }),
+        body: JSON.stringify({ email, password }),
       });
 
       const data = await res.json();
@@ -121,24 +121,6 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900"
             required
           />
-        </div>
-
-        <div>
-          <label
-            htmlFor="role"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Role
-          </label>
-          <select
-            id="role"
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900"
-          >
-            <option value="USER">User</option>
-            <option value="ADMIN">Admin</option>
-          </select>
         </div>
 
         <button

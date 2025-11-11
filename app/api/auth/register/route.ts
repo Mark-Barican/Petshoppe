@@ -36,7 +36,9 @@ export async function POST(req: NextRequest) {
 
     // Assign role (default = USER)
     const userRole =
-      role && role.toUpperCase() === "ADMIN" ? "ADMIN" : "USER";
+      role && typeof role === "string" && role.toUpperCase() === "ADMIN"
+        ? "ADMIN"
+        : "USER";
 
     // Create user in the database
     const user = await prisma.user.create({
