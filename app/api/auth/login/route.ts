@@ -4,39 +4,78 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 const prisma = new PrismaClient();
-const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
+const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey"; // 🔒 set this in .env file
 
 export async function POST(req: NextRequest) {
   try {
     const { email, password } = await req.json();
 
+    // Input validation
     if (!email || !password) {
-      return NextResponse.json({ error: "Email and password are required" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Email and password are required" },
+        { status: 400 }
+      );
     }
 
-    const user = await prisma.user.findUnique({ where: { email } });
+    // Find user in the database
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
+
     if (!user) {
-      return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
+      return NextResponse.json(
+        { error: "Invalid email or password" },
+        { status: 401 }
+      );
     }
 
-    const passwordValid = await bcrypt.compare(password, user.password);
-    if (!passwordValid) {
-      return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
+    //  Validate password
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return NextResponse.json(
+        { error: "Invalid email or password" },
+        { status: 401 }
+      );
     }
 
+    //  Generate a signed JWT
     const token = jwt.sign(
-      { id: user.id, email: user.email, role: user.role },
+      {
+        id: user.id,
+        email: user.email,
+        role: user.role || "user", // fallback if no role field
+      },
       JWT_SECRET,
       { expiresIn: "7d" }
     );
 
-    return NextResponse.json({
+    // Optionally set the JWT as a secure HTTP-only cookie
+    const response = NextResponse.json({
       message: "Login successful",
-      token,
-      user: { id: user.id, email: user.email, role: user.role },
+      user: {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+      },
     });
-  } catch (err) {
-    console.error(err);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+
+    // Send token as cookie 
+    response.cookies.set({
+      name: "token",
+      value: token,
+      httpOnly: true, // prevents JS access
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+    });
+
+    return response;
+  } catch (error) {
+    console.error("LOGIN ERROR:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
 }

@@ -36,10 +36,29 @@ const HomePage: React.FC = () => {
   return (
     <div className="flex justify-center py-5">
       <div className="layout-content-container flex flex-col w-full max-w-[960px] flex-1 px-4 sm:px-0">
+
+        {/* 🔹 Top-right Login/Register buttons */}
+        <div className="flex justify-end gap-3 mb-4">
+          <a
+            href="/login"
+            className="px-4 py-2 text-sm font-semibold bg-[#e7f3eb] text-[#0d1b12] rounded-full hover:bg-[#d8e9df] transition-colors"
+          >
+            Login
+          </a>
+          <a
+            href="/register"
+            className="px-4 py-2 text-sm font-semibold bg-[#13ec5b] text-[#0d1b12] rounded-full hover:opacity-90 transition-opacity"
+          >
+            Register
+          </a>
+        </div>
+
+        {/* 🔹 Main content */}
         <div className="relative flex items-center justify-center bg-black aspect-video rounded-lg overflow-hidden"></div>
         <h1 className="text-[#0d1b12] tracking-light text-2xl md:text-[32px] font-bold leading-tight px-4 text-center pb-3 pt-6">
           Your Pet's Grooming Partner
         </h1>
+
         <div className="flex flex-col sm:flex-row justify-center gap-4 my-4">
           <a
             href="/booking"
@@ -55,6 +74,7 @@ const HomePage: React.FC = () => {
           </a>
         </div>
 
+        {/* 🔹 Testimonials section */}
         <h2 className="text-[#0d1b12] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">
           Customer Testimonials
         </h2>
