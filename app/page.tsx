@@ -3,7 +3,7 @@
 import React from "react";
 import type { Testimonial } from "@/types";
 import TestimonialCard from "../components/TestimonialCard";
-import { PlayIcon } from "../components/icons";
+import { useAuth } from "@/hooks/useAuth";
 
 const testimonials: Testimonial[] = [
   {
@@ -33,24 +33,68 @@ const testimonials: Testimonial[] = [
 ];
 
 const HomePage: React.FC = () => {
+  const { user, loading } = useAuth();
+
+  // Show loading state while checking auth
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen text-lg font-semibold">
+        Checking session...
+      </div>
+    );
+  }
+
+  // Updated logout function
+  const handleLogout = async () => {
+    try {
+      const res = await fetch("/api/auth/logout", {
+        method: "POST",
+        credentials: "include", // ensures cookie is sent with the request
+      });
+
+      if (res.ok) {
+        localStorage.clear();
+        sessionStorage.clear();
+        window.location.reload();
+      }
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
+  };
+
   return (
     <div className="flex justify-center py-5">
       <div className="layout-content-container flex flex-col w-full max-w-[960px] flex-1 px-4 sm:px-0">
-
-        {/* 🔹 Top-right Login/Register buttons */}
+        {/* 🔹 Top-right Auth Controls */}
         <div className="flex justify-end gap-3 mb-4">
-          <a
-            href="/login"
-            className="px-4 py-2 text-sm font-semibold bg-[#e7f3eb] text-[#0d1b12] rounded-full hover:bg-[#d8e9df] transition-colors"
-          >
-            Login
-          </a>
-          <a
-            href="/register"
-            className="px-4 py-2 text-sm font-semibold bg-[#13ec5b] text-[#0d1b12] rounded-full hover:opacity-90 transition-opacity"
-          >
-            Register
-          </a>
+          {user ? (
+            <>
+              <span className="text-sm font-medium text-gray-700 flex items-center">
+                Welcome, <span className="ml-1 font-semibold">{user.email}</span>
+              </span>
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 text-sm font-semibold bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <a
+                href="/login"
+                className="px-4 py-2 text-sm font-semibold bg-[#e7f3eb] text-[#0d1b12] rounded-full hover:bg-[#d8e9df] transition-colors"
+              >
+                Login
+              </a>
+              <a
+                href="/register"
+                className="px-4 py-2 text-sm font-semibold bg-[#13ec5b] text-[#0d1b12] rounded-full hover:opacity-90 transition-opacity"
+              >
+                Register
+              </a>
+            </>
+          )}
         </div>
 
         {/* 🔹 Main content */}
