@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
@@ -18,20 +19,14 @@ export default function LoginPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
-        credentials: "include", // ensures cookies are sent
+        credentials: "include", // important
       });
 
       const data = await res.json();
 
-      if (res.ok) {
-        localStorage.setItem("token", data.token); // save JWT
-        router.push("/"); // redirect to home page after login
-      } else {
-        setError(data.error || "Invalid credentials");
-      }
     } catch (err) {
       console.error("Login error:", err);
-      setError("Something went wrong. Please try again.");
+      setError("Something went wrong.");
     }
   };
 

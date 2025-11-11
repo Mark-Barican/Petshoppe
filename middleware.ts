@@ -1,36 +1,33 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import jwt from "jsonwebtoken";
+import { jwtVerify } from "jose";
 
-const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
+const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET || "supersecretkey");
 
-export function middleware(req: NextRequest) {
+export async function middleware(req: NextRequest) {
   const token = req.cookies.get("token")?.value;
 
-  // Skip protection for login/register/public routes
-  if (
-    req.nextUrl.pathname.startsWith("/login") ||
-    req.nextUrl.pathname.startsWith("/register") ||
-    req.nextUrl.pathname === "/"
-  ) {
+  // Public routes
+  if (req.nextUrl.pathname.startsWith("/login") || 
+      req.nextUrl.pathname.startsWith("/register") || 
+      req.nextUrl.pathname === "/") {
     return NextResponse.next();
   }
 
-  // If no token found, redirect to login
+  // If no token, redirect
   if (!token) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  // Verify JWT token
   try {
-    jwt.verify(token, JWT_SECRET);
-    return NextResponse.next();
-  } catch (error) {
-    console.error("Invalid token:", error);
+    await jwtVerify(token, JWT_SECRET);
+    return NextResponse.next(); // token valid
+  } catch (err) {
+    console.error("Invalid token:", err);
     return NextResponse.redirect(new URL("/login", req.url));
   }
 }
 
 export const config = {
-  matcher: ["/booking/:path*", "/products/:path*", "/profile/:path*"],
+  matcher: ["/booking/:path*", "/services/:path*", "/products/:path*", "/profile/:path*"],
 };
