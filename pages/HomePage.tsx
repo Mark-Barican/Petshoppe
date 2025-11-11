@@ -1,9 +1,8 @@
-"use client";
-
 import React from "react";
-import type { Testimonial } from "@/types";
+import type { Testimonial } from "../types";
 import TestimonialCard from "../components/TestimonialCard";
 import { PlayIcon } from "../components/icons";
+import Link from "next/link";
 
 const testimonials: Testimonial[] = [
   {
@@ -38,21 +37,21 @@ const HomePage: React.FC = () => {
       <div className="layout-content-container flex flex-col w-full max-w-[960px] flex-1 px-4 sm:px-0">
         <div className="relative flex items-center justify-center bg-black aspect-video rounded-lg overflow-hidden"></div>
         <h1 className="text-[#0d1b12] tracking-light text-2xl md:text-[32px] font-bold leading-tight px-4 text-center pb-3 pt-6">
-          Your Pet's Grooming Partner
+          Your Pet’s Grooming Partner
         </h1>
         <div className="flex flex-col sm:flex-row justify-center gap-4 my-4">
-          <a
+          <Link
             href="/booking"
             className="flex min-w-[120px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#13ec5b] text-[#0d1b12] text-sm font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-opacity"
           >
             <span className="truncate">Book Appointment</span>
-          </a>
-          <a
+          </Link>
+          <Link
             href="/products"
             className="flex min-w-[120px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#e7f3eb] text-[#0d1b12] text-sm font-bold leading-normal tracking-[0.015em] hover:bg-[#d8e9df] transition-colors"
           >
             <span className="truncate">Shop Products</span>
-          </a>
+          </Link>
         </div>
 
         <h2 className="text-[#0d1b12] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">
