@@ -19,7 +19,7 @@ const Footer: React.FC = () => {
             </a>
           </div>
           <p className="text-[#4c9a66] text-base font-normal leading-normal">
-            © 2024 Petshoppe. All rights reserved.
+            © 2025 Petshoppe. All rights reserved.
           </p>
         </div>
       </div>

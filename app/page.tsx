@@ -1,9 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import type { Testimonial } from "@/types";
 import TestimonialCard from "../components/TestimonialCard";
 import { useAuth } from "@/hooks/useAuth";
+import LoginModal from "../components/LoginModal";
+import RegisterModal from "../components/RegisterModal";
 
 const testimonials: Testimonial[] = [
   {
@@ -34,6 +36,8 @@ const testimonials: Testimonial[] = [
 
 const HomePage: React.FC = () => {
   const { user, loading } = useAuth();
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
 
   // Show loading state while checking auth
   if (loading) {
@@ -72,12 +76,20 @@ const HomePage: React.FC = () => {
         </h1>
 
         <div className="flex flex-col sm:flex-row justify-center gap-4 my-4">
-          <a
-            href="/booking"
+          <button
+            onClick={() => {
+              if (user) {
+                // If logged in, redirect to booking/services page
+                window.location.href = "/booking";
+              } else {
+                // If not logged in, open login modal
+                setIsLoginModalOpen(true);
+              }
+            }}
             className="flex min-w-[120px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#13ec5b] text-[#0d1b12] text-sm font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-opacity"
           >
             <span className="truncate">Book Appointment</span>
-          </a>
+          </button>
           <a
             href="/products"
             className="flex min-w-[120px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#e7f3eb] text-[#0d1b12] text-sm font-bold leading-normal tracking-[0.015em] hover:bg-[#d8e9df] transition-colors"
@@ -96,6 +108,29 @@ const HomePage: React.FC = () => {
           ))}
         </div>
       </div>
+
+      {/* Login and Register Modals */}
+      {isLoginModalOpen && (
+        <LoginModal
+          isOpen={isLoginModalOpen}
+          onClose={() => setIsLoginModalOpen(false)}
+          onSwitchToRegister={() => {
+            setIsLoginModalOpen(false);
+            setIsRegisterModalOpen(true);
+          }}
+        />
+      )}
+
+      {isRegisterModalOpen && (
+        <RegisterModal
+          isOpen={isRegisterModalOpen}
+          onClose={() => setIsRegisterModalOpen(false)}
+          onSwitchToLogin={() => {
+            setIsRegisterModalOpen(false);
+            setIsLoginModalOpen(true);
+          }}
+        />
+      )}
     </div>
   );
 };

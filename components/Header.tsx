@@ -41,14 +41,16 @@ const Header: React.FC = () => {
           >
             Home
           </Link>
-          <Link
-            href="/booking"
-            className={`${linkStyle} ${
-              isActive("/booking") ? activeLinkStyle : ""
-            }`}
-          >
-            Services
-          </Link>
+          {user && (
+            <Link
+              href="/booking"
+              className={`${linkStyle} ${
+                isActive("/booking") ? activeLinkStyle : ""
+              }`}
+            >
+              Services
+            </Link>
+          )}
           <Link
             href="/products"
             className={`${linkStyle} ${
@@ -135,15 +137,17 @@ const Header: React.FC = () => {
             >
               Home
             </Link>
-            <Link
-              href="/booking"
-              className={`${linkStyle} ${
-                isActive("/booking") ? activeLinkStyle : ""
-              }`}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Services
-            </Link>
+            {user && (
+              <Link
+                href="/booking"
+                className={`${linkStyle} ${
+                  isActive("/booking") ? activeLinkStyle : ""
+                }`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Services
+              </Link>
+            )}
             <Link
               href="/products"
               className={`${linkStyle} ${
