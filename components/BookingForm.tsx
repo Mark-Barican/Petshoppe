@@ -1,9 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { useAuth } from "../hooks/useAuth";
 import Calendar from "./Calendar";
 import LoginModal from "./LoginModal";
+import RegisterPetModal from "./RegisterPetModal";
 
 const BookingForm: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -12,6 +14,7 @@ const BookingForm: React.FC = () => {
   const [notes, setNotes] = useState("");
   const [loading, setLoading] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [isRegisterPetModalOpen, setIsRegisterPetModalOpen] = useState(false);
   const { user, loading: authLoading } = useAuth();
 
   const handleBooking = async () => {
@@ -82,6 +85,16 @@ const BookingForm: React.FC = () => {
         <h2 className="text-[#0d1b12] tracking-light text-[28px] font-bold leading-tight text-center pb-3 pt-5">
           Book an Appointment
         </h2>
+        {user && (
+          <div className="py-3">
+            <button
+              onClick={() => setIsRegisterPetModalOpen(true)}
+              className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-12 px-8 bg-[#13ec5b] text-[#0d1b12] text-sm font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-opacity"
+            >
+              Register Pet
+            </button>
+          </div>
+        )}
 
         <div className="w-full max-w-md space-y-4 py-3">
           <div className="relative">
@@ -142,6 +155,13 @@ const BookingForm: React.FC = () => {
             setShowLoginModal(false);
             // We can handle the register switch here if needed
           }}
+        />
+      )}
+
+      {isRegisterPetModalOpen && (
+        <RegisterPetModal
+          isOpen={isRegisterPetModalOpen}
+          onClose={() => setIsRegisterPetModalOpen(false)}
         />
       )}
     </div>

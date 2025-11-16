@@ -34,41 +34,41 @@ const Header: React.FC = () => {
             Petshoppe
           </h2>
         </Link>
-        <nav className="hidden md:flex items-center gap-9 justify-center absolute left-1/2 transform -translate-x-1/2">
-          <Link
-            href="/"
-            className={`${linkStyle} ${isActive("/") ? activeLinkStyle : ""}`}
-          >
-            Home
-          </Link>
-          {user && (
-            <Link
-              href="/booking"
-              className={`${linkStyle} ${
-                isActive("/booking") ? activeLinkStyle : ""
-              }`}
-            >
-              Services
-            </Link>
-          )}
-          <Link
-            href="/products"
-            className={`${linkStyle} ${
-              isActive("/products") ? activeLinkStyle : ""
-            }`}
-          >
-            Products
-          </Link>
-          {user && (
-            <Link
-              href="/pets/register"
-              className={`${linkStyle} ${
-                isActive("/pets/register") ? activeLinkStyle : ""
-              }`}
-            >
-              Register Pet
-            </Link>
-          )}
+        <nav className="hidden md:flex items-center justify-center absolute left-1/2 transform -translate-x-1/2">
+          <div className="flex items-center">
+            <div className="w-24 text-center">
+              <Link
+                href="/"
+                className={`${linkStyle} ${
+                  isActive("/") ? activeLinkStyle : ""
+                }`}
+              >
+                Home
+              </Link>
+            </div>
+            {user && (
+              <div className="w-24 text-center">
+                <Link
+                  href="/booking"
+                  className={`${linkStyle} ${
+                    isActive("/booking") ? activeLinkStyle : ""
+                  }`}
+                >
+                  Services
+                </Link>
+              </div>
+            )}
+            <div className="w-24 text-center">
+              <Link
+                href="/products"
+                className={`${linkStyle} ${
+                  isActive("/products") ? activeLinkStyle : ""
+                }`}
+              >
+                Products
+              </Link>
+            </div>
+          </div>
         </nav>
         <div className="flex items-center gap-2">
           {user ? (
@@ -157,17 +157,6 @@ const Header: React.FC = () => {
             >
               Products
             </Link>
-            {user && (
-              <Link
-                href="/pets/register"
-                className={`${linkStyle} ${
-                  isActive("/pets/register") ? activeLinkStyle : ""
-                }`}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Register Pet
-              </Link>
-            )}
             {user ? (
               <div className="flex flex-col gap-2">
                 <span className="text-sm text-[#0d1b12]">
