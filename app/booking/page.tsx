@@ -5,6 +5,54 @@ import Calendar from "../../components/Calendar";
 
 const BookingPage: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [service, setService] = useState("");
+  const [groomer, setGroomer] = useState("");
+  const [notes, setNotes] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleBooking = async () => {
+    if (!service || !groomer || !selectedDate) {
+      alert("Please complete all fields.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/appointments", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          service,
+          groomer,
+          date: selectedDate,
+          notes,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Booking failed");
+      }
+
+      const data = await res.json();
+      console.log("Appointment created:", data);
+
+      alert("Appointment booked successfully!");
+
+      // Reset form
+      setService("");
+      setGroomer("");
+      setNotes("");
+
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong. Try again.");
+    }
+
+    setLoading(false);
+  };
 
   return (
     <div className="flex justify-center py-5">
@@ -17,47 +65,28 @@ const BookingPage: React.FC = () => {
           <div className="relative">
             <select
               className="appearance-none w-full cursor-pointer rounded-xl text-[#0d1b12] focus:outline-0 focus:ring-2 focus:ring-[#13ec5b] border-[#cfe7d7] bg-[#f8fcf9] h-14 p-4 pr-10 text-base"
-              defaultValue=""
+              value={service}
+              onChange={(e) => setService(e.target.value)}
             >
-              <option value="" disabled>
-                Select a Service
-              </option>
+              <option value="">Select a Service</option>
               <option value="grooming">Full Grooming</option>
               <option value="bath">Bath & Brush</option>
               <option value="nails">Nail Trim</option>
             </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-[#4c9a66]">
-              <svg
-                className="fill-current h-6 w-6"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-              >
-                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-              </svg>
-            </div>
           </div>
+
           <div className="relative">
             <select
               className="appearance-none w-full cursor-pointer rounded-xl text-[#0d1b12] focus:outline-0 focus:ring-2 focus:ring-[#13ec5b] border border-[#cfe7d7] bg-[#f8fcf9] h-14 p-4 pr-10 text-base"
-              defaultValue=""
+              value={groomer}
+              onChange={(e) => setGroomer(e.target.value)}
             >
-              <option value="" disabled>
-                Select a Groomer
-              </option>
+              <option value="">Select a Groomer</option>
               <option value="any">Any Available</option>
               <option value="jessica">Jessica</option>
               <option value="mike">Mike</option>
               <option value="sandra">Sandra</option>
             </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-[#4c9a66]">
-              <svg
-                className="fill-current h-6 w-6"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-              >
-                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-              </svg>
-            </div>
           </div>
         </div>
 
@@ -67,12 +96,18 @@ const BookingPage: React.FC = () => {
           <textarea
             placeholder="Special instructions"
             className="form-input flex w-full min-w-0 flex-1 resize-y overflow-hidden rounded-xl text-[#0d1b12] focus:outline-0 focus:ring-2 focus:ring-[#13ec5b] border border-[#cfe7d7] bg-[#f8fcf9] min-h-36 placeholder:text-[#4c9a66] p-4 text-base font-normal leading-normal"
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
           ></textarea>
         </div>
 
         <div className="py-3">
-          <button className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-12 px-8 bg-[#13ec5b] text-[#0d1b12] text-sm font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-opacity">
-            <span className="truncate">Book Now</span>
+          <button
+            onClick={handleBooking}
+            disabled={loading}
+            className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-12 px-8 bg-[#13ec5b] text-[#0d1b12] text-sm font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-opacity disabled:opacity-50"
+          >
+            {loading ? "Booking..." : "Book Now"}
           </button>
         </div>
       </div>

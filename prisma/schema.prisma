@@ -7,17 +7,69 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
-  name      String?
-  updatedAt DateTime @updatedAt
-  role      Role     @default(USER)
-}
-
+//
+// ========== ENUMS ==========
+//
 enum Role {
   USER
   ADMIN
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+//
+// ========== USER MODEL ==========
+//
+model User {
+  id        Int        @id @default(autoincrement())
+  email     String     @unique
+  password  String
+  name      String?
+  role      Role       @default(USER)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  // Relations
+  pets Pet[]
+}
+
+//
+// ========== PET MODEL ==========
+//
+model Pet {
+  id          Int        @id @default(autoincrement())
+  name        String
+  species     String?
+  breed       String?
+  sex         String?
+  dob         DateTime?
+  ownerId     Int
+  owner       User       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([ownerId])
+}
+
+//
+// ========== APPOINTMENT MODEL ==========
+//
+model Appointment {
+  id        Int               @id @default(autoincrement())
+
+  service   String            // e.g. "grooming", "bath", etc
+  groomer   String            // e.g. Jessica, Mike
+  date      DateTime          // selected calendar date
+  notes     String?           // special instructions
+
+  status    AppointmentStatus @default(SCHEDULED)
+
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
 }
