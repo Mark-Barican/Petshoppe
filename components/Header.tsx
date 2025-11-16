@@ -57,6 +57,16 @@ const Header: React.FC = () => {
           >
             Products
           </Link>
+          {user && (
+            <Link
+              href="/pets/register"
+              className={`${linkStyle} ${
+                isActive("/pets/register") ? activeLinkStyle : ""
+              }`}
+            >
+              Register Pet
+            </Link>
+          )}
         </nav>
         <div className="flex items-center gap-2">
           {user ? (
@@ -143,6 +153,17 @@ const Header: React.FC = () => {
             >
               Products
             </Link>
+            {user && (
+              <Link
+                href="/pets/register"
+                className={`${linkStyle} ${
+                  isActive("/pets/register") ? activeLinkStyle : ""
+                }`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Register Pet
+              </Link>
+            )}
             {user ? (
               <div className="flex flex-col gap-2">
                 <span className="text-sm text-[#0d1b12]">
