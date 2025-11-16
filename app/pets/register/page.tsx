@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const PetRegistrationPage: React.FC = () => {
   const [name, setName] = useState("");
@@ -11,6 +11,35 @@ const PetRegistrationPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+
+  // Load form data from localStorage on component mount
+  useEffect(() => {
+    const savedFormData = localStorage.getItem("petRegistrationFormData");
+    if (savedFormData) {
+      try {
+        const parsedData = JSON.parse(savedFormData);
+        setName(parsedData.name || "");
+        setSpecies(parsedData.species || "");
+        setBreed(parsedData.breed || "");
+        setSex(parsedData.sex || "");
+        setDob(parsedData.dob || "");
+      } catch (e) {
+        console.error("Error parsing saved form data:", e);
+      }
+    }
+  }, []);
+
+  // Save form data to localStorage whenever any field changes
+  useEffect(() => {
+    const formData = {
+      name,
+      species,
+      breed,
+      sex,
+      dob,
+    };
+    localStorage.setItem("petRegistrationFormData", JSON.stringify(formData));
+  }, [name, species, breed, sex, dob]);
 
   const handlePetRegistration = async () => {
     // Reset previous messages
@@ -55,6 +84,9 @@ const PetRegistrationPage: React.FC = () => {
 
       setSuccess("Pet registered successfully!");
 
+      // Clear saved form data after successful registration
+      localStorage.removeItem("petRegistrationFormData");
+
       // Reset form
       setName("");
       setSpecies("");
@@ -73,6 +105,15 @@ const PetRegistrationPage: React.FC = () => {
     setLoading(false);
   };
 
+  const handleClearForm = () => {
+    setName("");
+    setSpecies("");
+    setBreed("");
+    setSex("");
+    setDob("");
+    localStorage.removeItem("petRegistrationFormData");
+  };
+
   return (
     <div className="flex justify-center py-5">
       <div className="layout-content-container flex flex-col items-center max-w-[960px] flex-1 px-4">
@@ -82,7 +123,7 @@ const PetRegistrationPage: React.FC = () => {
 
         {error && (
           <div className="w-full max-w-md py-3">
-            <div className="bg-red-10 border border-red-400 text-red-700 px-4 py-3 rounded-xl text-center">
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl text-center">
               {error}
             </div>
           </div>
@@ -155,7 +196,13 @@ const PetRegistrationPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="py-3">
+        <div className="flex gap-3 py-3">
+          <button
+            onClick={handleClearForm}
+            className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-12 px-8 bg-[#e7f3eb] text-[#0d1b12] text-sm font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-opacity"
+          >
+            Clear Form
+          </button>
           <button
             onClick={handlePetRegistration}
             disabled={loading}

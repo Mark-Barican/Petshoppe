@@ -16,27 +16,16 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children, title }) => {
       if (e.key === "Escape") onClose();
     };
 
-    let scrollY = 0;
-    let scrollbarWidth = 0;
-
     if (isOpen) {
       document.addEventListener("keydown", handleEscape);
-      // Store current scroll position and scrollbar width
-      scrollY = window.scrollY;
-      scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-
-      // Prevent scrolling while keeping scrollbar space
-      document.body.style.paddingRight = `${scrollbarWidth}px`;
       document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
     }
 
     return () => {
       document.removeEventListener("keydown", handleEscape);
-      // Restore scroll and remove styles
-      document.body.style.paddingRight = "";
       document.body.style.overflow = "";
-      // Restore original scroll position
-      window.scrollTo(0, scrollY);
     };
   }, [isOpen, onClose]);
 
@@ -48,6 +37,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children, title }) => {
       <div
         className="fixed inset-0 z-[999] bg-black/30 backdrop-blur-[2px] flex items-center justify-center p-4"
         onClick={onClose}
+        style={{ pointerEvents: isOpen ? "auto" : "none" }}
       >
         <div
           className="bg-white rounded-lg shadow-xl w-full max-w-md mx-auto overflow-hidden"
