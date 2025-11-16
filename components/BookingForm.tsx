@@ -41,6 +41,20 @@ const BookingForm: React.FC = () => {
     fetchPets();
   }, [user]);
 
+  const refreshPets = async () => {
+    if (user) {
+      try {
+        const response = await fetch("/api/pets");
+        if (response.ok) {
+          const petsData = await response.json();
+          setPets(petsData);
+        }
+      } catch (error) {
+        console.error("Error refreshing pets:", error);
+      }
+    }
+  };
+
   const handleBooking = async () => {
     if (!service || !groomer || !selectedDate) {
       alert("Please complete all fields.");
@@ -208,6 +222,7 @@ const BookingForm: React.FC = () => {
         <RegisterPetModal
           isOpen={isRegisterPetModalOpen}
           onClose={() => setIsRegisterPetModalOpen(false)}
+          onPetRegistered={refreshPets}
         />
       )}
     </div>

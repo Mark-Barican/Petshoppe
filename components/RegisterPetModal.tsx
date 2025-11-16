@@ -6,11 +6,13 @@ import Modal from "./Modal";
 interface RegisterPetModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onPetRegistered?: () => void;
 }
 
 const RegisterPetModal: React.FC<RegisterPetModalProps> = ({
   isOpen,
   onClose,
+  onPetRegistered,
 }) => {
   const [name, setName] = useState("");
   const [species, setSpecies] = useState("");
@@ -113,6 +115,9 @@ const RegisterPetModal: React.FC<RegisterPetModalProps> = ({
       setBreed("");
       setSex("");
       setDob("");
+
+      // Call the callback function to refresh pets list
+      onPetRegistered?.();
 
       // Close modal after successful registration
       setTimeout(() => {
