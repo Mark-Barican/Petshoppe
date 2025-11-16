@@ -9,16 +9,22 @@ export async function GET() {
     return NextResponse.json(appointments);
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "Failed to load appointments" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to load appointments" },
+      { status: 500 }
+    );
   }
 }
 
 export async function POST(req: Request) {
   try {
-    const { service, groomer, date, notes } = await req.json();
+    const { service, groomer, date, notes, petId } = await req.json();
 
     if (!service || !groomer || !date) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Missing required fields" },
+        { status: 400 }
+      );
     }
 
     const appointment = await prisma.appointment.create({
@@ -27,12 +33,16 @@ export async function POST(req: Request) {
         groomer,
         date: new Date(date),
         notes: notes ?? "",
+        petId: petId || null,
       },
     });
 
     return NextResponse.json(appointment);
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "Failed to create appointment" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to create appointment" },
+      { status: 500 }
+    );
   }
 }

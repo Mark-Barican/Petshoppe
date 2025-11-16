@@ -51,6 +51,9 @@ model Pet {
   ownerId     Int
   owner       User       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
+  // Relation to Appointments
+  appointments Appointment[]
+
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 
@@ -67,9 +70,13 @@ model Appointment {
   groomer   String            // e.g. Jessica, Mike
   date      DateTime          // selected calendar date
   notes     String?           // special instructions
+  petId     Int?              // reference to the pet being booked
 
   status    AppointmentStatus @default(SCHEDULED)
 
   createdAt DateTime          @default(now())
   updatedAt DateTime          @updatedAt
+
+  // Relation to Pet
+  pet       Pet?              @relation(fields: [petId], references: [id], onDelete: SetNull)
 }

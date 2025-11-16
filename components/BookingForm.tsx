@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useAuth } from "../hooks/useAuth";
 import Calendar from "./Calendar";
@@ -11,11 +11,35 @@ const BookingForm: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [service, setService] = useState("");
   const [groomer, setGroomer] = useState("");
+  const [petId, setPetId] = useState<string>("");
+  const [pets, setPets] = useState<any[]>([]);
   const [notes, setNotes] = useState("");
   const [loading, setLoading] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [isRegisterPetModalOpen, setIsRegisterPetModalOpen] = useState(false);
   const { user, loading: authLoading } = useAuth();
+
+  // Fetch user's pets when user is authenticated
+  useEffect(() => {
+    const fetchPets = async () => {
+      if (user) {
+        try {
+          const response = await fetch("/api/pets");
+          if (response.ok) {
+            const petsData = await response.json();
+            setPets(petsData);
+          }
+        } catch (error) {
+          console.error("Error fetching pets:", error);
+        }
+      } else {
+        setPets([]);
+        setPetId("");
+      }
+    };
+
+    fetchPets();
+  }, [user]);
 
   const handleBooking = async () => {
     if (!service || !groomer || !selectedDate) {
@@ -50,6 +74,7 @@ const BookingForm: React.FC = () => {
           groomer,
           date: selectedDate,
           notes,
+          petId: petId ? parseInt(petId) : null,
         }),
         credentials: "include",
       });
@@ -66,6 +91,7 @@ const BookingForm: React.FC = () => {
       // Reset form
       setService("");
       setGroomer("");
+      setPetId("");
       setNotes("");
     } catch (error) {
       console.error(error);
@@ -97,9 +123,28 @@ const BookingForm: React.FC = () => {
         )}
 
         <div className="w-full max-w-md space-y-4 py-3">
+          {/* Pet Selection */}
+          {user && pets.length > 0 && (
+            <div className="relative">
+              <select
+                className="appearance-none w-full cursor-pointer rounded-xl text-[#0d1b12] focus:outline-0 focus:ring-2 focus:ring-[#13ec5b] border border-[#cfe7d7] bg-[#f8fcf9] h-14 p-4 pr-10 text-base"
+                value={petId}
+                onChange={(e) => setPetId(e.target.value)}
+              >
+                <option value="">Select a Pet</option>
+                {pets.map((pet) => (
+                  <option key={pet.id} value={pet.id}>
+                    {pet.name} ({pet.species || "Pet"})
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {/* Service Selection */}
           <div className="relative">
             <select
-              className="appearance-none w-full cursor-pointer rounded-xl text-[#0d1b12] focus:outline-0 focus:ring-2 focus:ring-[#13ec5b] border-[#cfe7d7] bg-[#f8fcf9] h-14 p-4 pr-10 text-base"
+              className="appearance-none w-full cursor-pointer rounded-xl text-[#0d1b12] focus:outline-0 focus:ring-2 focus:ring-[#13ec5b] border border-[#cfe7d7] bg-[#f8fcf9] h-14 p-4 pr-10 text-base"
               value={service}
               onChange={(e) => setService(e.target.value)}
             >
@@ -110,6 +155,7 @@ const BookingForm: React.FC = () => {
             </select>
           </div>
 
+          {/* Groomer Selection */}
           <div className="relative">
             <select
               className="appearance-none w-full cursor-pointer rounded-xl text-[#0d1b12] focus:outline-0 focus:ring-2 focus:ring-[#13ec5b] border border-[#cfe7d7] bg-[#f8fcf9] h-14 p-4 pr-10 text-base"
