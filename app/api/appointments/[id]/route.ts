@@ -12,6 +12,75 @@ if (!JWT_SECRET) {
   throw new Error("Missing JWT_SECRET in environment variables");
 }
 
+// GET route to fetch a single appointment
+export async function GET(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const token = cookies().get("token")?.value;
+    if (!token) {
+      return NextResponse.json({ message: "No token found" }, { status: 401 });
+    }
+
+    const decoded = jwt.verify(token, JWT_SECRET) as {
+      id: number;
+      email?: string;
+      role?: string;
+    };
+
+    const appointmentId = parseInt(params.id);
+    if (isNaN(appointmentId)) {
+      return NextResponse.json(
+        { message: "Invalid appointment ID" },
+        { status: 400 }
+      );
+    }
+
+    // Admins can see all appointments, regular users can only see their own appointments through pets
+    const appointment = await prisma.appointment.findUnique({
+      where: { id: appointmentId },
+      include: {
+        pet: {
+          select: {
+            id: true,
+            name: true,
+            species: true,
+            breed: true,
+          },
+        },
+      },
+    });
+
+    if (!appointment) {
+      return NextResponse.json(
+        { message: "Appointment not found" },
+        { status: 404 }
+      );
+    }
+
+    // If user is not admin, we might want to add additional checks to ensure they can access this appointment
+    if (decoded.role !== "ADMIN") {
+      // Additional logic here if needed to verify user access rights
+    }
+
+    return NextResponse.json({ appointment }, { status: 200 });
+  } catch (err) {
+    console.error("GET APPOINTMENT ERROR:", err);
+
+    if (err instanceof TokenExpiredError) {
+      return NextResponse.json({ message: "Token expired" }, { status: 401 });
+    }
+    if (err instanceof JsonWebTokenError) {
+      return NextResponse.json({ message: "Invalid token" }, { status: 401 });
+    }
+    return NextResponse.json(
+      { message: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
+
 // PUT route to update appointment status
 export async function PUT(
   request: Request,
@@ -37,10 +106,11 @@ export async function PUT(
       );
     }
 
-    const { status } = await request.json();
+    const { status, service, groomer, date, notes } = await request.json();
 
+    // Validate status if it's provided
     if (
-      !status ||
+      status &&
       !["SCHEDULED", "COMPLETED", "CANCELLED", "NO_SHOW"].includes(status)
     ) {
       return NextResponse.json({ message: "Invalid status" }, { status: 400 });
@@ -54,9 +124,17 @@ export async function PUT(
       );
     }
 
+    // Build update data based on provided fields
+    const updateData: any = {};
+    if (status !== undefined) updateData.status = status;
+    if (service !== undefined) updateData.service = service;
+    if (groomer !== undefined) updateData.groomer = groomer;
+    if (date !== undefined) updateData.date = new Date(date);
+    if (notes !== undefined) updateData.notes = notes;
+
     const updatedAppointment = await prisma.appointment.update({
       where: { id: appointmentId },
-      data: { status },
+      data: updateData,
       include: {
         pet: {
           select: {

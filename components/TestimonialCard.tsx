@@ -2,7 +2,6 @@
 
 import React from "react";
 import type { Testimonial } from "@/types";
-import { StarIcon } from "./icons";
 
 interface TestimonialCardProps {
   testimonial: Testimonial;
@@ -27,7 +26,14 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial }) => {
       </div>
       <div className="flex gap-0.5">
         {[...Array(5)].map((_, i) => (
-          <StarIcon key={i} filled={i < testimonial.rating} />
+          <span
+            key={i}
+            className={
+              i < testimonial.rating ? "text-[#13ec5b]" : "text-[#add7bb]"
+            }
+          >
+            ★
+          </span>
         ))}
       </div>
       <p className="text-[#0d1b12] text-base font-normal leading-normal">

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../../../hooks/useAuth";
-import AdminSidebar from "../../../components/admin/AdminSidebar";
+import AdminSidebar from "../../../components/AdminSidebar";
 
 interface AuthUser {
   id: number;
@@ -54,7 +54,8 @@ const AdminAppointmentsPage = () => {
 
       if (appointmentsRes.ok) {
         const appointmentsData = await appointmentsRes.json();
-        setAppointments(appointmentsData.appointments || []);
+        // The API returns appointments directly, not wrapped in another property
+        setAppointments(appointmentsData || []);
       }
     } catch (error) {
       console.error("Error fetching appointments:", error);

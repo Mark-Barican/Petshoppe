@@ -3,7 +3,6 @@
 import React, { useState, useMemo } from "react";
 import type { Product } from "../../types";
 import ProductCard from "../../components/ProductCard";
-import { SearchIcon, CaretDownIcon } from "../../components/icons";
 
 // Use the global cart context from providers
 import { useCart } from "../../app/providers";
@@ -131,7 +130,7 @@ const ProductsPage: React.FC = () => {
           <label className="flex flex-col min-w-40 h-12 w-full">
             <div className="flex w-full flex-1 items-stretch rounded-lg h-full">
               <div className="text-[#4c9a66] flex border-none bg-[#e7f3eb] items-center justify-center pl-4 rounded-l-lg border-r-0">
-                <SearchIcon />
+                🔍
               </div>
               <input
                 placeholder="Search for products"
@@ -156,7 +155,7 @@ const ProductsPage: React.FC = () => {
               ))}
             </select>
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2 text-[#0d1b12]">
-              <CaretDownIcon />
+              ▼
             </div>
           </div>
           <div className="relative">
@@ -171,7 +170,7 @@ const ProductsPage: React.FC = () => {
               ))}
             </select>
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2 text-[#0d1b12]">
-              <CaretDownIcon />
+              ▼
             </div>
           </div>
         </div>

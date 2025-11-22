@@ -3,11 +3,12 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LogoIcon, CartIcon, MenuIcon, CloseIcon } from "./icons";
 import { useCart } from "../app/providers";
 import { useAuth } from "../hooks/useAuth";
 import LoginModal from "./LoginModal";
 import RegisterModal from "./RegisterModal";
+import PetshoppeLogo from "./icons/PetshoppeLogo";
+import CartIcon from "./icons/CartIcon";
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -34,9 +35,7 @@ const Header: React.FC = () => {
     <header className="sticky top-0 z-50 bg-[#f8fcf9]/80 backdrop-blur-sm border-b border-solid border-b-[#e7f3eb]">
       <div className="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#e7f3eb] px-4 sm:px-10 py-3">
         <Link href="/" className="flex items-center gap-4 text-[#0d1b12]">
-          <div className="size-6">
-            <LogoIcon />
-          </div>
+          <PetshoppeLogo width="24" height="24" color="#0d1b12" />
           <h2 className="text-[#0d1b12] text-lg font-bold leading-tight tracking-[-0.015em]">
             Petshoppe
           </h2>
@@ -131,9 +130,7 @@ const Header: React.FC = () => {
             </>
           )}
           <button className="relative flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-[#e7f3eb] text-[#0d1b12] gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5">
-            <div className="text-[#0d1b12]">
-              <CartIcon />
-            </div>
+            <CartIcon width="20" height="20" color="#0d1b12" />
             {cartCount > 0 && (
               <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#13ec5b] text-xs font-bold text-[#0d1b12]">
                 {cartCount}
@@ -144,7 +141,7 @@ const Header: React.FC = () => {
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="md:hidden flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-[#e7f3eb] text-[#0d1b12] gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5"
           >
-            {isMenuOpen ? <CloseIcon /> : <MenuIcon />}
+            {isMenuOpen ? "Close" : "Menu"}
           </button>
         </div>
       </div>
