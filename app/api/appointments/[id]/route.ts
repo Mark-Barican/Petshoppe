@@ -1,0 +1,159 @@
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+export const runtime = "nodejs";
+
+import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
+import jwt, { TokenExpiredError, JsonWebTokenError } from "jsonwebtoken";
+import prisma from "@/lib/prisma";
+
+const JWT_SECRET = process.env.JWT_SECRET!;
+if (!JWT_SECRET) {
+  throw new Error("Missing JWT_SECRET in environment variables");
+}
+
+// PUT route to update appointment status
+export async function PUT(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const token = cookies().get("token")?.value;
+    if (!token) {
+      return NextResponse.json({ message: "No token found" }, { status: 401 });
+    }
+
+    const decoded = jwt.verify(token, JWT_SECRET) as {
+      id: number;
+      email?: string;
+      role?: string;
+    };
+
+    // Check if user is admin
+    if (decoded.role !== "ADMIN") {
+      return NextResponse.json(
+        { message: "Unauthorized: Admin access required" },
+        { status: 403 }
+      );
+    }
+
+    const { status } = await request.json();
+
+    if (
+      !status ||
+      !["SCHEDULED", "COMPLETED", "CANCELLED", "NO_SHOW"].includes(status)
+    ) {
+      return NextResponse.json({ message: "Invalid status" }, { status: 400 });
+    }
+
+    const appointmentId = parseInt(params.id);
+    if (isNaN(appointmentId)) {
+      return NextResponse.json(
+        { message: "Invalid appointment ID" },
+        { status: 400 }
+      );
+    }
+
+    const updatedAppointment = await prisma.appointment.update({
+      where: { id: appointmentId },
+      data: { status },
+      include: {
+        pet: {
+          select: {
+            id: true,
+            name: true,
+            species: true,
+            breed: true,
+          },
+        },
+      },
+    });
+
+    return NextResponse.json(
+      { appointment: updatedAppointment },
+      { status: 200 }
+    );
+  } catch (err) {
+    console.error("UPDATE APPOINTMENT ERROR:", err);
+
+    if (err instanceof TokenExpiredError) {
+      return NextResponse.json({ message: "Token expired" }, { status: 401 });
+    }
+    if (err instanceof JsonWebTokenError) {
+      return NextResponse.json({ message: "Invalid token" }, { status: 401 });
+    }
+    if ((err as Error).message.includes("RecordNotFound")) {
+      return NextResponse.json(
+        { message: "Appointment not found" },
+        { status: 404 }
+      );
+    }
+    return NextResponse.json(
+      { message: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
+
+// DELETE route to delete an appointment
+export async function DELETE(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const token = cookies().get("token")?.value;
+    if (!token) {
+      return NextResponse.json({ message: "No token found" }, { status: 401 });
+    }
+
+    const decoded = jwt.verify(token, JWT_SECRET) as {
+      id: number;
+      email?: string;
+      role?: string;
+    };
+
+    // Check if user is admin
+    if (decoded.role !== "ADMIN") {
+      return NextResponse.json(
+        { message: "Unauthorized: Admin access required" },
+        { status: 403 }
+      );
+    }
+
+    const appointmentId = parseInt(params.id);
+    if (isNaN(appointmentId)) {
+      return NextResponse.json(
+        { message: "Invalid appointment ID" },
+        { status: 400 }
+      );
+    }
+
+    await prisma.appointment.delete({
+      where: { id: appointmentId },
+    });
+
+    return NextResponse.json(
+      { message: "Appointment deleted successfully" },
+      { status: 200 }
+    );
+  } catch (err) {
+    console.error("DELETE APPOINTMENT ERROR:", err);
+
+    if (err instanceof TokenExpiredError) {
+      return NextResponse.json({ message: "Token expired" }, { status: 401 });
+    }
+    if (err instanceof JsonWebTokenError) {
+      return NextResponse.json({ message: "Invalid token" }, { status: 401 });
+    }
+    if ((err as Error).message.includes("RecordNotFound")) {
+      return NextResponse.json(
+        { message: "Appointment not found" },
+        { status: 404 }
+      );
+    }
+    return NextResponse.json(
+      { message: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}

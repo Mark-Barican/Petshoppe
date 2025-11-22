@@ -17,6 +17,13 @@ const Header: React.FC = () => {
   const { cartCount } = useCart();
   const { user, loading } = useAuth();
 
+  // Define the correct type for the auth user
+  interface AuthUser {
+    email: string;
+    role: string;
+  }
+  const typedUser = user as AuthUser | null;
+
   const linkStyle =
     "text-[#0d1b12] text-sm font-medium leading-normal hover:text-[#4c9a66] transition-colors";
   const activeLinkStyle = "text-[#13ec5b]";
@@ -46,17 +53,31 @@ const Header: React.FC = () => {
                 Home
               </Link>
             </div>
-            {user && (
-              <div className="w-24 text-center">
-                <Link
-                  href="/booking"
-                  className={`${linkStyle} ${
-                    isActive("/booking") ? activeLinkStyle : ""
-                  }`}
-                >
-                  Services
-                </Link>
-              </div>
+            {typedUser && (
+              <>
+                <div className="w-24 text-center">
+                  <Link
+                    href="/booking"
+                    className={`${linkStyle} ${
+                      isActive("/booking") ? activeLinkStyle : ""
+                    }`}
+                  >
+                    Services
+                  </Link>
+                </div>
+                {typedUser.role === "ADMIN" && (
+                  <div className="w-24 text-center">
+                    <Link
+                      href="/admin"
+                      className={`${linkStyle} ${
+                        isActive("/admin") ? activeLinkStyle : ""
+                      }`}
+                    >
+                      Admin
+                    </Link>
+                  </div>
+                )}
+              </>
             )}
             <div className="w-24 text-center">
               <Link
@@ -137,16 +158,29 @@ const Header: React.FC = () => {
             >
               Home
             </Link>
-            {user && (
-              <Link
-                href="/booking"
-                className={`${linkStyle} ${
-                  isActive("/booking") ? activeLinkStyle : ""
-                }`}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Services
-              </Link>
+            {typedUser && (
+              <>
+                <Link
+                  href="/booking"
+                  className={`${linkStyle} ${
+                    isActive("/booking") ? activeLinkStyle : ""
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Services
+                </Link>
+                {typedUser.role === "ADMIN" && (
+                  <Link
+                    href="/admin"
+                    className={`${linkStyle} ${
+                      isActive("/admin") ? activeLinkStyle : ""
+                    }`}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Admin
+                  </Link>
+                )}
+              </>
             )}
             <Link
               href="/products"
@@ -157,10 +191,10 @@ const Header: React.FC = () => {
             >
               Products
             </Link>
-            {user ? (
+            {typedUser ? (
               <div className="flex flex-col gap-2">
                 <span className="text-sm text-[#0d1b12]">
-                  Welcome, {user.email}
+                  Welcome, {typedUser.email}
                 </span>
                 <button
                   onClick={async () => {
