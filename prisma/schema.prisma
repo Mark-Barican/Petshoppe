@@ -8,8 +8,11 @@ datasource db {
 }
 
 //
-// ========== ENUMS ==========
+// ========================================
+// ========== ENUMS ========================
+// ========================================
 //
+
 enum Role {
   USER
   ADMIN
@@ -22,9 +25,20 @@ enum AppointmentStatus {
   NO_SHOW
 }
 
+enum OrderStatus {
+  PENDING
+  PAID
+  SHIPPED
+  COMPLETED
+  CANCELLED
+}
+
 //
-// ========== USER MODEL ==========
+// ========================================
+// ========== USER MODEL ==================
+// ========================================
 //
+
 model User {
   id        Int        @id @default(autoincrement())
   email     String     @unique
@@ -35,12 +49,17 @@ model User {
   updatedAt DateTime   @updatedAt
 
   // Relations
-  pets Pet[]
+  pets       Pet[]
+  reviews    Review[]
+  orders     Order[]
 }
 
 //
-// ========== PET MODEL ==========
+// ========================================
+// ========== PET MODEL ===================
+// ========================================
 //
+
 model Pet {
   id          Int        @id @default(autoincrement())
   name        String
@@ -49,9 +68,8 @@ model Pet {
   sex         String?
   dob         DateTime?
   ownerId     Int
-  owner       User       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
-  // Relation to Appointments
+  owner       User       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   appointments Appointment[]
 
   createdAt   DateTime   @default(now())
@@ -61,16 +79,19 @@ model Pet {
 }
 
 //
-// ========== APPOINTMENT MODEL ==========
+// ========================================
+// ========== APPOINTMENT MODEL ===========
+// ========================================
 //
+
 model Appointment {
   id        Int               @id @default(autoincrement())
 
-  service   String            // e.g. "grooming", "bath", etc
-  groomer   String            // e.g. Jessica, Mike
-  date      DateTime          // selected calendar date
-  notes     String?           // special instructions
-  petId     Int?              // reference to the pet being booked
+  service   String
+  groomer   String
+  date      DateTime
+  notes     String?
+  petId     Int?
 
   status    AppointmentStatus @default(SCHEDULED)
 
@@ -79,4 +100,80 @@ model Appointment {
 
   // Relation to Pet
   pet       Pet?              @relation(fields: [petId], references: [id], onDelete: SetNull)
+}
+
+//
+// ========================================
+// ========== PRODUCT MODEL ===============
+// ========================================
+//
+
+model Product {
+  id          Int        @id @default(autoincrement())
+  name        String
+  description String?
+  price       Float
+  stock       Int        @default(0)
+  image       String?
+  category    String?
+
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  // Relations
+  reviews     Review[]
+  orderItems  OrderItem[]
+}
+
+//
+// ========================================
+// ========== REVIEW MODEL ================
+// ========================================
+//
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  rating    Int      // 1–5 stars
+  comment   String?
+  userId    Int
+  productId Int
+
+  createdAt DateTime @default(now())
+
+  // Relations
+  user      User     @relation(fields: [userId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
+}
+
+//
+// ========================================
+// ========== ORDER MODELS ================
+// ========================================
+//
+
+model Order {
+  id        Int          @id @default(autoincrement())
+  userId    Int
+  total     Float
+  status    OrderStatus   @default(PENDING)
+
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  // Relations
+  user       User         @relation(fields: [userId], references: [id])
+  items      OrderItem[]
+}
+
+model OrderItem {
+  id        Int      @id @default(autoincrement())
+  orderId   Int
+  productId Int
+
+  quantity  Int      @default(1)
+  price     Float    // snapshot at time of purchase
+
+  // Relations
+  order     Order    @relation(fields: [orderId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
 }
