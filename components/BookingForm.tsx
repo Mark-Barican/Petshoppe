@@ -139,9 +139,9 @@ const BookingForm: React.FC = () => {
         <div className="w-full max-w-md space-y-4 py-3">
           {/* Pet Selection */}
           {user && (
-            <div className="relative border-2 border-solid border-[#0d1b12] rounded-xl p-1">
+            <div className="relative rounded-xl p-1">
               <select
-                className="appearance-none w-full cursor-pointer rounded-xl text-[#0d1b12] focus:outline-0 focus:ring-2 focus:ring-[#13ec5b] border-[#cfe7d7] bg-[#f8fcf9] h-14 p-4 pr-10 text-base"
+                className="appearance-none w-full cursor-pointer rounded-xl text-[#0d1b12] focus:outline-0 focus:ring-2 focus:ring-[#13ec5b] border border-[#cfe7d7] bg-[#f8fcf9] h-14 p-4 pr-10 text-base"
                 value={petId}
                 onChange={(e) => setPetId(e.target.value)}
                 disabled={pets.length === 0}

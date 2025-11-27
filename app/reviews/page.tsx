@@ -127,7 +127,7 @@ const ReviewsPage: React.FC = () => {
           All Customer Reviews
         </h1>
 
-        <div className="flex flex-col gap-8 overflow-x-hidden p-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 overflow-x-hidden p-4">
           {allTestimonials.map((testimonial, index) => (
             <TestimonialCard key={index} testimonial={testimonial} />
           ))}
