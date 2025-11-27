@@ -6,9 +6,9 @@ import TwitterIcon from "./icons/TwitterIcon";
 
 const Footer: React.FC = () => {
   return (
-    <footer className="flex justify-center border-t border-solid border-t-[#e7f3eb]">
+    <footer className="flex justify-center border-t-2 border-solid border-t-gray-300">
       <div className="flex w-full max-w-[960px] flex-1 flex-col">
-        <div className="flex flex-col gap-6 px-5 py-10 text-center">
+        <div className="flex flex-col gap-6 px-5 py-10 text-center rounded-tl-2xl rounded-tr-2xl">
           <div className="flex flex-wrap justify-center gap-4">
             <a href="#" className="text-[#1877F2] hover:text-[#1877F2]/80">
               <FacebookIcon width="24" height="24" color="#1877F2" />

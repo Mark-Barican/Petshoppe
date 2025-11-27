@@ -32,6 +32,30 @@ const testimonials: Testimonial[] = [
       "I've been bringing my pets here for years, and they always do an amazing job. Highly recommend!",
     avatarUrl: "https://picsum.photos/id/1011/100/100",
   },
+  {
+    name: "James Wilson",
+    time: "1 month ago",
+    rating: 5,
+    review:
+      "The staff is incredibly knowledgeable and patient with my anxious dog. The grooming results are always fantastic!",
+    avatarUrl: "https://picsum.photos/id/1018/100/100",
+  },
+  {
+    name: "Ava Thompson",
+    time: "3 weeks ago",
+    rating: 4,
+    review:
+      "Great experience overall. My puppy's nails were trimmed carefully and she was so gentle during the process.",
+    avatarUrl: "https://picsum.photos/id/1012/100/100",
+  },
+  {
+    name: "Noah Johnson",
+    time: "5 weeks ago",
+    rating: 5,
+    review:
+      "Professional service and my pet looks so healthy and clean after each visit. I trust them completely with my pets.",
+    avatarUrl: "https://picsum.photos/id/1008/100/100",
+  },
 ];
 
 const HomePage: React.FC = () => {
@@ -68,7 +92,7 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="flex justify-center py-5">
-      <div className="layout-content-container flex flex-col w-full max-w-[960px] flex-1 px-4 sm:px-0">
+      <div className="layout-content-container flex flex-col w-full max-w-[960px] flex-1 px-4 sm:px-0 rounded-bl-2xl rounded-br-2xl">
         {/* 🔹 Main content */}
         <div className="relative flex items-center justify-center bg-black aspect-video rounded-lg overflow-hidden"></div>
         <h1 className="text-[#0d1b12] tracking-light text-2xl md:text-[32px] font-bold leading-tight px-4 text-center pb-3 pt-6">
@@ -99,9 +123,17 @@ const HomePage: React.FC = () => {
         </div>
 
         {/* 🔹 Testimonials section */}
-        <h2 className="text-[#0d1b12] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">
-          Customer Testimonials
-        </h2>
+        <div className="flex justify-between items-center px-4 pb-3 pt-5">
+          <h2 className="text-[#0d1b12] text-[22px] font-bold leading-tight tracking-[-0.015em]">
+            Customer Testimonials
+          </h2>
+          <a
+            href="/reviews"
+            className="text-[#4c9a66] text-sm font-medium leading-normal hover:underline flex items-center"
+          >
+            See more reviews →
+          </a>
+        </div>
         <div className="flex flex-col gap-8 overflow-x-hidden p-4">
           {testimonials.map((testimonial, index) => (
             <TestimonialCard key={index} testimonial={testimonial} />

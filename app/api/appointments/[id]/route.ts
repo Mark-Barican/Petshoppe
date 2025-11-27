@@ -59,9 +59,28 @@ export async function GET(
       );
     }
 
-    // If user is not admin, we might want to add additional checks to ensure they can access this appointment
+    // If user is not admin, check if they can access this appointment
     if (decoded.role !== "ADMIN") {
-      // Additional logic here if needed to verify user access rights
+      // Regular users can only access appointments for their pets
+      if (appointment.petId) {
+        const pet = await prisma.pet.findUnique({
+          where: { id: appointment.petId },
+        });
+
+        if (!pet || pet.ownerId !== decoded.id) {
+          return NextResponse.json(
+            { message: "Unauthorized: Access denied" },
+            { status: 403 }
+          );
+        }
+      } else {
+        // If appointment has no pet, it might be a general appointment
+        // For now, we'll restrict access to admin only for appointments without pets
+        return NextResponse.json(
+          { message: "Unauthorized: Access denied" },
+          { status: 403 }
+        );
+      }
     }
 
     return NextResponse.json({ appointment }, { status: 200 });

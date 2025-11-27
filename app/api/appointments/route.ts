@@ -1,11 +1,73 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
+import jwt from "jsonwebtoken";
 import prisma from "@/lib/prisma";
+
+const JWT_SECRET = process.env.JWT_SECRET!;
 
 export async function GET() {
   try {
-    const appointments = await prisma.appointment.findMany({
-      orderBy: { date: "asc" },
-    });
+    // Check for authentication
+    const token = cookies().get("token")?.value;
+    if (!token) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    let decoded;
+    try {
+      decoded = jwt.verify(token, JWT_SECRET) as {
+        id: number;
+        email?: string;
+        role?: string;
+      };
+    } catch (err) {
+      return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+    }
+
+    // Admins can see all appointments, regular users can only see appointments for their pets
+    let appointments;
+    if (decoded.role === "ADMIN") {
+      appointments = await prisma.appointment.findMany({
+        orderBy: { date: "asc" },
+        include: {
+          pet: {
+            select: {
+              id: true,
+              name: true,
+              species: true,
+              breed: true,
+              owner: {
+                select: {
+                  id: true,
+                  name: true,
+                  email: true,
+                },
+              },
+            },
+          },
+        },
+      });
+    } else {
+      appointments = await prisma.appointment.findMany({
+        where: {
+          pet: {
+            ownerId: decoded.id,
+          },
+        },
+        orderBy: { date: "asc" },
+        include: {
+          pet: {
+            select: {
+              id: true,
+              name: true,
+              species: true,
+              breed: true,
+            },
+          },
+        },
+      });
+    }
+
     return NextResponse.json(appointments);
   } catch (error) {
     console.error(error);
@@ -18,6 +80,23 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
+    // Check for authentication
+    const token = cookies().get("token")?.value;
+    if (!token) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    let decoded;
+    try {
+      decoded = jwt.verify(token, JWT_SECRET) as {
+        id: number;
+        email?: string;
+        role?: string;
+      };
+    } catch (err) {
+      return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+    }
+
     const { service, groomer, date, notes, petId } = await req.json();
 
     if (!service || !groomer || !date) {
@@ -27,13 +106,35 @@ export async function POST(req: Request) {
       );
     }
 
+    // If petId is provided, verify that the user owns the pet
+    if (petId) {
+      const pet = await prisma.pet.findUnique({
+        where: { id: parseInt(petId) },
+      });
+
+      if (!pet) {
+        return NextResponse.json({ error: "Pet not found" }, { status: 404 });
+      }
+
+      // Check if user is admin or the owner of the pet
+      if (decoded.role !== "ADMIN" && pet.ownerId !== decoded.id) {
+        return NextResponse.json(
+          {
+            error:
+              "Unauthorized: You can only book appointments for your own pets",
+          },
+          { status: 403 }
+        );
+      }
+    }
+
     const appointment = await prisma.appointment.create({
       data: {
         service,
         groomer,
         date: new Date(date),
         notes: notes ?? "",
-        petId: petId || null,
+        petId: petId ? parseInt(petId) : null,
       },
     });
 

@@ -32,7 +32,7 @@ const Header: React.FC = () => {
   const isActive = (path: string) => pathname === path;
 
   return (
-    <header className="sticky top-0 z-50 bg-[#f8fcf9]/80 backdrop-blur-sm border-b border-solid border-b-[#e7f3eb]">
+    <header className="sticky top-0 z-50 bg-[#f8fcf9]/80 backdrop-blur-sm border-b-2 border-solid border-b-gray-300">
       <div className="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#e7f3eb] px-4 sm:px-10 py-3">
         <Link href="/" className="flex items-center gap-4 text-[#0d1b12]">
           <PetshoppeLogo width="24" height="24" color="#0d1b12" />

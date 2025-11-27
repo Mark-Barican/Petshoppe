@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import DashboardIcon from "./icons/DashboardIcon";
 import UsersIcon from "./icons/UsersIcon";
 import AppointmentsIcon from "./icons/AppointmentsIcon";
-import LogoutIcon from "./icons/LogoutIcon";
 
 const AdminSidebar = () => {
   const pathname = usePathname();
@@ -55,28 +54,6 @@ const AdminSidebar = () => {
           ))}
         </ul>
       </nav>
-
-      <div className="absolute bottom-0 w-64 p-4 border-t border-gray-700">
-        <button
-          onClick={async () => {
-            try {
-              await fetch("/api/auth/logout", {
-                method: "POST",
-                credentials: "include",
-              });
-              window.location.href = "/login"; // Redirect to login after logout
-            } catch (err) {
-              console.error("Logout error:", err);
-            }
-          }}
-          className="flex items-center w-full px-6 py-3 text-sm font-medium text-[#0d1b12] hover:bg-[#4c9a66] hover:text-white rounded transition-colors"
-        >
-          <span className="mr-3">
-            <LogoutIcon width="20" height="20" color="#0d1b12" />
-          </span>
-          Logout
-        </button>
-      </div>
     </aside>
   );
 };
