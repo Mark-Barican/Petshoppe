@@ -123,7 +123,16 @@ const ReviewsPage: React.FC = () => {
   return (
     <div className="flex justify-center py-5">
       <div className="layout-content-container flex flex-col w-full max-w-[960px] flex-1 px-4 sm:px-0 rounded-bl-2xl rounded-br-2xl">
-        <h1 className="text-[#0d1b12] text-[28px] font-bold leading-tight px-4 pb-3 pt-6">
+        <div className="px-4 pb-3 pt-6">
+          <a
+            href="/"
+            className="text-[#0d1b12] text-base font-medium hover:text-[#4c9a66] flex items-center gap-2"
+          >
+            <span>←</span>
+            <span>Back to home page</span>
+          </a>
+        </div>
+        <h1 className="text-[#0d1b12] text-[28px] font-bold leading-tight px-4 pb-3 pt-2">
           All Customer Reviews
         </h1>
 
