@@ -9,7 +9,7 @@ interface TestimonialCardProps {
 
 const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial }) => {
   return (
-    <div className="flex flex-col gap-3 p-6 border border-gray-200 rounded-xl">
+    <div className="flex flex-col gap-3 p-6 border border-gray-300 rounded-lg bg-white shadow-sm">
       <div className="flex items-center gap-3">
         <div
           className="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10"
