@@ -1,0 +1,77 @@
+// /app/api/reviews/route.ts
+import { NextRequest, NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
+import jwt from "jsonwebtoken";
+
+const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
+
+// GET all reviews
+export async function GET() {
+  try {
+    const reviews = await prisma.review.findMany({
+      orderBy: { createdAt: "desc" },
+      include: {
+        user: true,
+        product: true,
+      },
+    });
+
+    return NextResponse.json(reviews, { status: 200 });
+  } catch (error) {
+    console.error("GET /reviews error:", error);
+    return NextResponse.json({ error: "Failed to fetch reviews" }, { status: 500 });
+  }
+}
+
+// CREATE review
+export async function POST(req: NextRequest) {
+  try {
+    const token = req.cookies.get("token")?.value;
+
+    if (!token) {
+      return NextResponse.json(
+        { error: "You must be logged in to create a review" },
+        { status: 401 }
+      );
+    }
+
+    let decoded: any;
+    try {
+      decoded = jwt.verify(token, JWT_SECRET);
+    } catch {
+      return NextResponse.json(
+        { error: "Invalid or expired token" },
+        { status: 401 }
+      );
+    }
+
+    const userId = decoded.id;
+
+    // Read body
+    const { productId, rating, comment } = await req.json();
+
+    //  FIXED: Only require rating (not productId)
+    if (!rating) {
+      return NextResponse.json(
+        { error: "Rating is required" },
+        { status: 400 }
+      );
+    }
+
+    // Save review
+    const review = await prisma.review.create({
+      data: {
+        userId,
+        rating,
+        comment,
+        productId: productId || null, //  FIXED: allow null for testimonials
+      },
+    });
+
+    return NextResponse.json(review, { status: 201 });
+
+  } catch (error) {
+    console.error("POST /reviews error:", error);
+    return NextResponse.json({ error: "Failed to create review" }, { status: 500 });
+  }
+}
