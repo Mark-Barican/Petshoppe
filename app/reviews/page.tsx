@@ -25,53 +25,62 @@ export default function ReviewsPage() {
   }, []);
 
   return (
-    <div className="flex justify-center py-5">
-      <div className="layout-content-container flex flex-col w-full max-w-[960px] flex-1 px-4 sm:px-0 rounded-bl-2xl rounded-br-2xl">
-
+    <div className="flex justify-center py-8">
+      <div className="layout-content-container flex flex-col w-full max-w-4xl flex-1 px-4 sm:px-0">
         {/* Back Button */}
         <div className="px-4 pb-3 pt-6">
           <a
             href="/"
-            className="text-[#0d1b12] text-base font-medium hover:text-[#4c9a66] flex items-center gap-2"
+            className="text-[#0d1b12] text-base font-medium hover:text-[#4c9a66] flex items-center gap-2 transition-colors duration-200"
           >
-            <span>←</span>
+            <span className="text-lg">←</span>
             <span>Back to home page</span>
           </a>
         </div>
 
         {/* Title */}
-        <h1 className="text-[#0d1b12] text-[28px] font-bold leading-tight px-4 pb-3 pt-2">
+        <h1 className="text-[#0d1b12] text-3xl font-bold leading-tight px-4 pb-3 pt-2 text-center">
           All Customer Reviews
         </h1>
 
         {/* Write Review Button */}
         <div className="px-4 pb-5">
           <Link href="/reviews/new">
-            <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
-              ➕ Write a Review
+            <button className="px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+              Write a Review
             </button>
           </Link>
         </div>
 
         {/* Loading */}
         {loading && (
-          <p className="text-center text-gray-600 p-4">Loading reviews...</p>
+          <div className="flex justify-center items-center p-8">
+            <div className="text-center">
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-green-500 mb-2"></div>
+              <p className="text-gray-600">Loading reviews...</p>
+            </div>
+          </div>
         )}
 
         {/* No reviews */}
         {!loading && reviews.length === 0 && (
-          <p className="text-center text-gray-600 p-4">
-            No reviews yet. Be the first to write one!
-          </p>
+          <div className="text-center p-8 bg-gray-50 rounded-xl mx-4">
+            <p className="text-gray-600 text-lg">
+              No reviews yet. Be the first to write one!
+            </p>
+            <Link href="/reviews/new">
+              <button className="mt-4 px-6 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-300">
+                Write Your Review
+              </button>
+            </Link>
+          </div>
         )}
 
         {/* Reviews grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 p-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
           {reviews.map((review: any) => {
             const displayName =
-              review.user?.name ||
-              review.user?.email ||
-              "Anonymous";
+              review.user?.name || review.user?.email || "Anonymous";
 
             return (
               <TestimonialCard
@@ -89,7 +98,6 @@ export default function ReviewsPage() {
             );
           })}
         </div>
-
       </div>
     </div>
   );
