@@ -3,6 +3,8 @@
 import React, { useState, useMemo } from "react";
 import type { Product } from "../../types";
 import ProductCard from "../../components/ProductCard";
+import Dropdown from "../../components/Dropdown";
+import PriceRangeFilter from "../../components/PriceRangeFilter";
 
 // Use the global cart context from providers
 import { useCart } from "../../app/providers";
@@ -80,16 +82,22 @@ const allProducts: Product[] = [
   },
 ];
 
-const categories = ["All", "Grooming", "Care", "Accessories"];
-const priceRanges = ["All", "Under $15", "$15 - $25", "Over $25"];
+const categories = [
+  { value: "All", label: "All Categories" },
+  { value: "Grooming", label: "Grooming" },
+  { value: "Care", label: "Care" },
+  { value: "Accessories", label: "Accessories" },
+];
 
 const ProductsPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [selectedPrice, setSelectedPrice] = useState("All");
+  const [priceRange, setPriceRange] = useState({
+    min: Math.min(...allProducts.map((p) => p.price)),
+    max: Math.max(...allProducts.map((p) => p.price)),
+  });
   const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
   const { addToCart } = useCart();
-
   // Toggle selecting products
   const handleToggleProduct = (productId: number) => {
     setSelectedProducts((prev) =>
@@ -120,21 +128,15 @@ const ProductsPage: React.FC = () => {
       const matchesCategory =
         selectedCategory === "All" || product.category === selectedCategory;
       const matchesPrice =
-        selectedPrice === "All" ||
-        (selectedPrice === "Under $15" && product.price < 15) ||
-        (selectedPrice === "$15 - $25" &&
-          product.price >= 15 &&
-          product.price <= 25) ||
-        (selectedPrice === "Over $25" && product.price > 25);
+        product.price >= priceRange.min && product.price <= priceRange.max;
 
       return matchesSearch && matchesCategory && matchesPrice;
     });
-  }, [searchQuery, selectedCategory, selectedPrice]);
+  }, [searchQuery, selectedCategory, priceRange]);
 
   return (
     <div className="flex justify-center py-5">
       <div className="layout-content-container flex flex-col w-full max-w-[960px] flex-1 px-4">
-        
         {/* Search Bar */}
         <div className="px-4 py-3">
           <label className="flex flex-col min-w-40 h-12 w-full">
@@ -155,37 +157,22 @@ const ProductsPage: React.FC = () => {
         {/* Filters */}
         <div className="flex gap-3 p-3 flex-wrap">
           {/* Category Filter */}
-          <div className="relative">
-            <select
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="appearance-none cursor-pointer flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-[#e7f3eb] pl-4 pr-8 text-[#0d1b12] text-sm font-medium leading-normal focus:outline-none focus:ring-2 focus:ring-[#13ec5b]"
-            >
-              {categories.map((c) => (
-                <option key={c} value={c}>
-                  {c === "All" ? "Category" : c}
-                </option>
-              ))}
-            </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2 text-[#0d1b12]">
-              ▼
-            </div>
+          <div className="w-48">
+            <Dropdown
+              options={categories}
+              selectedValue={selectedCategory}
+              onChange={setSelectedCategory}
+              placeholder="Category"
+            />
           </div>
 
-          {/* Price Filter */}
-          <div className="relative">
-            <select
-              onChange={(e) => setSelectedPrice(e.target.value)}
-              className="appearance-none cursor-pointer flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-[#e7f3eb] pl-4 pr-8 text-[#0d1b12] text-sm font-medium leading-normal focus:outline-none focus:ring-2 focus:ring-[#13ec5b]"
-            >
-              {priceRanges.map((p) => (
-                <option key={p} value={p}>
-                  {p === "All" ? "Price Range" : p}
-                </option>
-              ))}
-            </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2 text-[#0d1b12]">
-              ▼
-            </div>
+          {/* Price Range Filter */}
+          <div className="w-80">
+            <PriceRangeFilter
+              minPrice={priceRange.min}
+              maxPrice={priceRange.max}
+              onPriceChange={(min, max) => setPriceRange({ min, max })}
+            />
           </div>
         </div>
 

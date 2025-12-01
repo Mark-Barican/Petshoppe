@@ -33,7 +33,6 @@ const Header: React.FC = () => {
   return (
     <header className="sticky top-0 z-50 bg-[#f8fcf9]/80 backdrop-blur-sm border-b-2 border-solid border-b-gray-300">
       <div className="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#e7f3eb] px-4 sm:px-10 py-3">
-        
         {/* Logo */}
         <Link href="/" className="flex items-center gap-4 text-[#0d1b12]">
           <PetshoppeLogo width="24" height="24" color="#0d1b12" />
@@ -56,32 +55,28 @@ const Header: React.FC = () => {
               </Link>
             </div>
 
-            {typedUser && (
-              <>
-                <div className="w-24 text-center">
-                  <Link
-                    href="/booking"
-                    className={`${linkStyle} ${
-                      isActive("/booking") ? activeLinkStyle : ""
-                    }`}
-                  >
-                    Services
-                  </Link>
-                </div>
+            <div className="w-24 text-center">
+              <Link
+                href="/services"
+                className={`${linkStyle} ${
+                  isActive("/services") ? activeLinkStyle : ""
+                }`}
+              >
+                Services
+              </Link>
+            </div>
 
-                {typedUser.role === "ADMIN" && (
-                  <div className="w-24 text-center">
-                    <Link
-                      href="/admin"
-                      className={`${linkStyle} ${
-                        isActive("/admin") ? activeLinkStyle : ""
-                      }`}
-                    >
-                      Admin
-                    </Link>
-                  </div>
-                )}
-              </>
+            {typedUser && typedUser.role === "ADMIN" && (
+              <div className="w-24 text-center">
+                <Link
+                  href="/admin"
+                  className={`${linkStyle} ${
+                    isActive("/admin") ? activeLinkStyle : ""
+                  }`}
+                >
+                  Admin
+                </Link>
+              </div>
             )}
 
             <div className="w-24 text-center">
@@ -99,7 +94,6 @@ const Header: React.FC = () => {
 
         {/* Right Side Buttons */}
         <div className="flex items-center gap-2">
-
           {/* User Auth */}
           {user ? (
             <div className="flex items-center gap-4">
@@ -176,30 +170,26 @@ const Header: React.FC = () => {
               Home
             </Link>
 
-            {typedUser && (
-              <>
-                <Link
-                  href="/booking"
-                  className={`${linkStyle} ${
-                    isActive("/booking") ? activeLinkStyle : ""
-                  }`}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Services
-                </Link>
+            <Link
+              href="/services"
+              className={`${linkStyle} ${
+                isActive("/services") ? activeLinkStyle : ""
+              }`}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Services
+            </Link>
 
-                {typedUser.role === "ADMIN" && (
-                  <Link
-                    href="/admin"
-                    className={`${linkStyle} ${
-                      isActive("/admin") ? activeLinkStyle : ""
-                    }`}
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Admin
-                  </Link>
-                )}
-              </>
+            {typedUser && typedUser.role === "ADMIN" && (
+              <Link
+                href="/admin"
+                className={`${linkStyle} ${
+                  isActive("/admin") ? activeLinkStyle : ""
+                }`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Admin
+              </Link>
             )}
 
             <Link

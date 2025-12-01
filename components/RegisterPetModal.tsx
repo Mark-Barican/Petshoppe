@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Modal from "./Modal";
+import Dropdown from "./Dropdown";
 
 interface RegisterPetModalProps {
   isOpen: boolean;
@@ -187,19 +188,21 @@ const RegisterPetModal: React.FC<RegisterPetModalProps> = ({
             />
           </div>
 
-          <div className="relative">
-            <select
-              className="appearance-none w-full cursor-pointer rounded-xl text-[#0d1b12] focus:outline-0 focus:ring-2 focus:ring-[#13ec5b] border-[#cfe7d7] bg-[#f8fcf9] h-14 p-4 pr-10 text-base"
-              value={species}
-              onChange={(e) => setSpecies(e.target.value)}
-            >
-              <option value="">Select Species</option>
-              <option value="dog">Dog</option>
-              <option value="cat">Cat</option>
-              <option value="bird">Bird</option>
-              <option value="rabbit">Rabbit</option>
-              <option value="other">Other</option>
-            </select>
+          <div>
+            <Dropdown
+              options={[
+                { value: "", label: "Select Species" },
+                { value: "dog", label: "Dog" },
+                { value: "cat", label: "Cat" },
+                { value: "bird", label: "Bird" },
+                { value: "rabbit", label: "Rabbit" },
+                { value: "other", label: "Other" },
+              ]}
+              selectedValue={species}
+              onChange={setSpecies}
+              placeholder="Select Species"
+              className="w-full"
+            />
           </div>
 
           <div className="relative">
@@ -212,17 +215,19 @@ const RegisterPetModal: React.FC<RegisterPetModalProps> = ({
             />
           </div>
 
-          <div className="relative">
-            <select
-              className="appearance-none w-full cursor-pointer rounded-xl text-[#0d1b12] focus:outline-0 focus:ring-2 focus:ring-[#13ec5b] border-[#cfe7d7] bg-[#f8fcf9] h-14 p-4 pr-10 text-base"
-              value={sex}
-              onChange={(e) => setSex(e.target.value)}
-            >
-              <option value="">Select Sex</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-              <option value="unknown">Unknown</option>
-            </select>
+          <div>
+            <Dropdown
+              options={[
+                { value: "", label: "Select Sex" },
+                { value: "male", label: "Male" },
+                { value: "female", label: "Female" },
+                { value: "unknown", label: "Unknown" },
+              ]}
+              selectedValue={sex}
+              onChange={setSex}
+              placeholder="Select Sex"
+              className="w-full"
+            />
           </div>
 
           <div className="relative">

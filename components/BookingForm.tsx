@@ -11,6 +11,27 @@ const BookingForm: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [service, setService] = useState("");
   const [groomer, setGroomer] = useState("");
+
+  // Get initial service, groomer, date, and petId from URL parameters if available
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      const serviceParam = urlParams.get("service");
+      const groomerParam = urlParams.get("groomer");
+      const dateParam = urlParams.get("date");
+      const petIdParam = urlParams.get("petId");
+
+      if (serviceParam) setService(serviceParam);
+      if (groomerParam) setGroomer(groomerParam);
+      if (dateParam) {
+        const date = new Date(dateParam);
+        if (!isNaN(date.getTime())) {
+          setSelectedDate(date);
+        }
+      }
+      if (petIdParam) setPetId(petIdParam);
+    }
+  }, []);
   const [petId, setPetId] = useState<string>("");
   const [pets, setPets] = useState<any[]>([]);
   const [notes, setNotes] = useState("");

@@ -103,8 +103,8 @@ const HomePage: React.FC = () => {
           <button
             onClick={() => {
               if (user) {
-                // If logged in, redirect to booking/services page
-                window.location.href = "/booking";
+                // If logged in, redirect to services page
+                window.location.href = "/services";
               } else {
                 // If not logged in, open login modal
                 setIsLoginModalOpen(true);
