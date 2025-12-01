@@ -55,16 +55,18 @@ const Header: React.FC = () => {
               </Link>
             </div>
 
-            <div className="w-24 text-center">
-              <Link
-                href="/services"
-                className={`${linkStyle} ${
-                  isActive("/services") ? activeLinkStyle : ""
-                }`}
-              >
-                Services
-              </Link>
-            </div>
+            {typedUser && (
+              <div className="w-24 text-center">
+                <Link
+                  href="/services"
+                  className={`${linkStyle} ${
+                    isActive("/services") ? activeLinkStyle : ""
+                  }`}
+                >
+                  Services
+                </Link>
+              </div>
+            )}
 
             {typedUser && typedUser.role === "ADMIN" && (
               <div className="w-24 text-center">
@@ -170,15 +172,17 @@ const Header: React.FC = () => {
               Home
             </Link>
 
-            <Link
-              href="/services"
-              className={`${linkStyle} ${
-                isActive("/services") ? activeLinkStyle : ""
-              }`}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Services
-            </Link>
+            {typedUser && (
+              <Link
+                href="/services"
+                className={`${linkStyle} ${
+                  isActive("/services") ? activeLinkStyle : ""
+                }`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Services
+              </Link>
+            )}
 
             {typedUser && typedUser.role === "ADMIN" && (
               <Link
