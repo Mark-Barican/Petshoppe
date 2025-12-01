@@ -68,7 +68,7 @@ const allProducts: Product[] = [
     id: 9,
     name: "Flea & Tick Collar",
     price: 35.5,
-    imageUrl: "https://picsum.photos/seed/collar/300/300",
+    imageUrl: "httpsum.photos/seed/collar/300/300",
     category: "Accessories",
   },
   {
@@ -90,6 +90,7 @@ const ProductsPage: React.FC = () => {
   const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
   const { addToCart } = useCart();
 
+  // Toggle selecting products
   const handleToggleProduct = (productId: number) => {
     setSelectedProducts((prev) =>
       prev.includes(productId)
@@ -98,12 +99,19 @@ const ProductsPage: React.FC = () => {
     );
   };
 
+  // 🚀 NEW: Add real product objects to the cart
   const handleAddToCart = () => {
-    addToCart(selectedProducts.length);
-    alert(`Added ${selectedProducts.length} product(s) to cart!`);
+    const selectedItems = allProducts.filter((p) =>
+      selectedProducts.includes(p.id)
+    );
+
+    selectedItems.forEach((product) => addToCart(product));
+
+    alert(`Added ${selectedItems.length} product(s) to cart!`);
     setSelectedProducts([]);
   };
 
+  // Filtering logic
   const filteredProducts = useMemo(() => {
     return allProducts.filter((product) => {
       const matchesSearch = product.name
@@ -126,6 +134,8 @@ const ProductsPage: React.FC = () => {
   return (
     <div className="flex justify-center py-5">
       <div className="layout-content-container flex flex-col w-full max-w-[960px] flex-1 px-4">
+        
+        {/* Search Bar */}
         <div className="px-4 py-3">
           <label className="flex flex-col min-w-40 h-12 w-full">
             <div className="flex w-full flex-1 items-stretch rounded-lg h-full">
@@ -142,7 +152,9 @@ const ProductsPage: React.FC = () => {
           </label>
         </div>
 
+        {/* Filters */}
         <div className="flex gap-3 p-3 flex-wrap">
+          {/* Category Filter */}
           <div className="relative">
             <select
               onChange={(e) => setSelectedCategory(e.target.value)}
@@ -158,6 +170,8 @@ const ProductsPage: React.FC = () => {
               ▼
             </div>
           </div>
+
+          {/* Price Filter */}
           <div className="relative">
             <select
               onChange={(e) => setSelectedPrice(e.target.value)}
@@ -175,6 +189,7 @@ const ProductsPage: React.FC = () => {
           </div>
         </div>
 
+        {/* Product Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
           {filteredProducts.map((product) => (
             <ProductCard
@@ -186,6 +201,7 @@ const ProductsPage: React.FC = () => {
           ))}
         </div>
 
+        {/* Add To Cart Button (appears when items selected) */}
         {selectedProducts.length > 0 && (
           <div className="fixed bottom-5 right-5 z-40">
             <button
