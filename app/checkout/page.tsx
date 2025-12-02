@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useCart } from "../providers";
+import Dropdown from "../../components/Dropdown";
 
 export default function CheckoutPage() {
   const { cartItems, cartCount, clearCart, updateQuantity } = useCart();
@@ -40,9 +41,7 @@ export default function CheckoutPage() {
     return errors;
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -288,19 +287,20 @@ export default function CheckoutPage() {
               >
                 Country
               </label>
-              <select
-                id="country"
-                name="country"
-                value={formData.country}
-                onChange={handleChange}
-                required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-              >
-                <option value="Philippines">Philippines</option>
-                <option value="USA">United States</option>
-                <option value="Canada">Canada</option>
-                <option value="UK">United Kingdom</option>
-              </select>
+              <Dropdown
+                options={[
+                  { value: "Philippines", label: "Philippines" },
+                  { value: "USA", label: "United States" },
+                  { value: "Canada", label: "Canada" },
+                  { value: "UK", label: "United Kingdom" },
+                ]}
+                selectedValue={formData.country}
+                onChange={(value) =>
+                  setFormData((prev) => ({ ...prev, country: value }))
+                }
+                placeholder="Select a Country"
+                className="w-full"
+              />
             </div>
 
             <div className="mb-6">
@@ -313,7 +313,7 @@ export default function CheckoutPage() {
                     value="card"
                     checked={formData.paymentMethod === "card"}
                     onChange={handleChange}
-                    className="h-4 w-4 text-green-600 focus:ring-green-500"
+                    className="h-4 w-4 text-green-600 focus:ring-green-500 accent-green-600"
                   />
                   <span className="ml-2">Credit/Debit Card</span>
                 </label>
@@ -324,7 +324,7 @@ export default function CheckoutPage() {
                     value="paypal"
                     checked={formData.paymentMethod === "paypal"}
                     onChange={handleChange}
-                    className="h-4 w-4 text-green-600 focus:ring-green-500"
+                    className="h-4 w-4 text-green-600 focus:ring-green-500 accent-green-600"
                   />
                   <span className="ml-2">PayPal</span>
                 </label>
@@ -335,7 +335,7 @@ export default function CheckoutPage() {
                     value="cod"
                     checked={formData.paymentMethod === "cod"}
                     onChange={handleChange}
-                    className="h-4 w-4 text-green-600 focus:ring-green-500"
+                    className="h-4 w-4 text-green-600 focus:ring-green-500 accent-green-600"
                   />
                   <span className="ml-2">Cash on Delivery</span>
                 </label>
