@@ -9,6 +9,7 @@ import LoginModal from "./LoginModal";
 import RegisterModal from "./RegisterModal";
 import PetshoppeLogo from "./icons/PetshoppeLogo";
 import CartIcon from "./icons/CartIcon";
+import ClockIcon from "./icons/ClockIcon";
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -136,7 +137,17 @@ const Header: React.FC = () => {
             </>
           )}
 
-          {/*  CART ICON */}
+          {/* ORDER HISTORY */}
+          {user && (
+            <Link
+              href="/history"
+              className="relative flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-[#e7f3eb] text-[#0d1b12] gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5 mr-1"
+            >
+              <ClockIcon width="20" height="20" color="#0d1b12" />
+            </Link>
+          )}
+
+          {/* CART ICON */}
           <Link
             href="/checkout"
             className="relative flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-[#e7f3eb] text-[#0d1b12] gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5"
@@ -212,6 +223,14 @@ const Header: React.FC = () => {
                 <span className="text-sm text-[#0d1b12]">
                   Welcome, {typedUser.email}
                 </span>
+                <Link
+                  href="/history"
+                  className="bg-[#e7f3eb] text-[#0d1b12] text-sm font-medium leading-normal hover:bg-[#4c9a66] hover:text-white transition-colors px-4 py-2 rounded w-full text-center flex items-center justify-center gap-2"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <ClockIcon width="16" height="16" color="#0d1b12" />
+                  Order History
+                </Link>
                 <button
                   onClick={async () => {
                     try {

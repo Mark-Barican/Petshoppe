@@ -4,11 +4,18 @@ import { useState } from "react";
 import { useCart } from "../providers";
 import { useAuth } from "../../hooks/useAuth";
 import Dropdown from "../../components/Dropdown";
+import Modal from "../../components/Modal";
 
 export default function CheckoutPage() {
   const { user, loading } = useAuth();
   const { cartItems, cartCount, clearCart, updateQuantity } = useCart();
   const [isProcessing, setIsProcessing] = useState(false);
+  const [showModal, setShowModal] = useState({
+    isOpen: false,
+    title: "",
+    message: "",
+    type: "success" as "success" | "error", // success or error
+  });
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -56,9 +63,12 @@ export default function CheckoutPage() {
 
     const validationErrors = validateForm();
     if (validationErrors.length > 0) {
-      alert(
-        `Please fix the following errors:\n\n${validationErrors.join("\n- ")}`
-      );
+      setShowModal({
+        isOpen: true,
+        title: "Validation Errors",
+        message: validationErrors.join("\n- "),
+        type: "error",
+      });
       return;
     }
 
@@ -71,6 +81,7 @@ export default function CheckoutPage() {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({
           ...formData,
           items: cartItems,
@@ -81,27 +92,74 @@ export default function CheckoutPage() {
       });
 
       if (response.ok) {
-        alert("Payment Successful! 🐾 Thank you for your order!");
-        clearCart();
-        // Reset form after successful checkout
-        setFormData({
-          firstName: "",
-          lastName: "",
-          email: "",
-          phone: "",
-          address: "",
-          city: "",
-          state: "",
-          zipCode: "",
-          country: "Philippines",
-          paymentMethod: "card",
+        // Create order in database
+        const orderResponse = await fetch("/api/orders", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            ...formData,
+            items: cartItems,
+            total: total,
+            tax: total * 0.1,
+            finalTotal: total * 1.1,
+          }),
         });
+
+        if (orderResponse.ok) {
+          const orderData = await orderResponse.json();
+          setShowModal({
+            isOpen: true,
+            title: "Payment Successful!",
+            message:
+              "Thank you for your order! 🐾 Your payment has been processed successfully.",
+            type: "success",
+          });
+          clearCart();
+          // Reset form after successful checkout
+          setFormData({
+            firstName: "",
+            lastName: "",
+            email: "",
+            phone: "",
+            address: "",
+            city: "",
+            state: "",
+            zipCode: "",
+            country: "Philippines",
+            paymentMethod: "card",
+          });
+
+          // Close modal and redirect to order confirmation or history page after a short delay
+          setTimeout(() => {
+            setShowModal({
+              isOpen: false,
+              title: "",
+              message: "",
+              type: "success",
+            });
+            window.location.href = `/history/${orderData.id}`;
+          }, 2000); // Wait 2 seconds to show success message before redirecting
+        } else {
+          const errorData = await orderResponse.json();
+          console.error("Failed to save order:", errorData);
+          throw new Error(errorData.error || "Failed to save order");
+        }
       } else {
-        throw new Error("Failed to process order");
+        const errorData = await response.json();
+        console.error("Failed to process payment:", errorData);
+        throw new Error(errorData.error || "Failed to process payment");
       }
     } catch (error) {
       console.error("Checkout error:", error);
-      alert("There was an error processing your order. Please try again.");
+      setShowModal({
+        isOpen: true,
+        title: "Checkout Error",
+        message: "There was an error processing your order. Please try again.",
+        type: "error",
+      });
     } finally {
       setIsProcessing(false);
     }
@@ -127,6 +185,44 @@ export default function CheckoutPage() {
 
   return (
     <div className="p-4 md:p-6 max-w-6xl mx-auto">
+      {/* Modal for showing alerts */}
+      <Modal
+        isOpen={showModal.isOpen}
+        onClose={() =>
+          setShowModal({
+            isOpen: false,
+            title: "",
+            message: "",
+            type: "success",
+          })
+        }
+        title={showModal.title}
+      >
+        <div className="p-4">
+          <p
+            className={
+              showModal.type === "error" ? "text-red-600" : "text-green-600"
+            }
+          >
+            {showModal.message}
+          </p>
+          <div className="mt-6 flex justify-end">
+            <button
+              onClick={() =>
+                setShowModal({
+                  isOpen: false,
+                  title: "",
+                  message: "",
+                  type: "success",
+                })
+              }
+              className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      </Modal>
       <h1 className="text-2xl md:text-3xl font-bold mb-6">
         Checkout
         {!loading && (

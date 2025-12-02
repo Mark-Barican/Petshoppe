@@ -14,3 +14,22 @@ export interface Testimonial {
   review: string;
   avatarUrl: string;
 }
+
+export interface OrderItem {
+  id: number;
+  orderId: number;
+  productId: number;
+  quantity: number;
+  price: number;
+  product: Product;
+}
+
+export interface Order {
+  id: number;
+  userId: number;
+  total: number;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  items: OrderItem[];
+}
