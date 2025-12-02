@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import { useCart } from "../providers";
+import { useAuth } from "../../hooks/useAuth";
 import Dropdown from "../../components/Dropdown";
 
 export default function CheckoutPage() {
+  const { user, loading } = useAuth();
   const { cartItems, cartCount, clearCart, updateQuantity } = useCart();
   const [isProcessing, setIsProcessing] = useState(false);
   const [formData, setFormData] = useState({
@@ -125,7 +127,14 @@ export default function CheckoutPage() {
 
   return (
     <div className="p-4 md:p-6 max-w-6xl mx-auto">
-      <h1 className="text-2xl md:text-3xl font-bold mb-6">Checkout</h1>
+      <h1 className="text-2xl md:text-3xl font-bold mb-6">
+        Checkout
+        {!loading && (
+          <span className="ml-2 font-bold">
+            ({user ? user.name || user.email.split("@")[0] : "Guest"})
+          </span>
+        )}
+      </h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
         {/* Checkout Form */}
