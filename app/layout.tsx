@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import CartNotificationWrapper from "../components/CartNotificationWrapper";
 import { CartProvider } from "./providers";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -23,7 +24,8 @@ export default function RootLayout({
         <CartProvider>
           <div className="relative flex min-h-screen w-full flex-col bg-[#f8fcf9] text-[#0d1b12] group/design-root overflow-x-hidden">
             <Header />
-            <main className="flex-grow">{children}</main>
+            <CartNotificationWrapper />
+            <main className="flex-grow pt-16">{children}</main>
             <Footer />
           </div>
         </CartProvider>

@@ -32,7 +32,7 @@ const Header: React.FC = () => {
   const isActive = (path: string) => pathname === path;
 
   return (
-    <header className="sticky top-0 z-50 bg-[#f8fcf9]/80 backdrop-blur-sm border-b-2 border-solid border-b-gray-300">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-[#f8fcf9]/80 backdrop-blur-sm border-b-2 border-solid border-b-gray-300">
       <div className="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#e7f3eb] px-4 sm:px-10 py-3">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-4 text-[#0d1b12]">
@@ -141,30 +141,32 @@ const Header: React.FC = () => {
           {user && (
             <Link
               href="/history"
-              className="relative flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-[#e7f3eb] text-[#0d1b12] gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5 mr-1"
+              className="relative flex max-w-[480px] cursor-pointer items-center justify-center rounded-lg h-10 bg-[#e7f3eb] text-[#0d1b12] gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-4 mr-1 overflow-visible"
             >
               <ClockIcon width="20" height="20" color="#0d1b12" />
             </Link>
           )}
 
           {/* CART ICON */}
-          <Link
-            href="/checkout"
-            className="relative flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-[#e7f3eb] text-[#0d1b12] gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5"
-          >
-            <CartIcon width="20" height="20" color="#0d1b12" />
+          <div className="relative">
+            <Link
+              href="/checkout"
+              className="relative flex max-w-[480px] cursor-pointer items-center justify-center rounded-lg h-10 bg-[#e7f3eb] text-[#0d1b12] gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-4 overflow-visible"
+            >
+              <CartIcon width="20" height="20" color="#0d1b12" />
 
-            {cartCount > 0 && (
-              <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#13ec5b] text-xs font-bold text-[#0d1b12]">
-                {cartCount}
-              </span>
-            )}
-          </Link>
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[1.25rem] h-5 px-1 rounded-full bg-[#13ec5b] text-xs font-bold text-[#0d1b12]">
+                  {cartCount}
+                </span>
+              )}
+            </Link>
+          </div>
 
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-[#e7f3eb] text-[#0d1b12] gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5"
+            className="md:hidden flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-[#e7f3eb] text-[#0d1b12] gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-4"
           >
             {isMenuOpen ? "Close" : "Menu"}
           </button>

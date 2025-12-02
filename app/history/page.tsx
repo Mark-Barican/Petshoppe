@@ -8,6 +8,7 @@ export default function OrderHistoryPage() {
   const { user, loading } = useAuth();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loadingOrders, setLoadingOrders] = useState(true);
+  const [hasLoadedOrders, setHasLoadedOrders] = useState(false);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -26,6 +27,7 @@ export default function OrderHistoryPage() {
           console.error("Error fetching orders:", error);
         } finally {
           setLoadingOrders(false);
+          setHasLoadedOrders(true);
         }
       } else {
         setLoadingOrders(false);
@@ -64,7 +66,7 @@ export default function OrderHistoryPage() {
     );
   }
 
-  if (orders.length === 0) {
+  if (orders.length === 0 && !loadingOrders && hasLoadedOrders) {
     return (
       <div className="p-4 md:p-6 max-w-6xl mx-auto">
         <h1 className="text-2xl md:text-3xl font-bold mb-6">Order History</h1>
@@ -132,7 +134,7 @@ export default function OrderHistoryPage() {
                   key={item.id}
                   className="flex items-center border-b pb-4 last:border-0 last:pb-0"
                 >
-                  <div className="w-16 h-16 bg-gray-200 rounded-md mr-4 flex items-center justify-center">
+                  <div className="w-16 h-16 bg-gray-20 rounded-md mr-4 flex items-center justify-center">
                     <span className="text-gray-500 text-xs">Image</span>
                   </div>
                   <div className="flex-1">

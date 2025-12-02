@@ -101,7 +101,12 @@ export default function CheckoutPage() {
           credentials: "include",
           body: JSON.stringify({
             ...formData,
-            items: cartItems,
+            items: cartItems.map((item) => ({
+              id: item.id, // database product ID
+              quantity: item.quantity,
+              price: item.price,
+              name: item.name, // for reference only
+            })),
             total: total,
             tax: total * 0.1,
             finalTotal: total * 1.1,
@@ -456,7 +461,9 @@ export default function CheckoutPage() {
                   : "bg-green-600 hover:bg-green-700"
               } transition-colors duration-300`}
             >
-              {isProcessing ? "Processing..." : `Pay $${total.toFixed(2)}`}
+              {isProcessing
+                ? "Processing..."
+                : `Pay $${(total * 1.1).toFixed(2)}`}
             </button>
           </form>
         </div>

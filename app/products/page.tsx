@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import type { Product } from "../../types";
 import ProductCard from "../../components/ProductCard";
 import Dropdown from "../../components/Dropdown";
@@ -8,99 +8,6 @@ import PriceRangeFilter from "../../components/PriceRangeFilter";
 
 // Use the global cart context from providers
 import { useCart } from "../../app/providers";
-
-const allProducts: Product[] = [
-  {
-    id: 1,
-    name: "Luxury Shampoo",
-    price: 19.99,
-    imageUrl: "",
-    category: "Grooming",
-    description:
-      "Premium shampoo for pets with sensitive skin. Contains natural ingredients that nourish and protect your pet's coat.",
-  },
-  {
-    id: 2,
-    name: "Grooming Brush",
-    price: 14.99,
-    imageUrl: "",
-    category: "Grooming",
-    description:
-      "Ergonomic brush designed to remove loose fur and distribute natural oils for a healthy, shiny coat.",
-  },
-  {
-    id: 3,
-    name: "Nail Clippers",
-    price: 9.9,
-    imageUrl: "",
-    category: "Grooming",
-    description:
-      "Precision nail clippers with safety guard to prevent over-cutting. Ideal for pets of all sizes.",
-  },
-  {
-    id: 4,
-    name: "Pet Perfume",
-    price: 24.99,
-    imageUrl: "",
-    category: "Care",
-    description:
-      "Gentle, long-lasting fragrance specifically formulated for pets. Made with pet-safe ingredients.",
-  },
-  {
-    id: 5,
-    name: "Coat Conditioner",
-    price: 17.99,
-    imageUrl: "",
-    category: "Care",
-    description:
-      "Deep conditioning treatment that detangles and moisturizes your pet's fur, leaving it soft and manageable.",
-  },
-  {
-    id: 6,
-    name: "Ear Cleaning Solution",
-    price: 12.99,
-    imageUrl: "",
-    category: "Care",
-    description:
-      "Gentle solution for cleaning and maintaining healthy ears. Safe for regular use to prevent infections.",
-  },
-  {
-    id: 7,
-    name: "Dental Care Kit",
-    price: 29.99,
-    imageUrl: "",
-    category: "Care",
-    description:
-      "Complete dental care kit including toothbrush and toothpaste to maintain your pet's oral hygiene.",
-  },
-  {
-    id: 8,
-    name: "Paw Balm",
-    price: 11.99,
-    imageUrl: "",
-    category: "Care",
-    description:
-      "Nourishing balm to soothe and protect your pet's paws from dryness and cracking.",
-  },
-  {
-    id: 9,
-    name: "Flea & Tick Collar",
-    price: 35.5,
-    imageUrl: "",
-    category: "Accessories",
-    description:
-      "Long-lasting protection against fleas and ticks. Waterproof and safe for daily wear.",
-  },
-  {
-    id: 10,
-    name: "Plush Toy",
-    price: 8.9,
-    imageUrl: "",
-    category: "Accessories",
-    description:
-      "Soft and durable plush toy designed for safe play. Perfect for interactive games with your pet.",
-  },
-];
 
 const categories = [
   { value: "All", label: "All Categories" },
@@ -110,13 +17,36 @@ const categories = [
 ];
 
 const ProductsPage: React.FC = () => {
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [priceRange, setPriceRange] = useState({
-    min: Math.min(...allProducts.map((p) => p.price)),
-    max: Math.max(...allProducts.map((p) => p.price)),
-  });
+  const [priceRange, setPriceRange] = useState({ min: 0, max: 100 });
   const { addToCart } = useCart();
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch("/api/products");
+        if (response.ok) {
+          const products = await response.json();
+          setAllProducts(products);
+
+          // Update price range based on fetched products
+          if (products.length > 0) {
+            const min = Math.min(...products.map((p: Product) => p.price));
+            const max = Math.max(...products.map((p: Product) => p.price));
+            setPriceRange({ min, max });
+          }
+        } else {
+          console.error("Failed to fetch products");
+        }
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   // Filtering logic
   const filteredProducts = useMemo(() => {
@@ -131,7 +61,7 @@ const ProductsPage: React.FC = () => {
 
       return matchesSearch && matchesCategory && matchesPrice;
     });
-  }, [searchQuery, selectedCategory, priceRange]);
+  }, [searchQuery, selectedCategory, priceRange, allProducts]);
 
   return (
     <div className="py-8">

@@ -12,29 +12,53 @@ type CartContextType = {
   removeFromCart: (productId: number) => void;
   updateQuantity: (productId: number, quantity: number) => void;
   clearCart: () => void;
+  notifications: Array<{
+    id: string;
+    productName: string;
+    isVisible: boolean;
+  }>;
+  addNotification: (productName: string) => void;
+  removeNotification: (id: string) => void;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [notifications, setNotifications] = useState<
+    Array<{
+      id: string;
+      productName: string;
+      isVisible: boolean;
+    }>
+  >([]);
 
   const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
   const addToCart = (product: Product) => {
-    setCartItems((prev) => {
-      const existing = prev.find((item) => item.id === product.id);
+    // Check if product already exists in cart
+    const existing = cartItems.find((item) => item.id === product.id);
 
-      if (existing) {
-        return prev.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      }
+    if (existing) {
+      // Product already exists in cart, don't add it again
+      return;
+    }
 
-      return [...prev, { ...product, quantity: 1 }];
-    });
+    // Add notification first
+    const notificationId =
+      Date.now().toString() + Math.random().toString(36).substr(2, 9);
+    setNotifications((prev) => [
+      ...prev,
+      { id: notificationId, productName: product.name, isVisible: true },
+    ]);
+
+    // Remove notification after 2 seconds
+    setTimeout(() => {
+      setNotifications((prev) => prev.filter((n) => n.id !== notificationId));
+    }, 2000); // Hide after 2 seconds
+
+    // Then update cart
+    setCartItems((prev) => [...prev, { ...product, quantity: 1 }]);
   };
 
   const removeFromCart = (productId: number) => {
@@ -63,6 +87,25 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         removeFromCart,
         updateQuantity,
         clearCart,
+        notifications,
+        addNotification: (productName: string) => {
+          const notificationId =
+            Date.now().toString() + Math.random().toString(36).substr(2, 9);
+          setNotifications((prev) => [
+            ...prev,
+            { id: notificationId, productName, isVisible: true },
+          ]);
+
+          // Remove notification after 2 seconds
+          setTimeout(() => {
+            setNotifications((prev) =>
+              prev.filter((n) => n.id !== notificationId)
+            );
+          }, 2000);
+        },
+        removeNotification: (id: string) => {
+          setNotifications((prev) => prev.filter((n) => n.id !== id));
+        },
       }}
     >
       {children}

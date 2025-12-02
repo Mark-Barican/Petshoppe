@@ -85,14 +85,18 @@ export async function POST(request: NextRequest) {
         status: "PAID", // Since payment is processed in checkout
         items: {
           create: items.map((item: any) => ({
-            productId: item.id,
+            productId: item.id, // This should be the database product ID
             quantity: item.quantity,
             price: item.price,
           })),
         },
       },
       include: {
-        items: true,
+        items: {
+          include: {
+            product: true,
+          },
+        },
       },
     });
 

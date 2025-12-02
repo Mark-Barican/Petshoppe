@@ -134,12 +134,12 @@ export default function OrderDetailsPage({
               key={item.id}
               className="flex items-center border-b pb-4 last:border-0 last:pb-0"
             >
-              <div className="w-16 h-16 bg-gray-200 rounded-md mr-4 flex items-center justify-center">
+              <div className="w-16 h-16 bg-gray-20 rounded-md mr-4 flex items-center justify-center">
                 <span className="text-gray-500 text-xs">Image</span>
               </div>
               <div className="flex-1">
                 <h3 className="font-medium">{item.product.name}</h3>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-gray-50">
                   Price: ${item.price.toFixed(2)}
                 </p>
               </div>
