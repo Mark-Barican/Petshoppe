@@ -261,15 +261,17 @@ export default function GroomersPage() {
           </Link>
         </div>
 
-        {/* Title */}
-        <h1 className="text-[#0d1b12] text-3xl font-bold leading-tight px-4 pb-3 pt-2 text-center">
-          Meet Our Professional Groomers
-        </h1>
-        <p className="text-center text-gray-600 px-4 pb-6 max-w-2xl">
-          Our experienced groomers are passionate about caring for your pets.
-          Each professional has been carefully selected for their expertise and
-          love for animals.
-        </p>
+        {/* Title and Description */}
+        <div className="text-center px-4 pb-6">
+          <h1 className="text-[#0d1b12] text-3xl font-bold leading-tight pb-3 pt-2">
+            Meet Our Professional Groomers
+          </h1>
+          <p className="text-gray-600 max-w-2xl mx-auto">
+            Our experienced groomers are passionate about caring for your pets.
+            Each professional has been carefully selected for their expertise
+            and love for animals.
+          </p>
+        </div>
 
         {/* Loading */}
         {loading && (
@@ -304,7 +306,7 @@ export default function GroomersPage() {
 
         {/* Groomers grid */}
         {!loading && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4">
             {groomers.map((groomer) => (
               <div
                 key={groomer.name}
