@@ -310,7 +310,7 @@ export default function GroomersPage() {
             {groomers.map((groomer) => (
               <div
                 key={groomer.name}
-                className="flex flex-col gap-4 p-6 border border-gray-100 rounded-xl bg-gradient-to-br from-white to-gray-50 shadow-sm relative overflow-hidden"
+                className="flex flex-col gap-4 p-6 border border-gray-300 rounded-xl bg-gradient-to-br from-white to-gray-50 shadow-sm relative overflow-hidden"
               >
                 <div className="flex items-center gap-4">
                   <div className="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16 flex items-center justify-center">
