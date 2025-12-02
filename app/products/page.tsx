@@ -14,71 +14,91 @@ const allProducts: Product[] = [
     id: 1,
     name: "Luxury Shampoo",
     price: 19.99,
-    imageUrl: "https://picsum.photos/seed/shampoo/300/300",
+    imageUrl: "",
     category: "Grooming",
+    description:
+      "Premium shampoo for pets with sensitive skin. Contains natural ingredients that nourish and protect your pet's coat.",
   },
   {
     id: 2,
     name: "Grooming Brush",
     price: 14.99,
-    imageUrl: "https://picsum.photos/seed/brush/300/300",
+    imageUrl: "",
     category: "Grooming",
+    description:
+      "Ergonomic brush designed to remove loose fur and distribute natural oils for a healthy, shiny coat.",
   },
   {
     id: 3,
     name: "Nail Clippers",
     price: 9.9,
-    imageUrl: "https://picsum.photos/seed/clippers/300/300",
+    imageUrl: "",
     category: "Grooming",
+    description:
+      "Precision nail clippers with safety guard to prevent over-cutting. Ideal for pets of all sizes.",
   },
   {
     id: 4,
     name: "Pet Perfume",
     price: 24.99,
-    imageUrl: "https://picsum.photos/seed/perfume/300/300",
+    imageUrl: "",
     category: "Care",
+    description:
+      "Gentle, long-lasting fragrance specifically formulated for pets. Made with pet-safe ingredients.",
   },
   {
     id: 5,
     name: "Coat Conditioner",
     price: 17.99,
-    imageUrl: "https://picsum.photos/seed/conditioner/300/300",
+    imageUrl: "",
     category: "Care",
+    description:
+      "Deep conditioning treatment that detangles and moisturizes your pet's fur, leaving it soft and manageable.",
   },
   {
     id: 6,
     name: "Ear Cleaning Solution",
     price: 12.99,
-    imageUrl: "https://picsum.photos/seed/ear/300/300",
+    imageUrl: "",
     category: "Care",
+    description:
+      "Gentle solution for cleaning and maintaining healthy ears. Safe for regular use to prevent infections.",
   },
   {
     id: 7,
     name: "Dental Care Kit",
     price: 29.99,
-    imageUrl: "https://picsum.photos/seed/dental/300/300",
+    imageUrl: "",
     category: "Care",
+    description:
+      "Complete dental care kit including toothbrush and toothpaste to maintain your pet's oral hygiene.",
   },
   {
     id: 8,
     name: "Paw Balm",
     price: 11.99,
-    imageUrl: "https://picsum.photos/seed/paw/300/300",
+    imageUrl: "",
     category: "Care",
+    description:
+      "Nourishing balm to soothe and protect your pet's paws from dryness and cracking.",
   },
   {
     id: 9,
     name: "Flea & Tick Collar",
     price: 35.5,
-    imageUrl: "httpsum.photos/seed/collar/300/300",
+    imageUrl: "",
     category: "Accessories",
+    description:
+      "Long-lasting protection against fleas and ticks. Waterproof and safe for daily wear.",
   },
   {
     id: 10,
     name: "Plush Toy",
     price: 8.9,
-    imageUrl: "https://picsum.photos/seed/toy/300/300",
+    imageUrl: "",
     category: "Accessories",
+    description:
+      "Soft and durable plush toy designed for safe play. Perfect for interactive games with your pet.",
   },
 ];
 
@@ -96,28 +116,7 @@ const ProductsPage: React.FC = () => {
     min: Math.min(...allProducts.map((p) => p.price)),
     max: Math.max(...allProducts.map((p) => p.price)),
   });
-  const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
   const { addToCart } = useCart();
-  // Toggle selecting products
-  const handleToggleProduct = (productId: number) => {
-    setSelectedProducts((prev) =>
-      prev.includes(productId)
-        ? prev.filter((id) => id !== productId)
-        : [...prev, productId]
-    );
-  };
-
-  // 🚀 NEW: Add real product objects to the cart
-  const handleAddToCart = () => {
-    const selectedItems = allProducts.filter((p) =>
-      selectedProducts.includes(p.id)
-    );
-
-    selectedItems.forEach((product) => addToCart(product));
-
-    alert(`Added ${selectedItems.length} product(s) to cart!`);
-    setSelectedProducts([]);
-  };
 
   // Filtering logic
   const filteredProducts = useMemo(() => {
@@ -135,70 +134,77 @@ const ProductsPage: React.FC = () => {
   }, [searchQuery, selectedCategory, priceRange]);
 
   return (
-    <div className="flex justify-center py-5">
-      <div className="layout-content-container flex flex-col w-full max-w-[960px] flex-1 px-4">
-        {/* Search Bar */}
-        <div className="px-4 py-3">
-          <label className="flex flex-col min-w-40 h-12 w-full">
-            <div className="flex w-full flex-1 items-stretch rounded-lg h-full">
-              <div className="text-[#4c9a66] flex border-none bg-[#e7f3eb] items-center justify-center pl-4 rounded-l-lg border-r-0">
-                🔍
-              </div>
-              <input
-                placeholder="Search for products"
-                className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-r-lg text-[#0d1b12] focus:outline-0 focus:ring-0 border-none bg-[#e7f3eb] h-full placeholder:text-[#4c9a66] px-4 text-base font-normal leading-normal"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-          </label>
+    <div className="py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-10">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Our Products
+          </h1>
+          <p className="text-gray-600 max-w-2xl mx-auto">
+            Discover our premium selection of pet care products designed to keep
+            your furry friends happy and healthy.
+          </p>
         </div>
 
-        {/* Filters */}
-        <div className="flex gap-3 p-3 flex-wrap">
-          {/* Category Filter */}
-          <div className="w-48">
-            <Dropdown
-              options={categories}
-              selectedValue={selectedCategory}
-              onChange={setSelectedCategory}
-              placeholder="Category"
-            />
-          </div>
+        {/* Search Bar and Filters */}
+        <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
+          <div className="flex flex-col md:flex-row gap-4">
+            {/* Search Bar */}
+            <div className="flex-1">
+              <label className="flex flex-col w-full">
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                    🔍
+                  </div>
+                  <input
+                    placeholder="Search for products..."
+                    className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                </div>
+              </label>
+            </div>
 
-          {/* Price Range Filter */}
-          <div className="w-80">
-            <PriceRangeFilter
-              minPrice={priceRange.min}
-              maxPrice={priceRange.max}
-              onPriceChange={(min, max) => setPriceRange({ min, max })}
-            />
+            {/* Filters */}
+            <div className="flex gap-4">
+              {/* Category Filter */}
+              <div className="w-48">
+                <Dropdown
+                  options={categories}
+                  selectedValue={selectedCategory}
+                  onChange={setSelectedCategory}
+                  placeholder="Category"
+                />
+              </div>
+
+              {/* Price Range Filter */}
+              <div className="w-64">
+                <PriceRangeFilter
+                  minPrice={priceRange.min}
+                  maxPrice={priceRange.max}
+                  onPriceChange={(min, max) => setPriceRange({ min, max })}
+                />
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Product Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredProducts.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              isSelected={selectedProducts.includes(product.id)}
-              onToggleSelect={() => handleToggleProduct(product.id)}
-            />
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
 
-        {/* Add To Cart Button (appears when items selected) */}
-        {selectedProducts.length > 0 && (
-          <div className="fixed bottom-5 right-5 z-40">
-            <button
-              onClick={handleAddToCart}
-              className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-[#13ec5b] text-[#0d1b12] text-sm font-bold leading-normal tracking-[0.015em] shadow-lg hover:opacity-90 transition-opacity"
-            >
-              <span className="truncate">
-                Add {selectedProducts.length} to Cart
-              </span>
-            </button>
+        {filteredProducts.length === 0 && (
+          <div className="text-center py-12">
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              No products found
+            </h3>
+            <p className="text-gray-500">
+              Try adjusting your search or filter criteria
+            </p>
           </div>
         )}
       </div>
