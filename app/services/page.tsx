@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import Dropdown from "../../components/Dropdown";
 import Calendar from "../../components/Calendar";
 import RegisterPetModal from "../../components/RegisterPetModal";
@@ -28,20 +29,36 @@ const DEFAULT_GROOMER_OPTIONS = [
 ];
 
 const ServicesPage: React.FC = () => {
+  const { user, loading } = useAuth();
   const [selectedService, setSelectedService] = useState("");
   const [selectedGroomer, setSelectedGroomer] = useState("");
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [petId, setPetId] = useState<string>("");
   const [pets, setPets] = useState<any[]>([]);
+  const [petsLoading, setPetsLoading] = useState(true);
   const [isRegisterPetModalOpen, setIsRegisterPetModalOpen] = useState(false);
   const [serviceOptions, setServiceOptions] = useState(DEFAULT_SERVICE_OPTIONS);
   const [groomerOptions, setGroomerOptions] = useState(DEFAULT_GROOMER_OPTIONS);
-  const { user } = useAuth();
+
+  // Check URL for pre-selected groomer
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      const groomerParam = urlParams.get("groomer");
+
+      if (groomerParam) {
+        // If groomer is in URL, update state and add to options if not already there
+        setSelectedGroomer(groomerParam);
+        addNewGroomerOption(groomerParam, groomerParam);
+      }
+    }
+  }, []);
 
   // Fetch user's pets when user is authenticated
   useEffect(() => {
     const fetchPets = async () => {
       if (user) {
+        setPetsLoading(true);
         try {
           const response = await fetch("/api/pets");
           if (response.ok) {
@@ -50,9 +67,12 @@ const ServicesPage: React.FC = () => {
           }
         } catch (error) {
           console.error("Error fetching pets:", error);
+        } finally {
+          setPetsLoading(false);
         }
       } else {
         setPets([]);
+        setPetsLoading(false);
         setPetId("");
       }
     };
@@ -111,106 +131,133 @@ const ServicesPage: React.FC = () => {
 
   return (
     <div className="flex justify-center py-5">
-      <div className="layout-content-container flex flex-col items-center max-w-[960px] flex-1 px-4">
-        <h2 className="text-[#0d1b12] tracking-light text-[28px] font-bold leading-tight text-center pb-3 pt-5">
-          Our Services
-        </h2>
+      {loading ? (
+        <div className="flex justify-center items-center min-h-screen text-lg font-semibold">
+          Checking session...
+        </div>
+      ) : (
+        <div className="layout-content-container flex flex-col items-center max-w-[960px] flex-1 px-4">
+          <h2 className="text-[#0d1b12] tracking-light text-[28px] font-bold leading-tight text-center pb-3 pt-5">
+            Our Services
+          </h2>
 
-        <div className="w-full max-w-md space-y-6 py-8">
-          {user && (
-            <div className="py-3 flex justify-center">
-              <button
-                onClick={() => setIsRegisterPetModalOpen(true)}
-                className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-12 px-8 bg-[#13ec5b] text-[#0d1b12] text-sm font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-opacity"
-              >
-                Register Pet
-              </button>
-            </div>
-          )}
+          <div className="w-full max-w-md space-y-6 py-8">
+            {user && (
+              <div className="py-3 flex justify-center">
+                <button
+                  onClick={() => setIsRegisterPetModalOpen(true)}
+                  className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-12 px-8 bg-[#13ec5b] text-[#0d1b12] text-sm font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-opacity"
+                >
+                  Register Pet
+                </button>
+              </div>
+            )}
 
-          {/* Pet Selection */}
-          {user && (
+            {/* Pet Selection */}
+            {user && (
+              <div>
+                <h3 className="text-[#0d1b12] text-lg font-semibold mb-3">
+                  Select a Pet
+                </h3>
+                <Dropdown
+                  options={[
+                    {
+                      value: "",
+                      label: petsLoading
+                        ? "Select a Pet"
+                        : pets.length > 0
+                        ? "Select a Pet"
+                        : "No pets registered",
+                    },
+                    ...pets.map((pet) => ({
+                      value: pet.id,
+                      label: `${pet.name} (${pet.species || "Pet"})`,
+                    })),
+                  ]}
+                  selectedValue={petId}
+                  onChange={setPetId}
+                  placeholder={
+                    petsLoading
+                      ? "Select a Pet"
+                      : pets.length > 0
+                      ? "Select a Pet"
+                      : "No pets registered"
+                  }
+                  className="w-full"
+                />
+              </div>
+            )}
+
             <div>
               <h3 className="text-[#0d1b12] text-lg font-semibold mb-3">
-                Select a Pet
+                Pet Services
               </h3>
               <Dropdown
-                options={[
-                  {
-                    value: "",
-                    label:
-                      pets.length > 0 ? "Select a Pet" : "No pets registered",
-                  },
-                  ...pets.map((pet) => ({
-                    value: pet.id,
-                    label: `${pet.name} (${pet.species || "Pet"})`,
-                  })),
-                ]}
-                selectedValue={petId}
-                onChange={setPetId}
-                placeholder={
-                  pets.length > 0 ? "Select a Pet" : "No pets registered"
-                }
+                options={serviceOptions}
+                selectedValue={selectedService}
+                onChange={setSelectedService}
+                placeholder="Select a Service"
                 className="w-full"
               />
             </div>
-          )}
 
-          <div>
-            <h3 className="text-[#0d1b12] text-lg font-semibold mb-3">
-              Pet Services
-            </h3>
-            <Dropdown
-              options={serviceOptions}
-              selectedValue={selectedService}
-              onChange={setSelectedService}
-              placeholder="Select a Service"
-              className="w-full"
-            />
+            <div>
+              <h3 className="text-[#0d1b12] text-lg font-semibold mb-3">
+                Groomer Selection
+              </h3>
+              <div className="flex flex-col gap-2">
+                <Dropdown
+                  options={groomerOptions}
+                  selectedValue={selectedGroomer}
+                  onChange={setSelectedGroomer}
+                  placeholder="Select a Groomer"
+                  className="w-full"
+                />
+                <div className="mt-2 text-center">
+                  <Link
+                    href="/groomers"
+                    className="text-[#4c9a66] font-bold hover:underline"
+                  >
+                    Check out our Groomers {"->"}
+                  </Link>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div>
-            <h3 className="text-[#0d1b12] text-lg font-semibold mb-3">
-              Groomer Selection
-            </h3>
-            <Dropdown
-              options={groomerOptions}
-              selectedValue={selectedGroomer}
-              onChange={setSelectedGroomer}
-              placeholder="Select a Groomer"
-              className="w-full"
-            />
+          <Calendar
+            selectedDate={selectedDate}
+            onDateSelect={setSelectedDate}
+          />
+
+          <div className="py-3">
+            <button
+              onClick={handleBookingRedirect}
+              className="flex min-w-[120px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-12 px-8 bg-[#13ec5b] text-[#0d1b12] text-sm font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-opacity"
+            >
+              <span className="truncate">Book Appointment</span>
+            </button>
+          </div>
+
+          <div className="mt-8 text-center text-[#4c9a66]">
+            <p className="text-base font-medium">
+              Our professional groomers provide top-quality care for your pets
+            </p>
+            <p className="text-sm mt-2">
+              All services include a complimentary consultation
+            </p>
           </div>
         </div>
+      )}
 
-        <Calendar selectedDate={selectedDate} onDateSelect={setSelectedDate} />
-
-        <div className="py-3">
-          <button
-            onClick={handleBookingRedirect}
-            className="flex min-w-[120px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-12 px-8 bg-[#13ec5b] text-[#0d1b12] text-sm font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-opacity"
-          >
-            <span className="truncate">Book Appointment</span>
-          </button>
-        </div>
-
-        <div className="mt-8 text-center text-[#4c9a66]">
-          <p className="text-base font-medium">
-            Our professional groomers provide top-quality care for your pets
-          </p>
-          <p className="text-sm mt-2">
-            All services include a complimentary consultation
-          </p>
-        </div>
-      </div>
-
-      {isRegisterPetModalOpen && (
+      {isRegisterPetModalOpen && !loading && (
         <RegisterPetModal
           isOpen={isRegisterPetModalOpen}
           onClose={() => setIsRegisterPetModalOpen(false)}
           onPetRegistered={async () => {
             // Refresh pets after registration
             if (user) {
+              setPetsLoading(true);
               try {
                 const response = await fetch("/api/pets");
                 if (response.ok) {
@@ -219,6 +266,8 @@ const ServicesPage: React.FC = () => {
                 }
               } catch (error) {
                 console.error("Error refreshing pets:", error);
+              } finally {
+                setPetsLoading(false);
               }
             }
             setIsRegisterPetModalOpen(false);
