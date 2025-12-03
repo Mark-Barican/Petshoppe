@@ -128,6 +128,10 @@ const BookingForm: React.FC = () => {
 
       alert("Appointment booked successfully!");
 
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("appointments:refresh"));
+      }
+
       // Reset form
       setService("");
       setGroomer("");
