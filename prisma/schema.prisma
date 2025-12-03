@@ -26,6 +26,7 @@ model User {
   orders    Order[]
   pets      Pet[]
   reviews   Review[]
+  appointments Appointment[]
 }
 
 model Groomer {
@@ -73,6 +74,7 @@ model Pet {
 model Appointment {
   id        Int               @id @default(autoincrement())
   petId     Int?
+  userId    Int?
   status    AppointmentStatus @default(SCHEDULED)
   notes     String?
   createdAt DateTime          @default(now())
@@ -84,6 +86,9 @@ model Appointment {
 
   // Relations
   pet       Pet?              @relation(fields: [petId], references: [id])
+  user      User?             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model Product {

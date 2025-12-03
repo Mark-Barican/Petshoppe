@@ -7,6 +7,25 @@ export interface Product {
   description?: string;
 }
 
+export interface AppointmentPetInfo {
+  id: number;
+  name: string;
+  species?: string | null;
+  breed?: string | null;
+}
+
+export interface Appointment {
+  id: number;
+  service: string;
+  groomer: string;
+  date: string;
+  status: string;
+  notes?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  pet?: AppointmentPetInfo | null;
+}
+
 export interface Testimonial {
   name: string;
   time: string;
