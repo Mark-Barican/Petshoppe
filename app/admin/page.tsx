@@ -32,6 +32,11 @@ interface Appointment {
     name: string;
     species: string;
     breed: string;
+    owner?: {
+      id: number;
+      name: string | null;
+      email: string;
+    };
   };
   user?: {
     id: number;
