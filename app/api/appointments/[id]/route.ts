@@ -183,11 +183,12 @@ export async function PUT(
             name: true,
             species: true,
             breed: true,
-          owner: {
-            select: {
-              id: true,
-              name: true,
-              email: true,
+            owner: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+              },
             },
           },
         },
