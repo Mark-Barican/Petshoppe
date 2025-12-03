@@ -2,8 +2,7 @@ import { NextRequest } from "next/server";
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
 import { prisma } from "../../../../lib/prisma";
-
-const JWT_SECRET = process.env.JWT_SECRET!;
+import { getJwtSecret } from "@/lib/env";
 
 export async function GET(
   request: NextRequest,
@@ -15,7 +14,12 @@ export async function GET(
       return new Response("Unauthorized", { status: 401 });
     }
 
-    const decoded = jwt.verify(token, JWT_SECRET) as {
+    const jwtSecret = getJwtSecret();
+    if (!jwtSecret) {
+      return new Response("Server configuration error", { status: 500 });
+    }
+
+    const decoded = jwt.verify(token, jwtSecret) as {
       id: number;
       email?: string;
       role?: string;

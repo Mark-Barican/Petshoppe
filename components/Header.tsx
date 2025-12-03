@@ -17,7 +17,7 @@ const Header: React.FC = () => {
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const pathname = usePathname();
   const { cartCount } = useCart();
-  const { user, loading } = useAuth();
+  const { user } = useAuth();
 
   interface AuthUser {
     email: string;

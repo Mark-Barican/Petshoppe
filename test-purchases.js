@@ -1,7 +1,6 @@
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
-
 async function testPurchaseFunctionality() {
+  const { PrismaClient } = await import("@prisma/client");
+  const prisma = new PrismaClient();
   console.log("Testing purchase functionality...\n");
 
   try {

@@ -23,14 +23,9 @@ type GroomerResponse = {
   averageRating: number;
   reviews: ReviewWithUser[];
 };
-
-
-
- 
 export async function GET() {
   try {
-    
-    const dbGroomers = await prisma.groomer.findMany({
+    const dbGroomers = (await prisma.groomer.findMany({
       include: {
         reviews: {
           include: {
@@ -42,16 +37,24 @@ export async function GET() {
         },
       },
       orderBy: { name: "asc" },
-    });
+    })) as GroomerWithReviews[];
 
-  
-    const formattedFromDb: GroomerResponse[] = dbGroomers.map((g: any) => {
+    type GroomerWithReviews = {
+      id: number;
+      name: string;
+      createdAt: Date;
+      updatedAt: Date;
+      reviews: ReviewWithUser[];
+    };
+    type GroomerReview = ReviewWithUser;
+
+    const formattedFromDb: GroomerResponse[] = dbGroomers.map((g: GroomerWithReviews) => {
       const totalReviews: number = g.reviews.length;
 
       const averageRating: number =
         totalReviews > 0
           ? g.reviews.reduce(
-              (sum: number, r: { rating: number }) => sum + r.rating,
+              (sum: number, r: GroomerReview) => sum + r.rating,
               0
             ) / totalReviews
           : 0;
@@ -63,7 +66,7 @@ export async function GET() {
         updatedAt: g.updatedAt,
         totalReviews,
         averageRating: parseFloat(averageRating.toFixed(1)),
-        reviews: g.reviews.map((r: any): ReviewWithUser => ({
+        reviews: g.reviews.map((r: GroomerReview): ReviewWithUser => ({
           id: r.id,
           rating: r.rating,
           comment: r.comment,
@@ -79,7 +82,6 @@ export async function GET() {
       };
     });
 
- 
     if (formattedFromDb.length > 0) {
       return NextResponse.json(formattedFromDb, { status: 200 });
     }
@@ -89,10 +91,12 @@ export async function GET() {
       where: { groomer: { not: "" } },
     });
 
+    type AppointmentGroomer = { groomer: string | null };
+
     const uniqueNames: string[] = Array.from(
       new Set<string>(
         appointments
-          .map((a: { groomer: string }) => a.groomer?.trim() || "")
+          .map((a: AppointmentGroomer) => a.groomer?.trim() || "")
           .filter((name: string) => name.length > 0)
       )
     ).sort();

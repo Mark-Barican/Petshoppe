@@ -3,7 +3,6 @@ import { NextRequest } from "next/server";
 export async function POST(request: NextRequest) {
   try {
     // Simulate payment processing
-    const body = await request.json();
     const {
       items,
       total,
@@ -19,7 +18,7 @@ export async function POST(request: NextRequest) {
       zipCode,
       country,
       paymentMethod,
-    } = body;
+    } = await request.json();
 
     // In a real application, this would integrate with a payment processor like Stripe
     // For now, we'll simulate a successful payment
@@ -43,12 +42,25 @@ export async function POST(request: NextRequest) {
       !address ||
       !city ||
       !state ||
-      !zipCode
+      !zipCode ||
+      !country ||
+      !paymentMethod
     ) {
       return new Response(
         JSON.stringify({
           error: "All delivery information fields are required",
         }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    const expectedFinalTotal = Number((total + tax).toFixed(2));
+    if (Math.abs(expectedFinalTotal - finalTotal) > 0.01) {
+      return new Response(
+        JSON.stringify({ error: "Totals do not add up" }),
         {
           status: 400,
           headers: { "Content-Type": "application/json" },

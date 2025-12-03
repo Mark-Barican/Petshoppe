@@ -6,11 +6,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import jwt, { TokenExpiredError, JsonWebTokenError } from "jsonwebtoken";
 import prisma from "@/lib/prisma";
+import { getJwtSecret } from "@/lib/env";
 
-const JWT_SECRET = process.env.JWT_SECRET!;
-if (!JWT_SECRET) {
-  throw new Error("Missing JWT_SECRET in environment variables");
-}
+type PetUpdateData = {
+  name?: string;
+  species?: string | null;
+  breed?: string | null;
+  sex?: string | null;
+  dob?: Date | null;
+};
 
 // GET route to fetch a single pet
 export async function GET(
@@ -23,7 +27,15 @@ export async function GET(
       return NextResponse.json({ message: "No token found" }, { status: 401 });
     }
 
-    const decoded = jwt.verify(token, JWT_SECRET) as {
+    const jwtSecret = getJwtSecret();
+    if (!jwtSecret) {
+      return NextResponse.json(
+        { message: "Server configuration error" },
+        { status: 500 }
+      );
+    }
+
+    const decoded = jwt.verify(token, jwtSecret) as {
       id: number;
       email?: string;
       role?: string;
@@ -79,7 +91,15 @@ export async function PUT(
       return NextResponse.json({ message: "No token found" }, { status: 401 });
     }
 
-    const decoded = jwt.verify(token, JWT_SECRET) as {
+    const jwtSecret = getJwtSecret();
+    if (!jwtSecret) {
+      return NextResponse.json(
+        { message: "Server configuration error" },
+        { status: 500 }
+      );
+    }
+
+    const decoded = jwt.verify(token, jwtSecret) as {
       id: number;
       email?: string;
       role?: string;
@@ -110,7 +130,7 @@ export async function PUT(
     }
 
     // Build update data based on provided fields
-    const updateData: any = {};
+    const updateData: PetUpdateData = {};
     if (name !== undefined) updateData.name = name;
     if (species !== undefined) updateData.species = species;
     if (breed !== undefined) updateData.breed = breed;
@@ -153,7 +173,15 @@ export async function DELETE(
       return NextResponse.json({ message: "No token found" }, { status: 401 });
     }
 
-    const decoded = jwt.verify(token, JWT_SECRET) as {
+    const jwtSecret = getJwtSecret();
+    if (!jwtSecret) {
+      return NextResponse.json(
+        { message: "Server configuration error" },
+        { status: 500 }
+      );
+    }
+
+    const decoded = jwt.verify(token, jwtSecret) as {
       id: number;
       email?: string;
       role?: string;

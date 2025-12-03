@@ -6,11 +6,7 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import jwt, { TokenExpiredError, JsonWebTokenError } from "jsonwebtoken";
 import prisma from "@/lib/prisma";
-
-const JWT_SECRET = process.env.JWT_SECRET!;
-if (!JWT_SECRET) {
-  throw new Error("Missing JWT_SECRET in environment variables");
-}
+import { getJwtSecret } from "@/lib/env";
 
 // PUT route to update user role
 export async function PUT(
@@ -23,7 +19,15 @@ export async function PUT(
       return NextResponse.json({ message: "No token found" }, { status: 401 });
     }
 
-    const decoded = jwt.verify(token, JWT_SECRET) as {
+    const jwtSecret = getJwtSecret();
+    if (!jwtSecret) {
+      return NextResponse.json(
+        { message: "Server configuration error" },
+        { status: 500 }
+      );
+    }
+
+    const decoded = jwt.verify(token, jwtSecret) as {
       id: number;
       email?: string;
       role?: string;
@@ -91,7 +95,15 @@ export async function DELETE(
       return NextResponse.json({ message: "No token found" }, { status: 401 });
     }
 
-    const decoded = jwt.verify(token, JWT_SECRET) as {
+    const jwtSecret = getJwtSecret();
+    if (!jwtSecret) {
+      return NextResponse.json(
+        { message: "Server configuration error" },
+        { status: 500 }
+      );
+    }
+
+    const decoded = jwt.verify(token, jwtSecret) as {
       id: number;
       email?: string;
       role?: string;

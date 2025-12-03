@@ -2,8 +2,6 @@
 
 import React, { useState } from "react";
 import Modal from "./Modal";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -16,7 +14,6 @@ const LoginModal: React.FC<LoginModalProps> = ({
   onClose,
   onSwitchToRegister,
 }) => {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -102,7 +99,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
         </button>
 
         <div className="mt-4 text-center text-sm text-gray-600">
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <button
             type="button"
             onClick={() => {

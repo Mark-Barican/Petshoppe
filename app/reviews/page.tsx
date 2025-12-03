@@ -4,8 +4,20 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import TestimonialCard from "../../components/TestimonialCard";
 
+interface Review {
+  id: number;
+  rating: number;
+  comment: string | null;
+  createdAt: string;
+  user?: {
+    name?: string | null;
+    email?: string | null;
+    avatar?: string | null;
+  };
+}
+
 export default function ReviewsPage() {
-  const [reviews, setReviews] = useState<any[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -29,13 +41,13 @@ export default function ReviewsPage() {
       <div className="layout-content-container flex flex-col w-full max-w-4xl flex-1 px-4 sm:px-0">
         {/* Back Button */}
         <div className="px-4 pb-3 pt-6">
-          <a
+          <Link
             href="/"
             className="text-[#0d1b12] text-base font-medium hover:text-[#4c9a66] flex items-center gap-2 transition-colors duration-200"
           >
             <span className="text-lg">←</span>
             <span>Back to home page</span>
-          </a>
+          </Link>
         </div>
 
         {/* Title */}
@@ -78,7 +90,7 @@ export default function ReviewsPage() {
 
         {/* Reviews grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 p-4">
-          {reviews.map((review: any) => {
+          {reviews.map((review) => {
             const displayName =
               review.user?.name || review.user?.email || "Anonymous";
 
@@ -89,7 +101,7 @@ export default function ReviewsPage() {
                   name: displayName,
                   time: new Date(review.createdAt).toLocaleDateString(),
                   rating: review.rating,
-                  review: review.comment,
+                  review: review.comment ?? "",
                   avatarUrl:
                     review.user?.avatar ||
                     `https://api.dicebear.com/7.x/initials/svg?seed=${displayName}`,

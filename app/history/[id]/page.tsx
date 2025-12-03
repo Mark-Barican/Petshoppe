@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useAuth } from "../../../hooks/useAuth";
 import { Order } from "../../../types";
@@ -57,12 +58,12 @@ export default function OrderDetailsPage({
           <p className="text-3xl md:text-4xl font-bold text-gray-800 mb-6">
             Please log in to view your order details
           </p>
-          <a
+          <Link
             href="/login"
             className="text-2xl text-green-600 hover:underline transition-colors duration-300"
           >
             Login
-          </a>
+          </Link>
         </div>
       </div>
     );
@@ -75,12 +76,12 @@ export default function OrderDetailsPage({
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
           <p className="text-gray-600 text-center py-8">Order not found.</p>
           <div className="text-center mt-6">
-            <a
+            <Link
               href="/history"
               className="inline-block bg-green-600 text-white px-6 py-3 rounded-md hover:bg-green-700 transition-colors"
             >
               Back to Order History
-            </a>
+            </Link>
           </div>
         </div>
       </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { Order } from "../../types";
@@ -55,12 +56,12 @@ export default function OrderHistoryPage() {
           <p className="text-3xl md:text-4xl font-bold text-gray-800 mb-6">
             Please log in to view your order history
           </p>
-          <a
+          <Link
             href="/login"
             className="text-2xl text-green-600 hover:underline transition-colors duration-300"
           >
             Login
-          </a>
+          </Link>
         </div>
       </div>
     );
@@ -72,15 +73,15 @@ export default function OrderHistoryPage() {
         <h1 className="text-2xl md:text-3xl font-bold mb-6">Order History</h1>
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
           <p className="text-gray-600 text-center py-8">
-            You haven't placed any orders yet.
+            You haven&apos;t placed any orders yet.
           </p>
           <div className="text-center mt-6">
-            <a
+            <Link
               href="/products"
               className="inline-block bg-green-600 text-white px-6 py-3 rounded-md hover:bg-green-700 transition-colors"
             >
               Start Shopping
-            </a>
+            </Link>
           </div>
         </div>
       </div>
@@ -98,9 +99,9 @@ export default function OrderHistoryPage() {
             className="bg-white p-6 rounded-lg shadow-sm border border-gray-200"
           >
             <div className="flex justify-between items-center mb-4">
-              <a href={`/history/${order.id}`} className="hover:underline">
+              <Link href={`/history/${order.id}`} className="hover:underline">
                 <h2 className="text-xl font-semibold">Order # {order.id}</h2>
-              </a>
+              </Link>
               <div className="text-sm text-gray-500">
                 <p>{new Date(order.createdAt).toLocaleDateString()}</p>
                 <span

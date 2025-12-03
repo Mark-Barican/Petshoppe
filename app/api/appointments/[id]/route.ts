@@ -6,11 +6,15 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import jwt, { TokenExpiredError, JsonWebTokenError } from "jsonwebtoken";
 import prisma from "@/lib/prisma";
+import { getJwtSecret } from "@/lib/env";
 
-const JWT_SECRET = process.env.JWT_SECRET!;
-if (!JWT_SECRET) {
-  throw new Error("Missing JWT_SECRET in environment variables");
-}
+type AppointmentUpdateData = {
+  status?: "SCHEDULED" | "COMPLETED" | "CANCELLED" | "NO_SHOW";
+  service?: string;
+  groomer?: string;
+  date?: Date;
+  notes?: string | null;
+};
 
 // GET route to fetch a single appointment
 export async function GET(
@@ -23,7 +27,15 @@ export async function GET(
       return NextResponse.json({ message: "No token found" }, { status: 401 });
     }
 
-    const decoded = jwt.verify(token, JWT_SECRET) as {
+    const jwtSecret = getJwtSecret();
+    if (!jwtSecret) {
+      return NextResponse.json(
+        { message: "Server configuration error" },
+        { status: 500 }
+      );
+    }
+
+    const decoded = jwt.verify(token, jwtSecret) as {
       id: number;
       email?: string;
       role?: string;
@@ -111,7 +123,15 @@ export async function PUT(
       return NextResponse.json({ message: "No token found" }, { status: 401 });
     }
 
-    const decoded = jwt.verify(token, JWT_SECRET) as {
+    const jwtSecret = getJwtSecret();
+    if (!jwtSecret) {
+      return NextResponse.json(
+        { message: "Server configuration error" },
+        { status: 500 }
+      );
+    }
+
+    const decoded = jwt.verify(token, jwtSecret) as {
       id: number;
       email?: string;
       role?: string;
@@ -144,7 +164,7 @@ export async function PUT(
     }
 
     // Build update data based on provided fields
-    const updateData: any = {};
+    const updateData: AppointmentUpdateData = {};
     if (status !== undefined) updateData.status = status;
     if (service !== undefined) updateData.service = service;
     if (groomer !== undefined) updateData.groomer = groomer;
@@ -203,7 +223,15 @@ export async function DELETE(
       return NextResponse.json({ message: "No token found" }, { status: 401 });
     }
 
-    const decoded = jwt.verify(token, JWT_SECRET) as {
+    const jwtSecret = getJwtSecret();
+    if (!jwtSecret) {
+      return NextResponse.json(
+        { message: "Server configuration error" },
+        { status: 500 }
+      );
+    }
+
+    const decoded = jwt.verify(token, jwtSecret) as {
       id: number;
       email?: string;
       role?: string;

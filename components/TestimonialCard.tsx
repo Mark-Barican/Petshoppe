@@ -39,7 +39,7 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial }) => {
         ))}
       </div>
       <p className="text-[#0d1b12] text-base font-normal leading-normal">
-        "{testimonial.review}"
+        &ldquo;{testimonial.review}&rdquo;
       </p>
     </div>
   );

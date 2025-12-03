@@ -140,8 +140,12 @@ export default function GroomersPage() {
 
       await refreshGroomer(selected.name);
       closeModal();
-    } catch (err: any) {
-      setError(err.message || "Submission failed");
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message || "Submission failed");
+      } else {
+        setError("Submission failed");
+      }
     } finally {
       setSubmitting(false);
     }

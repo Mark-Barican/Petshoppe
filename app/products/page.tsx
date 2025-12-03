@@ -6,9 +6,6 @@ import ProductCard from "../../components/ProductCard";
 import Dropdown from "../../components/Dropdown";
 import PriceRangeFilter from "../../components/PriceRangeFilter";
 
-// Use the global cart context from providers
-import { useCart } from "../../app/providers";
-
 const categories = [
   { value: "All", label: "All Categories" },
   { value: "Grooming", label: "Grooming" },
@@ -21,7 +18,6 @@ const ProductsPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [priceRange, setPriceRange] = useState({ min: 0, max: 100 });
-  const { addToCart } = useCart();
 
   useEffect(() => {
     const fetchProducts = async () => {

@@ -1,11 +1,16 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
 import { useAuth } from "../hooks/useAuth";
 import Calendar from "./Calendar";
 import LoginModal from "./LoginModal";
 import RegisterPetModal from "./RegisterPetModal";
+
+type PetSummary = {
+  id: number;
+  name: string;
+  species?: string | null;
+};
 
 const BookingForm: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -33,7 +38,7 @@ const BookingForm: React.FC = () => {
     }
   }, []);
   const [petId, setPetId] = useState<string>("");
-  const [pets, setPets] = useState<any[]>([]);
+  const [pets, setPets] = useState<PetSummary[]>([]);
   const [notes, setNotes] = useState("");
   const [loading, setLoading] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -47,7 +52,7 @@ const BookingForm: React.FC = () => {
         try {
           const response = await fetch("/api/pets");
           if (response.ok) {
-            const petsData = await response.json();
+            const petsData: PetSummary[] = await response.json();
             setPets(petsData);
           }
         } catch (error) {
@@ -67,7 +72,7 @@ const BookingForm: React.FC = () => {
       try {
         const response = await fetch("/api/pets");
         if (response.ok) {
-          const petsData = await response.json();
+          const petsData: PetSummary[] = await response.json();
           setPets(petsData);
         }
       } catch (error) {
@@ -171,7 +176,7 @@ const BookingForm: React.FC = () => {
                   {pets.length > 0 ? "Select a Pet" : "No pets registered"}
                 </option>
                 {pets.map((pet) => (
-                  <option key={pet.id} value={pet.id}>
+                  <option key={pet.id} value={String(pet.id)}>
                     {pet.name} ({pet.species || "Pet"})
                   </option>
                 ))}

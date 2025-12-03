@@ -1,7 +1,6 @@
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
-
 async function deleteAllOrders() {
+  const { PrismaClient } = await import("@prisma/client");
+  const prisma = new PrismaClient();
   try {
     // First, delete all order items
     await prisma.orderItem.deleteMany({});

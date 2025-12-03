@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 /**
  * PriceRangeFilter component with input fields
@@ -23,29 +23,18 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({
   onPriceChange,
   className = "",
 }) => {
-  const [minValue, setMinValue] = useState(minPrice);
-  const [maxValue, setMaxValue] = useState(maxPrice);
-
-  // Update local state when props change
-  useEffect(() => {
-    setMinValue(minPrice);
-    setMaxValue(maxPrice);
-  }, [minPrice, maxPrice]);
-
   const handleMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value);
     // Ensure min doesn't exceed max
-    const newMin = isNaN(value) ? minPrice : Math.min(value, maxValue);
-    setMinValue(newMin);
-    onPriceChange(newMin, maxValue);
+    const newMin = isNaN(value) ? minPrice : Math.min(value, maxPrice);
+    onPriceChange(newMin, maxPrice);
   };
 
   const handleMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value);
     // Ensure max doesn't go below min
-    const newMax = isNaN(value) ? maxPrice : Math.max(value, minValue);
-    setMaxValue(newMax);
-    onPriceChange(minValue, newMax);
+    const newMax = isNaN(value) ? maxPrice : Math.max(value, minPrice);
+    onPriceChange(minPrice, newMax);
   };
 
   return (
@@ -62,7 +51,7 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({
               min={minPrice}
               max={maxPrice}
               step="0.01"
-              value={minValue}
+              value={minPrice}
               onChange={handleMinChange}
               className="w-full pl-5 pr-2 py-1 rounded text-sm bg-white border-[#4c9a66] text-[#0d1b12] focus:outline-none focus:ring-1 focus:ring-[#13ec5b] appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             />
@@ -77,7 +66,7 @@ const PriceRangeFilter: React.FC<PriceRangeFilterProps> = ({
               min={minPrice}
               max={maxPrice}
               step="0.01"
-              value={maxValue}
+              value={maxPrice}
               onChange={handleMaxChange}
               className="w-full pl-5 pr-2 py-1 rounded text-sm bg-white border-[#4c9a66] text-[#0d1b12] focus:outline-none focus:ring-1 focus:ring-[#13ec5b] appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             />

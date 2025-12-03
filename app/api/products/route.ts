@@ -1,7 +1,7 @@
-import { NextRequest } from "next/server";
+import type { Product as ProductResponse } from "@/types";
 import { prisma } from "../../../lib/prisma";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const products = await prisma.product.findMany({
       orderBy: {
@@ -10,14 +10,16 @@ export async function GET(request: NextRequest) {
     });
 
     // Transform the products to match the frontend Product type
-    const transformedProducts = products.map((product) => ({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      imageUrl: product.image || "",
-      category: product.category || "",
-      description: product.description || "",
-    }));
+    const transformedProducts: ProductResponse[] = products.map(
+      (product: (typeof products)[number]): ProductResponse => ({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        imageUrl: product.image || "",
+        category: product.category || "",
+        description: product.description || "",
+      })
+    );
 
     return new Response(JSON.stringify(transformedProducts), {
       status: 200,

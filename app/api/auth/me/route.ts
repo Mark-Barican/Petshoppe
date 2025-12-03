@@ -4,10 +4,9 @@ export const runtime = "nodejs";
 
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import jwt, { TokenExpiredError, JsonWebTokenError } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import prisma from "@/lib/prisma";
-
-const JWT_SECRET = process.env.JWT_SECRET!;
+import { getJwtSecret } from "@/lib/env";
 
 export async function GET() {
   try {
@@ -17,7 +16,15 @@ export async function GET() {
       return NextResponse.json({ user: null }, { status: 401 });
     }
 
-    const decoded = jwt.verify(token, JWT_SECRET) as { id: number };
+    const jwtSecret = getJwtSecret();
+    if (!jwtSecret) {
+      return NextResponse.json(
+        { user: null, error: "Server configuration error" },
+        { status: 500 }
+      );
+    }
+
+    const decoded = jwt.verify(token, jwtSecret) as { id: number };
 
     const user = await prisma.user.findUnique({
       where: { id: decoded.id },

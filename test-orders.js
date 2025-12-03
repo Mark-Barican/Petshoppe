@@ -1,6 +1,4 @@
 // Test script to verify order API endpoints
-const { exec } = require("child_process");
-
 console.log("Testing order history functionality...");
 
 // Test 1: Check if the API route exists
