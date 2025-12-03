@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import type { Testimonial } from "@/types";
 import TestimonialCard from "../components/TestimonialCard";
@@ -76,8 +77,18 @@ const HomePage: React.FC = () => {
   return (
     <div className="flex justify-center py-5">
       <div className="layout-content-container flex flex-col w-full max-w-[960px] flex-1 px-4 sm:px-0 rounded-bl-2xl rounded-br-2xl">
-        {/* 🔹 Main content */}
-        <div className="relative flex items-center justify-center bg-black aspect-video rounded-lg overflow-hidden"></div>
+
+        {/* Image Banner replacing the black box */}
+        <div className="relative w-full aspect-video rounded-lg overflow-hidden">
+          <Image
+            src="/products/homepage-banner.jpg" // Make sure this image exists in your public folder
+            alt="Pet grooming banner"
+            fill
+            style={{ objectFit: "cover" }}
+            priority={true}
+          />
+        </div>
+
         <h1 className="text-[#0d1b12] tracking-light text-2xl md:text-[32px] font-bold leading-tight px-4 text-center pb-3 pt-6">
           Your Pet&apos;s Grooming Partner
         </h1>
@@ -105,7 +116,7 @@ const HomePage: React.FC = () => {
           </Link>
         </div>
 
-        {/* 🔹 Testimonials section */}
+        {/* Testimonials Section */}
         <div className="flex justify-between items-center px-4 pb-3 pt-5">
           <h2 className="text-[#0d1b12] text-[22px] font-bold leading-tight tracking-[-0.015em]">
             Customer Testimonials
