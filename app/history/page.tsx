@@ -55,8 +55,13 @@ export default function OrderHistoryPage() {
           credentials: "include",
         });
         if (response.ok) {
-          const data: Appointment[] = await response.json();
-          setAppointments(data);
+          const data: { appointments?: Appointment[] } | Appointment[] =
+            await response.json();
+          if (Array.isArray(data)) {
+            setAppointments(data);
+          } else {
+            setAppointments(data.appointments || []);
+          }
         } else {
           console.error("Failed to fetch appointments:", response.status);
         }
@@ -79,13 +84,22 @@ export default function OrderHistoryPage() {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const handleRefresh = () => fetchHistory(false);
+    const handleAppointmentsRefresh = () => fetchHistory(false);
+    const handleOrdersRefresh = () => fetchHistory(false);
 
-    window.addEventListener("appointments:refresh", handleRefresh);
-    const intervalId = window.setInterval(() => fetchHistory(false), 15000);
+    window.addEventListener(
+      "appointments:refresh",
+      handleAppointmentsRefresh
+    );
+    window.addEventListener("orders:refresh", handleOrdersRefresh);
+    const intervalId = window.setInterval(() => fetchHistory(false), 5000);
 
     return () => {
-      window.removeEventListener("appointments:refresh", handleRefresh);
+      window.removeEventListener(
+        "appointments:refresh",
+        handleAppointmentsRefresh
+      );
+      window.removeEventListener("orders:refresh", handleOrdersRefresh);
       window.clearInterval(intervalId);
     };
   }, [fetchHistory]);

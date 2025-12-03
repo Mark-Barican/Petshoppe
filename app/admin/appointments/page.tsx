@@ -52,11 +52,18 @@ const AdminAppointmentsPage = () => {
     }
 
     try {
-      const appointmentsRes = await fetch("/api/appointments");
+      const appointmentsRes = await fetch("/api/appointments", {
+        credentials: "include",
+      });
 
       if (appointmentsRes.ok) {
-        const appointmentsData = await appointmentsRes.json();
-        setAppointments(appointmentsData || []);
+        const appointmentsData: { appointments?: Appointment[] } | Appointment[] =
+          await appointmentsRes.json();
+        if (Array.isArray(appointmentsData)) {
+          setAppointments(appointmentsData);
+        } else {
+          setAppointments(appointmentsData.appointments || []);
+        }
       }
     } catch (error) {
       console.error("Error fetching appointments:", error);
@@ -85,7 +92,7 @@ const AdminAppointmentsPage = () => {
 
     const handleRefresh = () => fetchData(false);
     window.addEventListener("appointments:refresh", handleRefresh);
-    const intervalId = window.setInterval(() => fetchData(false), 15000);
+    const intervalId = window.setInterval(() => fetchData(false), 5000);
 
     return () => {
       window.removeEventListener("appointments:refresh", handleRefresh);
@@ -105,13 +112,10 @@ const AdminAppointmentsPage = () => {
       });
 
       if (res.ok) {
-        setAppointments(
-          appointments.map((appointment) =>
-            appointment.id === id
-              ? { ...appointment, status: newStatus }
-              : appointment
-          )
-        );
+        await fetchData(false);
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new Event("appointments:refresh"));
+        }
       } else {
         alert("Failed to update appointment status");
       }
@@ -130,9 +134,10 @@ const AdminAppointmentsPage = () => {
         });
 
         if (res.ok) {
-          setAppointments(
-            appointments.filter((appointment) => appointment.id !== id)
-          );
+          await fetchData(false);
+          if (typeof window !== "undefined") {
+            window.dispatchEvent(new Event("appointments:refresh"));
+          }
         } else {
           alert("Failed to delete appointment");
         }

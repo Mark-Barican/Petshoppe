@@ -74,7 +74,7 @@ model Pet {
 model Appointment {
   id        Int               @id @default(autoincrement())
   petId     Int?
-  userId    Int?
+  userId    Int
   status    AppointmentStatus @default(SCHEDULED)
   notes     String?
   createdAt DateTime          @default(now())
@@ -86,9 +86,10 @@ model Appointment {
 
   // Relations
   pet       Pet?              @relation(fields: [petId], references: [id])
-  user      User?             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+  @@index([petId])
 }
 
 model Product {
