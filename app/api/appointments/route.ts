@@ -89,7 +89,7 @@ export async function GET() {
       });
     }
 
-    return NextResponse.json(appointments);
+    return NextResponse.json({ appointments });
   } catch (error) {
     console.error(error);
     return NextResponse.json(

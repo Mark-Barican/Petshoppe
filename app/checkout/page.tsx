@@ -115,6 +115,9 @@ export default function CheckoutPage() {
 
         if (orderResponse.ok) {
           const orderData = await orderResponse.json();
+          if (typeof window !== "undefined") {
+            window.dispatchEvent(new Event("orders:refresh"));
+          }
           setShowModal({
             isOpen: true,
             title: "Payment Successful!",
