@@ -2,16 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+
 export const runtime = "nodejs";
 
 const prisma = new PrismaClient();
-const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey"; // 🔒 set this in .env file
+const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
 
 export async function POST(req: NextRequest) {
   try {
     const { email, password } = await req.json();
 
-    // Input validation
     if (!email || !password) {
       return NextResponse.json(
         { error: "Email and password are required" },
@@ -19,10 +19,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Find user in the database
-    const user = await prisma.user.findUnique({
-      where: { email },
-    });
+    const user = await prisma.user.findUnique({ where: { email } });
 
     if (!user) {
       return NextResponse.json(
@@ -31,8 +28,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    //  Validate password
     const isPasswordValid = await bcrypt.compare(password, user.password);
+
     if (!isPasswordValid) {
       return NextResponse.json(
         { error: "Invalid email or password" },
@@ -40,40 +37,29 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    //  Generate a signed JWT
     const token = jwt.sign(
-      {
-        id: user.id,
-        email: user.email,
-        role: user.role || "user", // fallback if no role field
-      },
+      { id: user.id, email: user.email, role: user.role },
       JWT_SECRET,
       { expiresIn: "7d" }
     );
 
-    // Optionally set the JWT as a secure HTTP-only cookie
-    const response = NextResponse.json({
+    const res = NextResponse.json({
       message: "Login successful",
-      user: {
-        id: user.id,
-        email: user.email,
-        role: user.role,
-      },
+      user: { id: user.id, email: user.email, role: user.role },
     });
 
-    // Send token as cookie 
-    response.cookies.set({
+    res.cookies.set({
       name: "token",
       value: token,
-      httpOnly: true, // prevents JS access
+      httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       path: "/",
-      maxAge: 60 * 60 * 24 * 7, // 7 days
+      maxAge: 60 * 60 * 24 * 7,
     });
 
-    return response;
-  } catch (error) {
-    console.error("LOGIN ERROR:", error);
+    return res;
+  } catch (err) {
+    console.error("LOGIN ERROR:", err);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

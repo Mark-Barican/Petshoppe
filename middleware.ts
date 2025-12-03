@@ -26,7 +26,20 @@ export async function middleware(req: NextRequest) {
   }
 
   try {
-    await jwtVerify(token, JWT_SECRET);
+    const verifiedToken = await jwtVerify(token, JWT_SECRET);
+
+    // Check if accessing admin route
+    if (req.nextUrl.pathname.startsWith("/admin")) {
+      const payload = verifiedToken.payload as {
+        id: number;
+        email?: string;
+        role?: string;
+      };
+      if (payload.role !== "ADMIN") {
+        return NextResponse.redirect(new URL("/", req.url)); // Redirect non-admins
+      }
+    }
+
     return NextResponse.next(); // token valid
   } catch (err) {
     console.error("Invalid token:", err);
@@ -35,5 +48,10 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/booking/:path*", "/products/:path*", "/profile/:path*"],
+  matcher: [
+    "/booking/:path*",
+    "/products/:path*",
+    "/profile/:path*",
+    "/admin/:path*",
+  ],
 };

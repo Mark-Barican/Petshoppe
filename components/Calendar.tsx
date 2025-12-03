@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { CaretLeftIcon, CaretRightIcon } from "./icons";
 
 interface CalendarProps {
   selectedDate: Date;
@@ -93,7 +92,7 @@ const MonthView: React.FC<MonthViewProps> = ({
         {showPrev ? (
           <button onClick={onPrev} className="hover:bg-gray-200 rounded-full">
             <div className="text-[#0d1b12] flex size-10 items-center justify-center">
-              <CaretLeftIcon />
+              {"<"}
             </div>
           </button>
         ) : (
@@ -105,7 +104,7 @@ const MonthView: React.FC<MonthViewProps> = ({
         {showNext ? (
           <button onClick={onNext} className="hover:bg-gray-200 rounded-full">
             <div className="text-[#0d1b12] flex size-10 items-center justify-center">
-              <CaretRightIcon />
+              {">"}
             </div>
           </button>
         ) : (

@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import Modal from "./Modal";
-import { useRouter } from "next/navigation";
 
 interface RegisterModalProps {
   isOpen: boolean;
@@ -15,11 +14,9 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
   onClose,
   onSwitchToLogin,
 }) => {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [role] = useState("USER");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 

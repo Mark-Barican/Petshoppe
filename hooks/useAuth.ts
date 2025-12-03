@@ -3,7 +3,9 @@
 import { useState, useEffect } from "react";
 
 export const useAuth = () => {
-  const [user, setUser] = useState<{ email: string } | null>(null);
+  const [user, setUser] = useState<{ email: string; name?: string } | null>(
+    null
+  );
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
