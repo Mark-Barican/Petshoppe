@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "postinstall": "prisma generate",
+    "seed": "node seed-products.js"
   },
   "dependencies": {
     "@prisma/client": "^6.19.0",
@@ -30,5 +32,8 @@
     "prisma": "^6.19.0",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "prisma": {
+    "seed": "node seed-products.js"
   }
 }

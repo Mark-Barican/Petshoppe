@@ -4,8 +4,25 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import TestimonialCard from "../../components/TestimonialCard";
 
+<<<<<<< HEAD
 export default function ReviewsPage() {
   const [reviews, setReviews] = useState<any[]>([]);
+=======
+interface Review {
+  id: number;
+  rating: number;
+  comment: string | null;
+  createdAt: string;
+  user?: {
+    name?: string | null;
+    email?: string | null;
+    avatar?: string | null;
+  };
+}
+
+export default function ReviewsPage() {
+  const [reviews, setReviews] = useState<Review[]>([]);
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -29,13 +46,21 @@ export default function ReviewsPage() {
       <div className="layout-content-container flex flex-col w-full max-w-4xl flex-1 px-4 sm:px-0">
         {/* Back Button */}
         <div className="px-4 pb-3 pt-6">
+<<<<<<< HEAD
           <a
+=======
+          <Link
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
             href="/"
             className="text-[#0d1b12] text-base font-medium hover:text-[#4c9a66] flex items-center gap-2 transition-colors duration-200"
           >
             <span className="text-lg">←</span>
             <span>Back to home page</span>
+<<<<<<< HEAD
           </a>
+=======
+          </Link>
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
         </div>
 
         {/* Title */}
@@ -78,7 +103,11 @@ export default function ReviewsPage() {
 
         {/* Reviews grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 p-4">
+<<<<<<< HEAD
           {reviews.map((review: any) => {
+=======
+          {reviews.map((review) => {
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
             const displayName =
               review.user?.name || review.user?.email || "Anonymous";
 
@@ -89,7 +118,11 @@ export default function ReviewsPage() {
                   name: displayName,
                   time: new Date(review.createdAt).toLocaleDateString(),
                   rating: review.rating,
+<<<<<<< HEAD
                   review: review.comment,
+=======
+                  review: review.comment ?? "",
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
                   avatarUrl:
                     review.user?.avatar ||
                     `https://api.dicebear.com/7.x/initials/svg?seed=${displayName}`,

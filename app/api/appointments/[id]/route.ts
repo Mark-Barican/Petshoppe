@@ -6,11 +6,23 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import jwt, { TokenExpiredError, JsonWebTokenError } from "jsonwebtoken";
 import prisma from "@/lib/prisma";
+<<<<<<< HEAD
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 if (!JWT_SECRET) {
   throw new Error("Missing JWT_SECRET in environment variables");
 }
+=======
+import { getJwtSecret } from "@/lib/env";
+
+type AppointmentUpdateData = {
+  status?: "SCHEDULED" | "COMPLETED" | "CANCELLED" | "NO_SHOW";
+  service?: string;
+  groomer?: string;
+  date?: Date;
+  notes?: string | null;
+};
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
 
 // GET route to fetch a single appointment
 export async function GET(
@@ -23,7 +35,19 @@ export async function GET(
       return NextResponse.json({ message: "No token found" }, { status: 401 });
     }
 
+<<<<<<< HEAD
     const decoded = jwt.verify(token, JWT_SECRET) as {
+=======
+    const jwtSecret = getJwtSecret();
+    if (!jwtSecret) {
+      return NextResponse.json(
+        { message: "Server configuration error" },
+        { status: 500 }
+      );
+    }
+
+    const decoded = jwt.verify(token, jwtSecret) as {
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
       id: number;
       email?: string;
       role?: string;
@@ -47,6 +71,23 @@ export async function GET(
             name: true,
             species: true,
             breed: true,
+<<<<<<< HEAD
+=======
+            owner: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+              },
+            },
+          },
+        },
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
           },
         },
       },
@@ -59,6 +100,7 @@ export async function GET(
       );
     }
 
+<<<<<<< HEAD
     // If user is not admin, check if they can access this appointment
     if (decoded.role !== "ADMIN") {
       // Regular users can only access appointments for their pets
@@ -81,6 +123,18 @@ export async function GET(
           { status: 403 }
         );
       }
+=======
+    // If user is not admin, ensure they own the appointment directly or via pet ownership
+    if (
+      decoded.role !== "ADMIN" &&
+      appointment.userId !== decoded.id &&
+      (!appointment.pet || appointment.pet.owner?.id !== decoded.id)
+    ) {
+      return NextResponse.json(
+        { message: "Unauthorized: Access denied" },
+        { status: 403 }
+      );
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
     }
 
     return NextResponse.json({ appointment }, { status: 200 });
@@ -111,7 +165,19 @@ export async function PUT(
       return NextResponse.json({ message: "No token found" }, { status: 401 });
     }
 
+<<<<<<< HEAD
     const decoded = jwt.verify(token, JWT_SECRET) as {
+=======
+    const jwtSecret = getJwtSecret();
+    if (!jwtSecret) {
+      return NextResponse.json(
+        { message: "Server configuration error" },
+        { status: 500 }
+      );
+    }
+
+    const decoded = jwt.verify(token, jwtSecret) as {
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
       id: number;
       email?: string;
       role?: string;
@@ -144,7 +210,11 @@ export async function PUT(
     }
 
     // Build update data based on provided fields
+<<<<<<< HEAD
     const updateData: any = {};
+=======
+    const updateData: AppointmentUpdateData = {};
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
     if (status !== undefined) updateData.status = status;
     if (service !== undefined) updateData.service = service;
     if (groomer !== undefined) updateData.groomer = groomer;
@@ -161,6 +231,23 @@ export async function PUT(
             name: true,
             species: true,
             breed: true,
+<<<<<<< HEAD
+=======
+            owner: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+              },
+            },
+          },
+        },
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
           },
         },
       },
@@ -203,7 +290,19 @@ export async function DELETE(
       return NextResponse.json({ message: "No token found" }, { status: 401 });
     }
 
+<<<<<<< HEAD
     const decoded = jwt.verify(token, JWT_SECRET) as {
+=======
+    const jwtSecret = getJwtSecret();
+    if (!jwtSecret) {
+      return NextResponse.json(
+        { message: "Server configuration error" },
+        { status: 500 }
+      );
+    }
+
+    const decoded = jwt.verify(token, jwtSecret) as {
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
       id: number;
       email?: string;
       role?: string;

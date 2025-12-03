@@ -1,7 +1,10 @@
 "use client";
 
 import React from "react";
+<<<<<<< HEAD
 import type { Product } from "@/types";
+=======
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
 
 interface CartNotificationProps {
   id: string;
@@ -19,11 +22,26 @@ const CartNotification: React.FC<CartNotificationProps> = ({
   if (!isVisible) return null;
 
   return (
+<<<<<<< HEAD
     <div className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg animate-fadeDown min-w-[200px] transition-all duration-300">
+=======
+    <div className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg animate-fadeDown min-w-[200px] transition-all duration-300 flex items-center justify-between gap-2">
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
       <div className="flex items-center gap-2">
         <span className="font-medium">{productName}</span>
         <span>added to cart!</span>
       </div>
+<<<<<<< HEAD
+=======
+      <button
+        type="button"
+        aria-label="Dismiss notification"
+        onClick={() => onRemove(id)}
+        className="text-white/80 hover:text-white"
+      >
+        &times;
+      </button>
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
     </div>
   );
 };

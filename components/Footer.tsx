@@ -1,5 +1,8 @@
 import React from "react";
+<<<<<<< HEAD
 import Link from "next/link";
+=======
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
 import FacebookIcon from "./icons/FacebookIcon";
 import InstagramIcon from "./icons/InstagramIcon";
 import TwitterIcon from "./icons/TwitterIcon";

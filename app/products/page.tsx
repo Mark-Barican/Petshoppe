@@ -6,6 +6,7 @@ import ProductCard from "../../components/ProductCard";
 import Dropdown from "../../components/Dropdown";
 import PriceRangeFilter from "../../components/PriceRangeFilter";
 
+<<<<<<< HEAD
 // Use the global cart context from providers
 import { useCart } from "../../app/providers";
 
@@ -22,11 +23,23 @@ const ProductsPage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [priceRange, setPriceRange] = useState({ min: 0, max: 100 });
   const { addToCart } = useCart();
+=======
+const defaultCategories = [{ value: "All", label: "All Categories" }];
+
+const ProductsPage: React.FC = () => {
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
+  const [categoryOptions, setCategoryOptions] =
+    useState(defaultCategories);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [priceRange, setPriceRange] = useState({ min: 0, max: 100 });
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await fetch("/api/products");
+<<<<<<< HEAD
         if (response.ok) {
           const products = await response.json();
           setAllProducts(products);
@@ -45,6 +58,42 @@ const ProductsPage: React.FC = () => {
       }
     };
 
+=======
+        if (!response.ok) {
+          throw new Error("Failed to fetch products");
+        }
+
+        const products: Product[] = await response.json();
+        setAllProducts(products);
+
+        // Sync category dropdown with available product categories.
+        const uniqueCategories = Array.from(
+          new Set(
+            products
+              .map((product) => product.category?.trim())
+              .filter(Boolean) as string[]
+          )
+        ).sort();
+        setCategoryOptions([
+          defaultCategories[0],
+          ...uniqueCategories.map((category) => ({
+            value: category,
+            label: category,
+          })),
+        ]);
+
+        // Update price range based on fetched products
+        if (products.length > 0) {
+          const min = Math.min(...products.map((p: Product) => p.price));
+          const max = Math.max(...products.map((p: Product) => p.price));
+          setPriceRange({ min, max });
+        }
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
     fetchProducts();
   }, []);
 
@@ -101,7 +150,11 @@ const ProductsPage: React.FC = () => {
               {/* Category Filter */}
               <div className="w-48">
                 <Dropdown
+<<<<<<< HEAD
                   options={categories}
+=======
+                  options={categoryOptions}
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
                   selectedValue={selectedCategory}
                   onChange={setSelectedCategory}
                   placeholder="Category"

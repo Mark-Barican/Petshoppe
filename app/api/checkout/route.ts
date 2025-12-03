@@ -3,7 +3,10 @@ import { NextRequest } from "next/server";
 export async function POST(request: NextRequest) {
   try {
     // Simulate payment processing
+<<<<<<< HEAD
     const body = await request.json();
+=======
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
     const {
       items,
       total,
@@ -19,7 +22,11 @@ export async function POST(request: NextRequest) {
       zipCode,
       country,
       paymentMethod,
+<<<<<<< HEAD
     } = body;
+=======
+    } = await request.json();
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
 
     // In a real application, this would integrate with a payment processor like Stripe
     // For now, we'll simulate a successful payment
@@ -43,7 +50,13 @@ export async function POST(request: NextRequest) {
       !address ||
       !city ||
       !state ||
+<<<<<<< HEAD
       !zipCode
+=======
+      !zipCode ||
+      !country ||
+      !paymentMethod
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
     ) {
       return new Response(
         JSON.stringify({
@@ -56,6 +69,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
+<<<<<<< HEAD
+=======
+    const expectedFinalTotal = Number((total + tax).toFixed(2));
+    if (Math.abs(expectedFinalTotal - finalTotal) > 0.01) {
+      return new Response(
+        JSON.stringify({ error: "Totals do not add up" }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
+
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
     // Simulate payment processing (in real app, this would be handled by payment processor)
     // For now, just return success
     return new Response(

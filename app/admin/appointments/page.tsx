@@ -1,6 +1,10 @@
 "use client";
 
+<<<<<<< HEAD
 import { useEffect, useState } from "react";
+=======
+import { useEffect, useState, useCallback } from "react";
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
 import { useRouter } from "next/navigation";
 import { useAuth } from "../../../hooks/useAuth";
 import AdminSidebar from "../../../components/AdminSidebar";
@@ -24,6 +28,19 @@ interface Appointment {
     name: string;
     species: string;
     breed: string;
+<<<<<<< HEAD
+=======
+    owner?: {
+      id: number;
+      name: string | null;
+      email: string;
+    };
+  };
+  user?: {
+    id: number;
+    name: string | null;
+    email: string;
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
   };
 }
 
@@ -36,6 +53,37 @@ const AdminAppointmentsPage = () => {
   // Define the correct type for the auth user
   const typedAuthUser = authUser as AuthUser | null;
 
+<<<<<<< HEAD
+=======
+  const fetchData = useCallback(async (showLoader = false) => {
+    if (showLoader) {
+      setLoadingData(true);
+    }
+
+    try {
+      const appointmentsRes = await fetch("/api/appointments", {
+        credentials: "include",
+      });
+
+      if (appointmentsRes.ok) {
+        const appointmentsData: { appointments?: Appointment[] } | Appointment[] =
+          await appointmentsRes.json();
+        if (Array.isArray(appointmentsData)) {
+          setAppointments(appointmentsData);
+        } else {
+          setAppointments(appointmentsData.appointments || []);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching appointments:", error);
+    } finally {
+      if (showLoader) {
+        setLoadingData(false);
+      }
+    }
+  }, []);
+
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
   useEffect(() => {
     if (!loading) {
       if (!typedAuthUser) {
@@ -43,6 +91,7 @@ const AdminAppointmentsPage = () => {
       } else if (typedAuthUser.role !== "ADMIN") {
         router.push("/"); // Redirect non-admins to home
       } else {
+<<<<<<< HEAD
         fetchData();
       }
     }
@@ -63,6 +112,26 @@ const AdminAppointmentsPage = () => {
       setLoadingData(false);
     }
   };
+=======
+        fetchData(true);
+      }
+    }
+  }, [typedAuthUser, loading, router, fetchData]);
+
+  useEffect(() => {
+    if (!typedAuthUser || typedAuthUser.role !== "ADMIN") return;
+    if (typeof window === "undefined") return;
+
+    const handleRefresh = () => fetchData(false);
+    window.addEventListener("appointments:refresh", handleRefresh);
+    const intervalId = window.setInterval(() => fetchData(false), 5000);
+
+    return () => {
+      window.removeEventListener("appointments:refresh", handleRefresh);
+      window.clearInterval(intervalId);
+    };
+  }, [typedAuthUser, fetchData]);
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
 
   const updateAppointmentStatus = async (id: number, newStatus: string) => {
     try {
@@ -76,6 +145,7 @@ const AdminAppointmentsPage = () => {
       });
 
       if (res.ok) {
+<<<<<<< HEAD
         setAppointments(
           appointments.map((appointment) =>
             appointment.id === id
@@ -83,6 +153,12 @@ const AdminAppointmentsPage = () => {
               : appointment
           )
         );
+=======
+        await fetchData(false);
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new Event("appointments:refresh"));
+        }
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
       } else {
         alert("Failed to update appointment status");
       }
@@ -101,9 +177,16 @@ const AdminAppointmentsPage = () => {
         });
 
         if (res.ok) {
+<<<<<<< HEAD
           setAppointments(
             appointments.filter((appointment) => appointment.id !== id)
           );
+=======
+          await fetchData(false);
+          if (typeof window !== "undefined") {
+            window.dispatchEvent(new Event("appointments:refresh"));
+          }
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
         } else {
           alert("Failed to delete appointment");
         }
@@ -158,6 +241,12 @@ const AdminAppointmentsPage = () => {
                         Groomer
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-[#0d1b12] uppercase tracking-wider">
+<<<<<<< HEAD
+=======
+                        Customer
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-[#0d1b12] uppercase tracking-wider">
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
                         Date
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-[#0d1b12] uppercase tracking-wider">
@@ -184,6 +273,15 @@ const AdminAppointmentsPage = () => {
                           {appointment.groomer}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-[#0d1b12]">
+<<<<<<< HEAD
+=======
+                          {appointment.user?.name ||
+                            appointment.user?.email ||
+                            appointment.pet?.owner?.name ||
+                            "N/A"}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-[#0d1b12]">
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
                           {new Date(appointment.date).toLocaleString()}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-[#0d1b12]">

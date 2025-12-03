@@ -1,6 +1,10 @@
 "use client";
 
+<<<<<<< HEAD
 import { useEffect, useState } from "react";
+=======
+import { useEffect, useState, useCallback } from "react";
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
 import { useRouter } from "next/navigation";
 import { useAuth } from "../../hooks/useAuth";
 import AdminSidebar from "../../components/AdminSidebar";
@@ -32,6 +36,19 @@ interface Appointment {
     name: string;
     species: string;
     breed: string;
+<<<<<<< HEAD
+=======
+    owner?: {
+      id: number;
+      name: string | null;
+      email: string;
+    };
+  };
+  user?: {
+    id: number;
+    name: string | null;
+    email: string;
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
   };
 }
 
@@ -45,6 +62,7 @@ const AdminDashboard = () => {
   // Define the correct type for the auth user
   const typedAuthUser = authUser as AuthUser | null;
 
+<<<<<<< HEAD
   useEffect(() => {
     if (!loading) {
       if (!typedAuthUser) {
@@ -62,6 +80,17 @@ const AdminDashboard = () => {
       const [usersRes, appointmentsRes] = await Promise.all([
         fetch("/api/users"),
         fetch("/api/appointments"),
+=======
+  const fetchData = useCallback(async (showLoader = false) => {
+    if (showLoader) {
+      setLoadingData(true);
+    }
+
+    try {
+      const [usersRes, appointmentsRes] = await Promise.all([
+        fetch("/api/users", { credentials: "include" }),
+        fetch("/api/appointments", { credentials: "include" }),
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
       ]);
 
       if (usersRes.ok) {
@@ -70,15 +99,59 @@ const AdminDashboard = () => {
       }
 
       if (appointmentsRes.ok) {
+<<<<<<< HEAD
         const appointmentsData = await appointmentsRes.json();
         setAppointments(appointmentsData.appointments || []);
+=======
+        const appointmentsData: { appointments?: Appointment[] } | Appointment[] =
+          await appointmentsRes.json();
+        if (Array.isArray(appointmentsData)) {
+          setAppointments(appointmentsData);
+        } else {
+          setAppointments(appointmentsData.appointments || []);
+        }
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
       }
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
+<<<<<<< HEAD
       setLoadingData(false);
     }
   };
+=======
+      if (showLoader) {
+        setLoadingData(false);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!loading) {
+      if (!typedAuthUser) {
+        router.push("/login");
+      } else if (typedAuthUser.role !== "ADMIN") {
+        router.push("/"); // Redirect non-admins to home
+      } else {
+        fetchData(true);
+      }
+    }
+  }, [typedAuthUser, loading, router, fetchData]);
+
+  useEffect(() => {
+    if (!typedAuthUser || typedAuthUser.role !== "ADMIN") return;
+    if (typeof window === "undefined") return;
+
+    const handleRefresh = () => fetchData(false);
+    window.addEventListener("appointments:refresh", handleRefresh);
+    const intervalId = window.setInterval(() => fetchData(false), 5000);
+
+    return () => {
+      window.removeEventListener("appointments:refresh", handleRefresh);
+      window.clearInterval(intervalId);
+    };
+  }, [typedAuthUser, fetchData]);
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
 
   if (loading || loadingData) {
     return (
@@ -236,6 +309,12 @@ const AdminDashboard = () => {
                         Date
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-[#0d1b12] uppercase tracking-wider">
+<<<<<<< HEAD
+=======
+                        Customer
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-[#0d1b12] uppercase tracking-wider">
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
                         Status
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-[#0d1b12] uppercase tracking-wider">
@@ -259,6 +338,15 @@ const AdminDashboard = () => {
                           {new Date(appointment.date).toLocaleString()}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-[#0d1b12]">
+<<<<<<< HEAD
+=======
+                          {appointment.user?.name ||
+                            appointment.user?.email ||
+                            appointment.pet?.owner?.name ||
+                            "N/A"}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-[#0d1b12]">
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
                           <span
                             className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                               appointment.status === "SCHEDULED"

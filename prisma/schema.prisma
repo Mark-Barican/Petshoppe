@@ -26,6 +26,10 @@ model User {
   orders    Order[]
   pets      Pet[]
   reviews   Review[]
+<<<<<<< HEAD
+=======
+  appointments Appointment[]
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
 }
 
 model Groomer {
@@ -73,6 +77,10 @@ model Pet {
 model Appointment {
   id        Int               @id @default(autoincrement())
   petId     Int?
+<<<<<<< HEAD
+=======
+  userId    Int
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
   status    AppointmentStatus @default(SCHEDULED)
   notes     String?
   createdAt DateTime          @default(now())
@@ -84,11 +92,22 @@ model Appointment {
 
   // Relations
   pet       Pet?              @relation(fields: [petId], references: [id])
+<<<<<<< HEAD
+=======
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([petId])
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
 }
 
 model Product {
   id          Int         @id @default(autoincrement())
+<<<<<<< HEAD
   name        String
+=======
+  name        String      @unique
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
   description String?
   price       Float
   stock       Int         @default(0)

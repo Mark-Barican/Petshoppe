@@ -2,8 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
 import prisma from "@/lib/prisma";
+<<<<<<< HEAD
 
 const JWT_SECRET = process.env.JWT_SECRET!;
+=======
+import { getJwtSecret } from "@/lib/env";
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
 
 export async function POST(req: NextRequest) {
   try {
@@ -13,14 +17,32 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+<<<<<<< HEAD
     let decoded;
     try {
       decoded = jwt.verify(token, JWT_SECRET) as {
+=======
+    const jwtSecret = getJwtSecret();
+    if (!jwtSecret) {
+      return NextResponse.json(
+        { error: "Server configuration error" },
+        { status: 500 }
+      );
+    }
+
+    let decoded;
+    try {
+      decoded = jwt.verify(token, jwtSecret) as {
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
         id: number;
         email?: string;
         role?: string;
       };
+<<<<<<< HEAD
     } catch (err) {
+=======
+    } catch {
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
       return NextResponse.json({ error: "Invalid token" }, { status: 401 });
     }
 
@@ -56,7 +78,11 @@ export async function POST(req: NextRequest) {
   }
 }
 
+<<<<<<< HEAD
 export async function GET(req: NextRequest) {
+=======
+export async function GET() {
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
   try {
     // Check for authentication
     const token = cookies().get("token")?.value;
@@ -64,14 +90,32 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+<<<<<<< HEAD
     let decoded;
     try {
       decoded = jwt.verify(token, JWT_SECRET) as {
+=======
+    const jwtSecret = getJwtSecret();
+    if (!jwtSecret) {
+      return NextResponse.json(
+        { error: "Server configuration error" },
+        { status: 500 }
+      );
+    }
+
+    let decoded;
+    try {
+      decoded = jwt.verify(token, jwtSecret) as {
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
         id: number;
         email?: string;
         role?: string;
       };
+<<<<<<< HEAD
     } catch (err) {
+=======
+    } catch {
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
       return NextResponse.json({ error: "Invalid token" }, { status: 401 });
     }
 

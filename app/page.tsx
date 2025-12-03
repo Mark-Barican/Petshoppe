@@ -1,6 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
+<<<<<<< HEAD
+=======
+import Link from "next/link";
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
 import type { Testimonial } from "@/types";
 import TestimonialCard from "../components/TestimonialCard";
 import { useAuth } from "@/hooks/useAuth";
@@ -72,31 +76,13 @@ const HomePage: React.FC = () => {
     );
   }
 
-  // Updated logout function
-  const handleLogout = async () => {
-    try {
-      const res = await fetch("/api/auth/logout", {
-        method: "POST",
-        credentials: "include", // ensures cookie is sent with the request
-      });
-
-      if (res.ok) {
-        localStorage.clear();
-        sessionStorage.clear();
-        window.location.reload();
-      }
-    } catch (err) {
-      console.error("Logout failed:", err);
-    }
-  };
-
   return (
     <div className="flex justify-center py-5">
       <div className="layout-content-container flex flex-col w-full max-w-[960px] flex-1 px-4 sm:px-0 rounded-bl-2xl rounded-br-2xl">
         {/* 🔹 Main content */}
         <div className="relative flex items-center justify-center bg-black aspect-video rounded-lg overflow-hidden"></div>
         <h1 className="text-[#0d1b12] tracking-light text-2xl md:text-[32px] font-bold leading-tight px-4 text-center pb-3 pt-6">
-          Your Pet's Grooming Partner
+          Your Pet&apos;s Grooming Partner
         </h1>
 
         <div className="flex flex-col sm:flex-row justify-center gap-4 my-4">
@@ -114,12 +100,16 @@ const HomePage: React.FC = () => {
           >
             <span className="truncate">Book Appointment</span>
           </button>
+<<<<<<< HEAD
           <a
+=======
+          <Link
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
             href="/products"
             className="flex min-w-[120px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#e7f3eb] text-[#0d1b12] text-sm font-bold leading-normal tracking-[0.015em] hover:bg-[#d8e9df] transition-colors"
           >
             <span className="truncate">Shop Products</span>
-          </a>
+          </Link>
         </div>
 
         {/* 🔹 Testimonials section */}
@@ -127,12 +117,20 @@ const HomePage: React.FC = () => {
           <h2 className="text-[#0d1b12] text-[22px] font-bold leading-tight tracking-[-0.015em]">
             Customer Testimonials
           </h2>
+<<<<<<< HEAD
           <a
+=======
+          <Link
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
             href="/reviews"
             className="text-[#4c9a66] text-sm font-medium leading-normal hover:underline flex items-center"
           >
             See more reviews →
+<<<<<<< HEAD
           </a>
+=======
+          </Link>
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
         </div>
         <div className="flex flex-col gap-8 overflow-x-hidden p-4">
           {testimonials.map((testimonial, index) => (

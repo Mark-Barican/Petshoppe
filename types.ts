@@ -5,6 +5,28 @@ export interface Product {
   imageUrl: string;
   category: string;
   description?: string;
+<<<<<<< HEAD
+=======
+}
+
+export interface AppointmentPetInfo {
+  id: number;
+  name: string;
+  species?: string | null;
+  breed?: string | null;
+}
+
+export interface Appointment {
+  id: number;
+  service: string;
+  groomer: string;
+  date: string;
+  status: string;
+  notes?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  pet?: AppointmentPetInfo | null;
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
 }
 
 export interface Testimonial {

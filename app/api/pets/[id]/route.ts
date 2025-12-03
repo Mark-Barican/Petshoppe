@@ -6,11 +6,23 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import jwt, { TokenExpiredError, JsonWebTokenError } from "jsonwebtoken";
 import prisma from "@/lib/prisma";
+<<<<<<< HEAD
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 if (!JWT_SECRET) {
   throw new Error("Missing JWT_SECRET in environment variables");
 }
+=======
+import { getJwtSecret } from "@/lib/env";
+
+type PetUpdateData = {
+  name?: string;
+  species?: string | null;
+  breed?: string | null;
+  sex?: string | null;
+  dob?: Date | null;
+};
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
 
 // GET route to fetch a single pet
 export async function GET(
@@ -23,7 +35,19 @@ export async function GET(
       return NextResponse.json({ message: "No token found" }, { status: 401 });
     }
 
+<<<<<<< HEAD
     const decoded = jwt.verify(token, JWT_SECRET) as {
+=======
+    const jwtSecret = getJwtSecret();
+    if (!jwtSecret) {
+      return NextResponse.json(
+        { message: "Server configuration error" },
+        { status: 500 }
+      );
+    }
+
+    const decoded = jwt.verify(token, jwtSecret) as {
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
       id: number;
       email?: string;
       role?: string;
@@ -79,7 +103,19 @@ export async function PUT(
       return NextResponse.json({ message: "No token found" }, { status: 401 });
     }
 
+<<<<<<< HEAD
     const decoded = jwt.verify(token, JWT_SECRET) as {
+=======
+    const jwtSecret = getJwtSecret();
+    if (!jwtSecret) {
+      return NextResponse.json(
+        { message: "Server configuration error" },
+        { status: 500 }
+      );
+    }
+
+    const decoded = jwt.verify(token, jwtSecret) as {
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
       id: number;
       email?: string;
       role?: string;
@@ -110,7 +146,11 @@ export async function PUT(
     }
 
     // Build update data based on provided fields
+<<<<<<< HEAD
     const updateData: any = {};
+=======
+    const updateData: PetUpdateData = {};
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
     if (name !== undefined) updateData.name = name;
     if (species !== undefined) updateData.species = species;
     if (breed !== undefined) updateData.breed = breed;
@@ -153,7 +193,19 @@ export async function DELETE(
       return NextResponse.json({ message: "No token found" }, { status: 401 });
     }
 
+<<<<<<< HEAD
     const decoded = jwt.verify(token, JWT_SECRET) as {
+=======
+    const jwtSecret = getJwtSecret();
+    if (!jwtSecret) {
+      return NextResponse.json(
+        { message: "Server configuration error" },
+        { status: 500 }
+      );
+    }
+
+    const decoded = jwt.verify(token, jwtSecret) as {
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
       id: number;
       email?: string;
       role?: string;

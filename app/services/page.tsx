@@ -7,6 +7,15 @@ import Calendar from "../../components/Calendar";
 import RegisterPetModal from "../../components/RegisterPetModal";
 import { useAuth } from "@/hooks/useAuth";
 
+<<<<<<< HEAD
+=======
+type PetSummary = {
+  id: number;
+  name: string;
+  species?: string | null;
+};
+
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
 // Define service and groomer options
 // Default service and groomer options - these will be dynamically updated when new values are added
 const DEFAULT_SERVICE_OPTIONS = [
@@ -34,11 +43,20 @@ const ServicesPage: React.FC = () => {
   const [selectedGroomer, setSelectedGroomer] = useState("");
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [petId, setPetId] = useState<string>("");
+<<<<<<< HEAD
   const [pets, setPets] = useState<any[]>([]);
   const [petsLoading, setPetsLoading] = useState(true);
   const [isRegisterPetModalOpen, setIsRegisterPetModalOpen] = useState(false);
   const [serviceOptions, setServiceOptions] = useState(DEFAULT_SERVICE_OPTIONS);
   const [groomerOptions, setGroomerOptions] = useState(DEFAULT_GROOMER_OPTIONS);
+=======
+  const [pets, setPets] = useState<PetSummary[]>([]);
+  const [petsLoading, setPetsLoading] = useState(true);
+  const [isRegisterPetModalOpen, setIsRegisterPetModalOpen] = useState(false);
+  const serviceOptions = DEFAULT_SERVICE_OPTIONS;
+  const [groomerOptions, setGroomerOptions] =
+    useState(DEFAULT_GROOMER_OPTIONS);
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
 
   // Check URL for pre-selected groomer
   useEffect(() => {
@@ -62,7 +80,11 @@ const ServicesPage: React.FC = () => {
         try {
           const response = await fetch("/api/pets");
           if (response.ok) {
+<<<<<<< HEAD
             const petsData = await response.json();
+=======
+            const petsData: PetSummary[] = await response.json();
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
             setPets(petsData);
           }
         } catch (error) {
@@ -80,6 +102,7 @@ const ServicesPage: React.FC = () => {
     fetchPets();
   }, [user]);
 
+<<<<<<< HEAD
   // Function to add new service option dynamically
   const addNewServiceOption = (value: string, label: string) => {
     const newOption = { value, label };
@@ -93,6 +116,8 @@ const ServicesPage: React.FC = () => {
     });
   };
 
+=======
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
   // Function to add new groomer option dynamically
   const addNewGroomerOption = (value: string, label: string) => {
     const newOption = { value, label };
@@ -170,7 +195,11 @@ const ServicesPage: React.FC = () => {
                         : "No pets registered",
                     },
                     ...pets.map((pet) => ({
+<<<<<<< HEAD
                       value: pet.id,
+=======
+                      value: String(pet.id),
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
                       label: `${pet.name} (${pet.species || "Pet"})`,
                     })),
                   ]}
@@ -261,7 +290,11 @@ const ServicesPage: React.FC = () => {
               try {
                 const response = await fetch("/api/pets");
                 if (response.ok) {
+<<<<<<< HEAD
                   const petsData = await response.json();
+=======
+                  const petsData: PetSummary[] = await response.json();
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
                   setPets(petsData);
                 }
               } catch (error) {

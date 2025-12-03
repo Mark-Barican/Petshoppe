@@ -1,7 +1,13 @@
+<<<<<<< HEAD
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 async function deleteAllOrders() {
+=======
+async function deleteAllOrders() {
+  const { PrismaClient } = await import("@prisma/client");
+  const prisma = new PrismaClient();
+>>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
   try {
     // First, delete all order items
     await prisma.orderItem.deleteMany({});
