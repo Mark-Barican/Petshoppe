@@ -1,3 +1,10 @@
+require("dotenv").config();
+
+const { PrismaClient } = require("@prisma/client");
+const products = require("./data/products.json");
+
+const prisma = new PrismaClient();
+
 async function seedProducts() {
   const dotenv = await import("dotenv");
   dotenv.config();
