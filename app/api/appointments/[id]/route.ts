@@ -59,6 +59,20 @@ export async function GET(
             name: true,
             species: true,
             breed: true,
+            owner: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+              },
+            },
+          },
+        },
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
           },
         },
       },
@@ -71,28 +85,16 @@ export async function GET(
       );
     }
 
-    // If user is not admin, check if they can access this appointment
-    if (decoded.role !== "ADMIN") {
-      // Regular users can only access appointments for their pets
-      if (appointment.petId) {
-        const pet = await prisma.pet.findUnique({
-          where: { id: appointment.petId },
-        });
-
-        if (!pet || pet.ownerId !== decoded.id) {
-          return NextResponse.json(
-            { message: "Unauthorized: Access denied" },
-            { status: 403 }
-          );
-        }
-      } else {
-        // If appointment has no pet, it might be a general appointment
-        // For now, we'll restrict access to admin only for appointments without pets
-        return NextResponse.json(
-          { message: "Unauthorized: Access denied" },
-          { status: 403 }
-        );
-      }
+    // If user is not admin, ensure they own the appointment directly or via pet ownership
+    if (
+      decoded.role !== "ADMIN" &&
+      appointment.userId !== decoded.id &&
+      (!appointment.pet || appointment.pet.owner?.id !== decoded.id)
+    ) {
+      return NextResponse.json(
+        { message: "Unauthorized: Access denied" },
+        { status: 403 }
+      );
     }
 
     return NextResponse.json({ appointment }, { status: 200 });
@@ -181,6 +183,19 @@ export async function PUT(
             name: true,
             species: true,
             breed: true,
+          owner: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
+        },
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
           },
         },
       },
