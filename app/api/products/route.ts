@@ -1,7 +1,25 @@
+import fallbackProducts from "@/data/products";
 import type { Product as ProductResponse } from "@/types";
 import { prisma } from "../../../lib/prisma";
 
+const jsonResponse = (
+  payload: ProductResponse[],
+  status = 200
+): Response => {
+  return new Response(JSON.stringify(payload), {
+    status,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+};
+
 export async function GET() {
+  if (!process.env.DATABASE_URL) {
+    console.warn("DATABASE_URL missing; serving fallback products.");
+    return jsonResponse(fallbackProducts);
+  }
+
   try {
     const products = await prisma.product.findMany({
       orderBy: {
@@ -21,14 +39,9 @@ export async function GET() {
       })
     );
 
-    return new Response(JSON.stringify(transformedProducts), {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    return jsonResponse(transformedProducts);
   } catch (error) {
     console.error("Error fetching products:", error);
-    return new Response("Internal Server Error", { status: 500 });
+    return jsonResponse(fallbackProducts);
   }
 }
