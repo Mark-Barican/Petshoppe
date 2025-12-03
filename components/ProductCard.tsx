@@ -1,26 +1,41 @@
 "use client";
 
 import React from "react";
-import type { Product } from "@/types";
-import { useCart } from "@/app/providers";
+import Image from "next/image";
+
+interface Product {
+  id: number;
+  name: string;
+  description?: string;
+  price: number;
+  category: string;
+  imageUrl: string;
+}
 
 interface ProductCardProps {
   product: Product;
+  addToCart?: (product: Product) => void; // Optional, if you have a cart provider
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const { addToCart } = useCart();
-
+const ProductCard: React.FC<ProductCardProps> = ({ product, addToCart }) => {
   const handleAddToCart = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent triggering any parent click handlers
-    addToCart(product);
+    e.stopPropagation();
+    if (addToCart) {
+      addToCart(product);
+    }
   };
 
   return (
     <div className="group relative bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-green-100 hover:border-green-100">
-      {/* Product Image Placeholder */}
-      <div className="relative w-full h-48 bg-black flex items-center justify-center">
-        <span className="text-white text-sm font-medium">Product Image</span>
+      {/* Product Image */}
+      <div className="relative w-full h-48 bg-gray-100 flex items-center justify-center overflow-hidden">
+        <Image
+          src={product.imageUrl}
+          alt={product.name}
+          fill
+          style={{ objectFit: "cover" }}
+          className="transition-transform duration-300 group-hover:scale-105"
+        />
       </div>
 
       {/* Product Details */}
@@ -44,12 +59,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             ${product.price.toFixed(2)}
           </span>
 
-          <button
-            onClick={handleAddToCart}
-            className="px-4 py-2 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition-all duration-300 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-300 focus:ring-offset-1"
-          >
-            Add to Cart
-          </button>
+          {addToCart && (
+            <button
+              onClick={handleAddToCart}
+              className="px-4 py-2 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition-all duration-300 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-300 focus:ring-offset-1"
+            >
+              Add to Cart
+            </button>
+          )}
         </div>
       </div>
     </div>
