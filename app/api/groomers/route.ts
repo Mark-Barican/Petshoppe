@@ -1,279 +1,169 @@
-// /app/api/groomers/route.ts
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-// GET all groomers with their average rating and reviews
+
+type ReviewWithUser = {
+  id: number;
+  rating: number;
+  comment: string | null;
+  createdAt: Date;
+  user: {
+    id: number;
+    name: string | null;
+    email: string;
+  } | null;
+};
+
+type GroomerResponse = {
+  id: number | null;
+  name: string;
+  createdAt: Date | null;
+  updatedAt: Date | null;
+  totalReviews: number;
+  averageRating: number;
+  reviews: ReviewWithUser[];
+};
+
+
+
+ 
 export async function GET() {
   try {
-    // Get all unique groomers from appointments
-    const appointments = await prisma.appointment.findMany({
-      distinct: ["groomer"],
-      select: {
-        groomer: true,
-      },
-      where: {
-        groomer: {
-          not: "", // Filter out empty groomers
+    
+    const dbGroomers = await prisma.groomer.findMany({
+      include: {
+        reviews: {
+          include: {
+            user: {
+              select: { id: true, name: true, email: true },
+            },
+          },
+          orderBy: { createdAt: "desc" },
         },
       },
+      orderBy: { name: "asc" },
     });
 
-    // For each groomer, get their appointments and related reviews
-    const groomersWithInfo = await Promise.all(
-      appointments
-        .filter((appointment) => appointment.groomer) // Filter out null/empty groomers
-        .map(async (appointment) => {
-          const groomerName = appointment.groomer as string;
+  
+    const formattedFromDb: GroomerResponse[] = dbGroomers.map((g: any) => {
+      const totalReviews: number = g.reviews.length;
 
-          // Get all appointments for this groomer
-          const groomerAppointments = await prisma.appointment.findMany({
-            where: {
-              groomer: groomerName,
-            },
-            include: {
-              pet: {
-                include: {
-                  owner: true, // Include pet owner to get user info
-                },
-              },
-            },
-          });
-
-          // Get all reviews for appointments with this groomer
-          // We need to get reviews associated with the pets that were groomed by this groomer
-          let allReviews: any[] = [];
-
-          // Get reviews for each appointment with this groomer
-          for (const appointment of groomerAppointments) {
-            if (appointment.pet?.ownerId) {
-              // Get reviews by the pet owner (user who booked the appointment)
-              const userReviews = await prisma.review.findMany({
-                where: {
-                  userId: appointment.pet.ownerId,
-                },
-                include: {
-                  user: true,
-                },
-              });
-
-              // Add appointment and pet information to each review
-              const appointmentReviews = userReviews.map((review) => ({
-                ...review,
-                appointmentId: appointment.id,
-                petName: appointment.pet?.name || "Unknown Pet",
-                ownerName:
-                  appointment.pet?.owner?.name ||
-                  appointment.pet?.owner?.email ||
-                  "Unknown Owner",
-              }));
-
-              allReviews = allReviews.concat(appointmentReviews);
-            }
-          }
-
-          // Calculate average rating
-          let averageRating = 0;
-          if (allReviews.length > 0) {
-            const totalRating = allReviews.reduce(
-              (sum, review) => sum + review.rating,
+      const averageRating: number =
+        totalReviews > 0
+          ? g.reviews.reduce(
+              (sum: number, r: { rating: number }) => sum + r.rating,
               0
-            );
-            averageRating = totalRating / allReviews.length;
-          }
+            ) / totalReviews
+          : 0;
 
-          return {
-            name: groomerName,
-            appointments: groomerAppointments.length,
-            reviews: allReviews,
-            averageRating: parseFloat(averageRating.toFixed(1)),
-            totalReviews: allReviews.length,
-          };
-        })
+      return {
+        id: g.id,
+        name: g.name,
+        createdAt: g.createdAt,
+        updatedAt: g.updatedAt,
+        totalReviews,
+        averageRating: parseFloat(averageRating.toFixed(1)),
+        reviews: g.reviews.map((r: any): ReviewWithUser => ({
+          id: r.id,
+          rating: r.rating,
+          comment: r.comment,
+          createdAt: r.createdAt,
+          user: r.user
+            ? {
+                id: r.user.id,
+                name: r.user.name,
+                email: r.user.email,
+              }
+            : null,
+        })),
+      };
+    });
+
+ 
+    if (formattedFromDb.length > 0) {
+      return NextResponse.json(formattedFromDb, { status: 200 });
+    }
+
+    const appointments = await prisma.appointment.findMany({
+      select: { groomer: true },
+      where: { groomer: { not: "" } },
+    });
+
+    const uniqueNames: string[] = Array.from(
+      new Set<string>(
+        appointments
+          .map((a: { groomer: string }) => a.groomer?.trim() || "")
+          .filter((name: string) => name.length > 0)
+      )
+    ).sort();
+
+    const fallback: GroomerResponse[] = uniqueNames.map(
+      (name: string): GroomerResponse => ({
+        id: null,
+        name,
+        createdAt: null,
+        updatedAt: null,
+        totalReviews: 0,
+        averageRating: 0,
+        reviews: [],
+      })
     );
 
-    return NextResponse.json(groomersWithInfo, { status: 200 });
-  } catch (error) {
-    console.error("GET /api/groomers error:", error);
-    // Return mock data when database is unavailable
-    const mockGroomers = [
-      {
-        name: "Alex Johnson",
-        appointments: 24,
-        reviews: [
-          {
-            id: 1,
-            rating: 5,
-            comment: "Great with my nervous dog! Very patient and gentle.",
-            createdAt: new Date().toISOString(),
-            user: { name: "Maria Santos", email: "maria@example.com" },
-            appointmentId: 1,
-            petName: "Buddy",
-            ownerName: "Maria Santos",
-          },
-          {
-            id: 2,
-            rating: 4,
-            comment: "Did a wonderful job on my cat's grooming!",
-            createdAt: new Date().toISOString(),
-            user: { name: "James Wilson", email: "james@example.com" },
-            appointmentId: 2,
-            petName: "Whiskers",
-            ownerName: "James Wilson",
-          },
-        ],
-        averageRating: 4.5,
-        totalReviews: 2,
-      },
-      {
-        name: "Sarah Chen",
-        appointments: 18,
-        reviews: [
-          {
-            id: 3,
-            rating: 5,
-            comment: "Professional and caring. My dog looked amazing!",
-            createdAt: new Date().toISOString(),
-            user: { name: "Robert Lee", email: "robert@example.com" },
-            appointmentId: 3,
-            petName: "Max",
-            ownerName: "Robert Lee",
-          },
-        ],
-        averageRating: 5.0,
-        totalReviews: 1,
-      },
-      {
-        name: "Michael Rodriguez",
-        appointments: 32,
-        reviews: [
-          {
-            id: 4,
-            rating: 5,
-            comment:
-              "Experienced groomer. My pet was comfortable the whole time.",
-            createdAt: new Date().toISOString(),
-            user: { name: "Emily Parker", email: "emily@example.com" },
-            appointmentId: 4,
-            petName: "Luna",
-            ownerName: "Emily Parker",
-          },
-          {
-            id: 5,
-            rating: 4,
-            comment: "Good service, but a bit rushed today.",
-            createdAt: new Date().toISOString(),
-            user: { name: "David Kim", email: "david@example.com" },
-            appointmentId: 5,
-            petName: "Rocky",
-            ownerName: "David Kim",
-          },
-        ],
-        averageRating: 4.5,
-        totalReviews: 2,
-      },
-    ];
-
-    return NextResponse.json(mockGroomers, { status: 200 });
+    return NextResponse.json(fallback, { status: 200 });
+  } catch (err) {
+    console.error("GET /api/groomers error:", err);
+    return NextResponse.json(
+      { error: "Failed to load groomers" },
+      { status: 500 }
+    );
   }
 }
 
-// GET a specific groomer by name
-export async function POST(req: NextRequest) {
-  try {
-    const { groomerName } = await req.json();
 
-    if (!groomerName) {
+export async function POST(req: Request) {
+  try {
+    const body = await req.json();
+    const name: string = (body?.name || "").trim();
+
+    if (!name) {
       return NextResponse.json(
         { error: "Groomer name is required" },
         { status: 400 }
       );
     }
 
-    // Get all appointments for this specific groomer
-    const groomerAppointments = await prisma.appointment.findMany({
-      where: {
-        groomer: groomerName,
-      },
-      include: {
-        pet: {
-          include: {
-            owner: true,
-          },
-        },
-      },
+
+    const existing = await prisma.groomer.findFirst({
+      where: { name },
     });
 
-    // Get all reviews for appointments with this groomer
-    const reviews = await Promise.all(
-      groomerAppointments.map(async (appt) => {
-        if (appt.pet?.ownerId) {
-          const userReviews = await prisma.review.findMany({
-            where: {
-              userId: appt.pet.ownerId,
-            },
-            include: {
-              user: true,
-            },
-          });
-
-          return userReviews.map((review) => ({
-            ...review,
-            appointmentId: appt.id,
-            petName: appt.pet?.name || "Unknown Pet",
-            ownerName:
-              appt.pet?.owner?.name ||
-              appt.pet?.owner?.email ||
-              "Unknown Owner",
-          }));
-        }
-        return [];
-      })
-    );
-
-    // Flatten reviews array
-    const allReviews = reviews.flat();
-
-    // Calculate average rating
-    let averageRating = 0;
-    if (allReviews.length > 0) {
-      const totalRating = allReviews.reduce(
-        (sum, review) => sum + review.rating,
-        0
+    if (existing) {
+      return NextResponse.json(
+        { error: "Groomer already exists" },
+        { status: 400 }
       );
-      averageRating = totalRating / allReviews.length;
     }
 
-    const groomerInfo = {
-      name: groomerName,
-      appointments: groomerAppointments.length,
-      reviews: allReviews,
-      averageRating: parseFloat(averageRating.toFixed(1)),
-      totalReviews: allReviews.length,
+    const newGroomer = await prisma.groomer.create({
+      data: { name },
+    });
+
+    const response: GroomerResponse = {
+      id: newGroomer.id,
+      name: newGroomer.name,
+      createdAt: newGroomer.createdAt,
+      updatedAt: newGroomer.updatedAt,
+      totalReviews: 0,
+      averageRating: 0,
+      reviews: [],
     };
 
-    return NextResponse.json(groomerInfo, { status: 201 });
-  } catch (error) {
-    console.error("POST /api/groomers error:", error);
-    // Return mock data when database is unavailable
-    const mockGroomer = {
-      name: groomerName || "Default Groomer",
-      appointments: 15,
-      reviews: [
-        {
-          id: 1,
-          rating: 5,
-          comment: "Excellent service as always!",
-          createdAt: new Date().toISOString(),
-          user: { name: "Test User", email: "test@example.com" },
-          appointmentId: 1,
-          petName: "Test Pet",
-          ownerName: "Test User",
-        },
-      ],
-      averageRating: 5.0,
-      totalReviews: 1,
-    };
-
-    return NextResponse.json(mockGroomer, { status: 200 });
+    return NextResponse.json(response, { status: 201 });
+  } catch (err) {
+    console.error("POST /api/groomers error:", err);
+    return NextResponse.json(
+      { error: "Failed to create groomer" },
+      { status: 500 }
+    );
   }
 }

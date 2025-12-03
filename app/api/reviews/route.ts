@@ -1,11 +1,10 @@
-// /app/api/reviews/route.ts
+
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import jwt from "jsonwebtoken";
 
 const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
 
-// GET all reviews
 export async function GET() {
   try {
     const reviews = await prisma.review.findMany({
@@ -13,6 +12,7 @@ export async function GET() {
       include: {
         user: true,
         product: true,
+        groomer: true, 
       },
     });
 
@@ -23,7 +23,7 @@ export async function GET() {
   }
 }
 
-// CREATE review
+
 export async function POST(req: NextRequest) {
   try {
     const token = req.cookies.get("token")?.value;
@@ -47,10 +47,9 @@ export async function POST(req: NextRequest) {
 
     const userId = decoded.id;
 
-    // Read body
-    const { productId, rating, comment } = await req.json();
+    
+    const { rating, comment, productId, groomerId } = await req.json();
 
-    //  FIXED: Only require rating (not productId)
     if (!rating) {
       return NextResponse.json(
         { error: "Rating is required" },
@@ -58,18 +57,18 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Save review
+   
     const review = await prisma.review.create({
       data: {
         userId,
         rating,
-        comment,
-        productId: productId || null, //  FIXED: allow null for testimonials
+        comment: comment || null,
+        productId: productId || null,   
+        groomerId: groomerId || null,   
       },
     });
 
     return NextResponse.json(review, { status: 201 });
-
   } catch (error) {
     console.error("POST /reviews error:", error);
     return NextResponse.json({ error: "Failed to create review" }, { status: 500 });
