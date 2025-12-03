@@ -8,14 +8,20 @@ import RegisterPetModal from "../../components/RegisterPetModal";
 import { useAuth } from "@/hooks/useAuth";
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
 type PetSummary = {
   id: number;
   name: string;
   species?: string | null;
 };
 
+<<<<<<< HEAD
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
 // Define service and groomer options
 // Default service and groomer options - these will be dynamically updated when new values are added
 const DEFAULT_SERVICE_OPTIONS = [
@@ -44,19 +50,25 @@ const ServicesPage: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [petId, setPetId] = useState<string>("");
 <<<<<<< HEAD
+<<<<<<< HEAD
   const [pets, setPets] = useState<any[]>([]);
   const [petsLoading, setPetsLoading] = useState(true);
   const [isRegisterPetModalOpen, setIsRegisterPetModalOpen] = useState(false);
   const [serviceOptions, setServiceOptions] = useState(DEFAULT_SERVICE_OPTIONS);
   const [groomerOptions, setGroomerOptions] = useState(DEFAULT_GROOMER_OPTIONS);
 =======
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
   const [pets, setPets] = useState<PetSummary[]>([]);
   const [petsLoading, setPetsLoading] = useState(true);
   const [isRegisterPetModalOpen, setIsRegisterPetModalOpen] = useState(false);
   const serviceOptions = DEFAULT_SERVICE_OPTIONS;
   const [groomerOptions, setGroomerOptions] =
     useState(DEFAULT_GROOMER_OPTIONS);
+<<<<<<< HEAD
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
 
   // Check URL for pre-selected groomer
   useEffect(() => {
@@ -81,10 +93,14 @@ const ServicesPage: React.FC = () => {
           const response = await fetch("/api/pets");
           if (response.ok) {
 <<<<<<< HEAD
+<<<<<<< HEAD
             const petsData = await response.json();
 =======
             const petsData: PetSummary[] = await response.json();
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+            const petsData: PetSummary[] = await response.json();
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
             setPets(petsData);
           }
         } catch (error) {
@@ -103,6 +119,7 @@ const ServicesPage: React.FC = () => {
   }, [user]);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   // Function to add new service option dynamically
   const addNewServiceOption = (value: string, label: string) => {
     const newOption = { value, label };
@@ -118,6 +135,8 @@ const ServicesPage: React.FC = () => {
 
 =======
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
   // Function to add new groomer option dynamically
   const addNewGroomerOption = (value: string, label: string) => {
     const newOption = { value, label };
@@ -196,10 +215,14 @@ const ServicesPage: React.FC = () => {
                     },
                     ...pets.map((pet) => ({
 <<<<<<< HEAD
+<<<<<<< HEAD
                       value: pet.id,
 =======
                       value: String(pet.id),
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+                      value: String(pet.id),
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
                       label: `${pet.name} (${pet.species || "Pet"})`,
                     })),
                   ]}
@@ -291,10 +314,14 @@ const ServicesPage: React.FC = () => {
                 const response = await fetch("/api/pets");
                 if (response.ok) {
 <<<<<<< HEAD
+<<<<<<< HEAD
                   const petsData = await response.json();
 =======
                   const petsData: PetSummary[] = await response.json();
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+                  const petsData: PetSummary[] = await response.json();
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
                   setPets(petsData);
                 }
               } catch (error) {

@@ -6,7 +6,10 @@ export interface Product {
   category: string;
   description?: string;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
 }
 
 export interface AppointmentPetInfo {
@@ -26,7 +29,10 @@ export interface Appointment {
   createdAt: string;
   updatedAt: string;
   pet?: AppointmentPetInfo | null;
+<<<<<<< HEAD
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
 }
 
 export interface Testimonial {

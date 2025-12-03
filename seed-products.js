@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
@@ -152,6 +153,8 @@ seedProducts().catch((e) => {
   process.exit(1);
 });
 =======
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
 async function seedProducts() {
   const dotenv = await import("dotenv");
   dotenv.config();
@@ -197,4 +200,7 @@ async function seedProducts() {
 }
 
 seedProducts();
+<<<<<<< HEAD
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3

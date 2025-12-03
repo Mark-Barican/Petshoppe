@@ -4,9 +4,12 @@ export async function POST(request: NextRequest) {
   try {
     // Simulate payment processing
 <<<<<<< HEAD
+<<<<<<< HEAD
     const body = await request.json();
 =======
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
     const {
       items,
       total,
@@ -23,10 +26,14 @@ export async function POST(request: NextRequest) {
       country,
       paymentMethod,
 <<<<<<< HEAD
+<<<<<<< HEAD
     } = body;
 =======
     } = await request.json();
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+    } = await request.json();
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
 
     // In a real application, this would integrate with a payment processor like Stripe
     // For now, we'll simulate a successful payment
@@ -51,12 +58,18 @@ export async function POST(request: NextRequest) {
       !city ||
       !state ||
 <<<<<<< HEAD
+<<<<<<< HEAD
       !zipCode
 =======
       !zipCode ||
       !country ||
       !paymentMethod
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+      !zipCode ||
+      !country ||
+      !paymentMethod
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
     ) {
       return new Response(
         JSON.stringify({
@@ -70,7 +83,10 @@ export async function POST(request: NextRequest) {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
     const expectedFinalTotal = Number((total + tax).toFixed(2));
     if (Math.abs(expectedFinalTotal - finalTotal) > 0.01) {
       return new Response(
@@ -82,7 +98,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
+<<<<<<< HEAD
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
     // Simulate payment processing (in real app, this would be handled by payment processor)
     // For now, just return success
     return new Response(

@@ -7,6 +7,7 @@ import Dropdown from "../../components/Dropdown";
 import PriceRangeFilter from "../../components/PriceRangeFilter";
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 // Use the global cart context from providers
 import { useCart } from "../../app/providers";
 
@@ -24,6 +25,8 @@ const ProductsPage: React.FC = () => {
   const [priceRange, setPriceRange] = useState({ min: 0, max: 100 });
   const { addToCart } = useCart();
 =======
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
 const defaultCategories = [{ value: "All", label: "All Categories" }];
 
 const ProductsPage: React.FC = () => {
@@ -33,12 +36,16 @@ const ProductsPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [priceRange, setPriceRange] = useState({ min: 0, max: 100 });
+<<<<<<< HEAD
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await fetch("/api/products");
+<<<<<<< HEAD
 <<<<<<< HEAD
         if (response.ok) {
           const products = await response.json();
@@ -59,6 +66,8 @@ const ProductsPage: React.FC = () => {
     };
 
 =======
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
         if (!response.ok) {
           throw new Error("Failed to fetch products");
         }
@@ -93,7 +102,10 @@ const ProductsPage: React.FC = () => {
       }
     };
 
+<<<<<<< HEAD
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
     fetchProducts();
   }, []);
 
@@ -151,10 +163,14 @@ const ProductsPage: React.FC = () => {
               <div className="w-48">
                 <Dropdown
 <<<<<<< HEAD
+<<<<<<< HEAD
                   options={categories}
 =======
                   options={categoryOptions}
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+                  options={categoryOptions}
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
                   selectedValue={selectedCategory}
                   onChange={setSelectedCategory}
                   placeholder="Category"

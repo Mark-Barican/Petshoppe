@@ -7,6 +7,7 @@ import { cookies } from "next/headers";
 import jwt, { TokenExpiredError, JsonWebTokenError } from "jsonwebtoken";
 import prisma from "@/lib/prisma";
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 if (!JWT_SECRET) {
@@ -15,6 +16,9 @@ if (!JWT_SECRET) {
 =======
 import { getJwtSecret } from "@/lib/env";
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+import { getJwtSecret } from "@/lib/env";
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
 
 // PUT route to update user role
 export async function PUT(
@@ -28,8 +32,11 @@ export async function PUT(
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     const decoded = jwt.verify(token, JWT_SECRET) as {
 =======
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
     const jwtSecret = getJwtSecret();
     if (!jwtSecret) {
       return NextResponse.json(
@@ -39,7 +46,10 @@ export async function PUT(
     }
 
     const decoded = jwt.verify(token, jwtSecret) as {
+<<<<<<< HEAD
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
       id: number;
       email?: string;
       role?: string;
@@ -108,8 +118,11 @@ export async function DELETE(
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     const decoded = jwt.verify(token, JWT_SECRET) as {
 =======
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
     const jwtSecret = getJwtSecret();
     if (!jwtSecret) {
       return NextResponse.json(
@@ -119,7 +132,10 @@ export async function DELETE(
     }
 
     const decoded = jwt.verify(token, jwtSecret) as {
+<<<<<<< HEAD
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
       id: number;
       email?: string;
       role?: string;

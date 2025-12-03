@@ -1,10 +1,14 @@
 "use client";
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { useEffect, useState } from "react";
 =======
 import { useEffect, useState, useCallback } from "react";
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+import { useEffect, useState, useCallback } from "react";
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
 import { useRouter } from "next/navigation";
 import { useAuth } from "../../hooks/useAuth";
 import AdminSidebar from "../../components/AdminSidebar";
@@ -37,7 +41,10 @@ interface Appointment {
     species: string;
     breed: string;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
     owner?: {
       id: number;
       name: string | null;
@@ -48,7 +55,10 @@ interface Appointment {
     id: number;
     name: string | null;
     email: string;
+<<<<<<< HEAD
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
   };
 }
 
@@ -62,6 +72,7 @@ const AdminDashboard = () => {
   // Define the correct type for the auth user
   const typedAuthUser = authUser as AuthUser | null;
 
+<<<<<<< HEAD
 <<<<<<< HEAD
   useEffect(() => {
     if (!loading) {
@@ -81,6 +92,8 @@ const AdminDashboard = () => {
         fetch("/api/users"),
         fetch("/api/appointments"),
 =======
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
   const fetchData = useCallback(async (showLoader = false) => {
     if (showLoader) {
       setLoadingData(true);
@@ -90,7 +103,10 @@ const AdminDashboard = () => {
       const [usersRes, appointmentsRes] = await Promise.all([
         fetch("/api/users", { credentials: "include" }),
         fetch("/api/appointments", { credentials: "include" }),
+<<<<<<< HEAD
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
       ]);
 
       if (usersRes.ok) {
@@ -100,9 +116,12 @@ const AdminDashboard = () => {
 
       if (appointmentsRes.ok) {
 <<<<<<< HEAD
+<<<<<<< HEAD
         const appointmentsData = await appointmentsRes.json();
         setAppointments(appointmentsData.appointments || []);
 =======
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
         const appointmentsData: { appointments?: Appointment[] } | Appointment[] =
           await appointmentsRes.json();
         if (Array.isArray(appointmentsData)) {
@@ -110,16 +129,22 @@ const AdminDashboard = () => {
         } else {
           setAppointments(appointmentsData.appointments || []);
         }
+<<<<<<< HEAD
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
       }
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
 <<<<<<< HEAD
+<<<<<<< HEAD
       setLoadingData(false);
     }
   };
 =======
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
       if (showLoader) {
         setLoadingData(false);
       }
@@ -151,7 +176,10 @@ const AdminDashboard = () => {
       window.clearInterval(intervalId);
     };
   }, [typedAuthUser, fetchData]);
+<<<<<<< HEAD
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
 
   if (loading || loadingData) {
     return (
@@ -310,11 +338,17 @@ const AdminDashboard = () => {
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-[#0d1b12] uppercase tracking-wider">
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                         Customer
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-[#0d1b12] uppercase tracking-wider">
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+                        Customer
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-[#0d1b12] uppercase tracking-wider">
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
                         Status
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-[#0d1b12] uppercase tracking-wider">
@@ -339,14 +373,20 @@ const AdminDashboard = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-[#0d1b12]">
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
                           {appointment.user?.name ||
                             appointment.user?.email ||
                             appointment.pet?.owner?.name ||
                             "N/A"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-[#0d1b12]">
+<<<<<<< HEAD
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
                           <span
                             className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                               appointment.status === "SCHEDULED"

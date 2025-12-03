@@ -25,12 +25,6 @@ const Header: React.FC = () => {
   }
   const typedUser = user as AuthUser | null;
 
-  interface AuthUser {
-    email: string;
-    role: string;
-  }
-  const typedUser = user as AuthUser | null;
-
   const linkStyle =
     "text-[#0d1b12] text-sm font-medium leading-normal hover:text-[#4c9a66] transition-colors";
   const activeLinkStyle = "text-[#13ec5b]";

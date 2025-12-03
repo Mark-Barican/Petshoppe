@@ -2,23 +2,32 @@
 
 import React, { useState, useEffect } from "react";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import Link from "next/link";
 =======
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
 import { useAuth } from "../hooks/useAuth";
 import Calendar from "./Calendar";
 import LoginModal from "./LoginModal";
 import RegisterPetModal from "./RegisterPetModal";
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
 type PetSummary = {
   id: number;
   name: string;
   species?: string | null;
 };
 
+<<<<<<< HEAD
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
 const BookingForm: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [service, setService] = useState("");
@@ -46,10 +55,14 @@ const BookingForm: React.FC = () => {
   }, []);
   const [petId, setPetId] = useState<string>("");
 <<<<<<< HEAD
+<<<<<<< HEAD
   const [pets, setPets] = useState<any[]>([]);
 =======
   const [pets, setPets] = useState<PetSummary[]>([]);
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+  const [pets, setPets] = useState<PetSummary[]>([]);
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
   const [notes, setNotes] = useState("");
   const [loading, setLoading] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -64,10 +77,14 @@ const BookingForm: React.FC = () => {
           const response = await fetch("/api/pets");
           if (response.ok) {
 <<<<<<< HEAD
+<<<<<<< HEAD
             const petsData = await response.json();
 =======
             const petsData: PetSummary[] = await response.json();
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+            const petsData: PetSummary[] = await response.json();
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
             setPets(petsData);
           }
         } catch (error) {
@@ -88,10 +105,14 @@ const BookingForm: React.FC = () => {
         const response = await fetch("/api/pets");
         if (response.ok) {
 <<<<<<< HEAD
+<<<<<<< HEAD
           const petsData = await response.json();
 =======
           const petsData: PetSummary[] = await response.json();
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+          const petsData: PetSummary[] = await response.json();
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
           setPets(petsData);
         }
       } catch (error) {
@@ -148,12 +169,18 @@ const BookingForm: React.FC = () => {
       alert("Appointment booked successfully!");
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
       if (typeof window !== "undefined") {
         window.dispatchEvent(new Event("appointments:refresh"));
       }
 
+<<<<<<< HEAD
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
       // Reset form
       setService("");
       setGroomer("");
@@ -203,10 +230,14 @@ const BookingForm: React.FC = () => {
                 </option>
                 {pets.map((pet) => (
 <<<<<<< HEAD
+<<<<<<< HEAD
                   <option key={pet.id} value={pet.id}>
 =======
                   <option key={pet.id} value={String(pet.id)}>
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+                  <option key={pet.id} value={String(pet.id)}>
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
                     {pet.name} ({pet.species || "Pet"})
                   </option>
                 ))}

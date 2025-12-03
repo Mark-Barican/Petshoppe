@@ -2,9 +2,13 @@
 
 import React, { useState } from "react";
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import Link from "next/link";
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+import Link from "next/link";
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
 import type { Testimonial } from "@/types";
 import TestimonialCard from "../components/TestimonialCard";
 import { useAuth } from "@/hooks/useAuth";
@@ -101,10 +105,14 @@ const HomePage: React.FC = () => {
             <span className="truncate">Book Appointment</span>
           </button>
 <<<<<<< HEAD
+<<<<<<< HEAD
           <a
 =======
           <Link
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+          <Link
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
             href="/products"
             className="flex min-w-[120px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#e7f3eb] text-[#0d1b12] text-sm font-bold leading-normal tracking-[0.015em] hover:bg-[#d8e9df] transition-colors"
           >
@@ -118,19 +126,27 @@ const HomePage: React.FC = () => {
             Customer Testimonials
           </h2>
 <<<<<<< HEAD
+<<<<<<< HEAD
           <a
 =======
           <Link
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+          <Link
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
             href="/reviews"
             className="text-[#4c9a66] text-sm font-medium leading-normal hover:underline flex items-center"
           >
             See more reviews →
 <<<<<<< HEAD
+<<<<<<< HEAD
           </a>
 =======
           </Link>
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+          </Link>
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
         </div>
         <div className="flex flex-col gap-8 overflow-x-hidden p-4">
           {testimonials.map((testimonial, index) => (

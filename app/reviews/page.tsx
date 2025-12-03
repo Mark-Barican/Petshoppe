@@ -5,9 +5,12 @@ import Link from "next/link";
 import TestimonialCard from "../../components/TestimonialCard";
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 export default function ReviewsPage() {
   const [reviews, setReviews] = useState<any[]>([]);
 =======
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
 interface Review {
   id: number;
   rating: number;
@@ -22,7 +25,10 @@ interface Review {
 
 export default function ReviewsPage() {
   const [reviews, setReviews] = useState<Review[]>([]);
+<<<<<<< HEAD
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -47,20 +53,28 @@ export default function ReviewsPage() {
         {/* Back Button */}
         <div className="px-4 pb-3 pt-6">
 <<<<<<< HEAD
+<<<<<<< HEAD
           <a
 =======
           <Link
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+          <Link
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
             href="/"
             className="text-[#0d1b12] text-base font-medium hover:text-[#4c9a66] flex items-center gap-2 transition-colors duration-200"
           >
             <span className="text-lg">←</span>
             <span>Back to home page</span>
 <<<<<<< HEAD
+<<<<<<< HEAD
           </a>
 =======
           </Link>
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+          </Link>
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
         </div>
 
         {/* Title */}
@@ -104,10 +118,14 @@ export default function ReviewsPage() {
         {/* Reviews grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 p-4">
 <<<<<<< HEAD
+<<<<<<< HEAD
           {reviews.map((review: any) => {
 =======
           {reviews.map((review) => {
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+          {reviews.map((review) => {
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
             const displayName =
               review.user?.name || review.user?.email || "Anonymous";
 
@@ -119,10 +137,14 @@ export default function ReviewsPage() {
                   time: new Date(review.createdAt).toLocaleDateString(),
                   rating: review.rating,
 <<<<<<< HEAD
+<<<<<<< HEAD
                   review: review.comment,
 =======
                   review: review.comment ?? "",
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+                  review: review.comment ?? "",
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
                   avatarUrl:
                     review.user?.avatar ||
                     `https://api.dicebear.com/7.x/initials/svg?seed=${displayName}`,

@@ -1,19 +1,26 @@
 "use client";
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { useState, useEffect } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { Order } from "../../types";
 =======
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
 import Link from "next/link";
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import type { Order, Appointment } from "../../types";
+<<<<<<< HEAD
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
 
 export default function OrderHistoryPage() {
   const { user, loading } = useAuth();
   const [orders, setOrders] = useState<Order[]>([]);
+<<<<<<< HEAD
 <<<<<<< HEAD
   const [loadingOrders, setLoadingOrders] = useState(true);
   const [hasLoadedOrders, setHasLoadedOrders] = useState(false);
@@ -47,6 +54,8 @@ export default function OrderHistoryPage() {
 
   if (loading || loadingOrders) {
 =======
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loadingOrders, setLoadingOrders] = useState(true);
   const [loadingAppointments, setLoadingAppointments] = useState(true);
@@ -144,16 +153,23 @@ export default function OrderHistoryPage() {
   }, [fetchHistory]);
 
   if (loading || loadingOrders || loadingAppointments) {
+<<<<<<< HEAD
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
     return (
       <div className="flex justify-center items-center min-h-[60vh]">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-green-500 mb-4"></div>
 <<<<<<< HEAD
+<<<<<<< HEAD
           <p className="text-gray-600">Loading order history...</p>
 =======
           <p className="text-gray-600">Loading your history...</p>
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+          <p className="text-gray-600">Loading your history...</p>
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
         </div>
       </div>
     );
@@ -165,6 +181,7 @@ export default function OrderHistoryPage() {
         <div className="text-center">
           <p className="text-3xl md:text-4xl font-bold text-gray-800 mb-6">
 <<<<<<< HEAD
+<<<<<<< HEAD
             Please log in to view your order history
           </p>
           <a
@@ -173,20 +190,30 @@ export default function OrderHistoryPage() {
           </p>
           <Link
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+            Please log in to view your history
+          </p>
+          <Link
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
             href="/login"
             className="text-2xl text-green-600 hover:underline transition-colors duration-300"
           >
             Login
 <<<<<<< HEAD
+<<<<<<< HEAD
           </a>
 =======
           </Link>
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+          </Link>
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
         </div>
       </div>
     );
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
   if (orders.length === 0 && !loadingOrders && hasLoadedOrders) {
     return (
@@ -199,6 +226,8 @@ export default function OrderHistoryPage() {
           <div className="text-center mt-6">
             <a
 =======
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
   const noHistory =
     orders.length === 0 &&
     appointments.length === 0 &&
@@ -217,14 +246,20 @@ export default function OrderHistoryPage() {
           </p>
           <div className="text-center mt-6 space-y-4">
             <Link
+<<<<<<< HEAD
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
               href="/products"
               className="inline-block bg-green-600 text-white px-6 py-3 rounded-md hover:bg-green-700 transition-colors"
             >
               Start Shopping
 <<<<<<< HEAD
+<<<<<<< HEAD
             </a>
 =======
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
             </Link>
             <div>
               <Link
@@ -234,7 +269,10 @@ export default function OrderHistoryPage() {
                 Book an Appointment
               </Link>
             </div>
+<<<<<<< HEAD
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
           </div>
         </div>
       </div>
@@ -243,6 +281,7 @@ export default function OrderHistoryPage() {
 
   return (
     <div className="p-4 md:p-6 max-w-6xl mx-auto">
+<<<<<<< HEAD
 <<<<<<< HEAD
       <h1 className="text-2xl md:text-3xl font-bold mb-6">Order History</h1>
 
@@ -268,6 +307,8 @@ export default function OrderHistoryPage() {
                       ? "bg-purple-100 text-purple-800"
                       : order.status === "CANCELLED"
 =======
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
       <h1 className="text-2xl md:text-3xl font-bold mb-6">
         Orders & Appointments
       </h1>
@@ -385,11 +426,15 @@ export default function OrderHistoryPage() {
                     appointment.status === "COMPLETED"
                       ? "bg-green-100 text-green-800"
                       : appointment.status === "CANCELLED"
+<<<<<<< HEAD
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
                       ? "bg-red-100 text-red-800"
                       : "bg-yellow-100 text-yellow-800"
                   }`}
                 >
+<<<<<<< HEAD
 <<<<<<< HEAD
                   {order.status}
                 </span>
@@ -433,6 +478,8 @@ export default function OrderHistoryPage() {
         ))}
       </div>
 =======
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
                   {appointment.status}
                 </span>
               </div>
@@ -462,7 +509,10 @@ export default function OrderHistoryPage() {
           ))
         )}
       </section>
+<<<<<<< HEAD
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
     </div>
   );
 }

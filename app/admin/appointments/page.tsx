@@ -1,10 +1,14 @@
 "use client";
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { useEffect, useState } from "react";
 =======
 import { useEffect, useState, useCallback } from "react";
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+import { useEffect, useState, useCallback } from "react";
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
 import { useRouter } from "next/navigation";
 import { useAuth } from "../../../hooks/useAuth";
 import AdminSidebar from "../../../components/AdminSidebar";
@@ -29,7 +33,10 @@ interface Appointment {
     species: string;
     breed: string;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
     owner?: {
       id: number;
       name: string | null;
@@ -40,7 +47,10 @@ interface Appointment {
     id: number;
     name: string | null;
     email: string;
+<<<<<<< HEAD
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
   };
 }
 
@@ -54,7 +64,10 @@ const AdminAppointmentsPage = () => {
   const typedAuthUser = authUser as AuthUser | null;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
   const fetchData = useCallback(async (showLoader = false) => {
     if (showLoader) {
       setLoadingData(true);
@@ -83,7 +96,10 @@ const AdminAppointmentsPage = () => {
     }
   }, []);
 
+<<<<<<< HEAD
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
   useEffect(() => {
     if (!loading) {
       if (!typedAuthUser) {
@@ -91,6 +107,7 @@ const AdminAppointmentsPage = () => {
       } else if (typedAuthUser.role !== "ADMIN") {
         router.push("/"); // Redirect non-admins to home
       } else {
+<<<<<<< HEAD
 <<<<<<< HEAD
         fetchData();
       }
@@ -113,6 +130,8 @@ const AdminAppointmentsPage = () => {
     }
   };
 =======
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
         fetchData(true);
       }
     }
@@ -131,7 +150,10 @@ const AdminAppointmentsPage = () => {
       window.clearInterval(intervalId);
     };
   }, [typedAuthUser, fetchData]);
+<<<<<<< HEAD
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
 
   const updateAppointmentStatus = async (id: number, newStatus: string) => {
     try {
@@ -146,6 +168,7 @@ const AdminAppointmentsPage = () => {
 
       if (res.ok) {
 <<<<<<< HEAD
+<<<<<<< HEAD
         setAppointments(
           appointments.map((appointment) =>
             appointment.id === id
@@ -154,11 +177,16 @@ const AdminAppointmentsPage = () => {
           )
         );
 =======
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
         await fetchData(false);
         if (typeof window !== "undefined") {
           window.dispatchEvent(new Event("appointments:refresh"));
         }
+<<<<<<< HEAD
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
       } else {
         alert("Failed to update appointment status");
       }
@@ -178,15 +206,21 @@ const AdminAppointmentsPage = () => {
 
         if (res.ok) {
 <<<<<<< HEAD
+<<<<<<< HEAD
           setAppointments(
             appointments.filter((appointment) => appointment.id !== id)
           );
 =======
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
           await fetchData(false);
           if (typeof window !== "undefined") {
             window.dispatchEvent(new Event("appointments:refresh"));
           }
+<<<<<<< HEAD
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
         } else {
           alert("Failed to delete appointment");
         }
@@ -242,11 +276,17 @@ const AdminAppointmentsPage = () => {
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-[#0d1b12] uppercase tracking-wider">
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                         Customer
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-[#0d1b12] uppercase tracking-wider">
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+                        Customer
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-[#0d1b12] uppercase tracking-wider">
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
                         Date
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-[#0d1b12] uppercase tracking-wider">
@@ -274,14 +314,20 @@ const AdminAppointmentsPage = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-[#0d1b12]">
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
                           {appointment.user?.name ||
                             appointment.user?.email ||
                             appointment.pet?.owner?.name ||
                             "N/A"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-[#0d1b12]">
+<<<<<<< HEAD
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
                           {new Date(appointment.date).toLocaleString()}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-[#0d1b12]">

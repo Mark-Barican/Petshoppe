@@ -1,9 +1,13 @@
 "use client";
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import Link from "next/link";
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+import Link from "next/link";
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
 import { useState, useEffect } from "react";
 import { useAuth } from "../../../hooks/useAuth";
 import { Order } from "../../../types";
@@ -62,19 +66,27 @@ export default function OrderDetailsPage({
             Please log in to view your order details
           </p>
 <<<<<<< HEAD
+<<<<<<< HEAD
           <a
 =======
           <Link
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+          <Link
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
             href="/login"
             className="text-2xl text-green-600 hover:underline transition-colors duration-300"
           >
             Login
 <<<<<<< HEAD
+<<<<<<< HEAD
           </a>
 =======
           </Link>
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+          </Link>
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
         </div>
       </div>
     );
@@ -88,19 +100,27 @@ export default function OrderDetailsPage({
           <p className="text-gray-600 text-center py-8">Order not found.</p>
           <div className="text-center mt-6">
 <<<<<<< HEAD
+<<<<<<< HEAD
             <a
 =======
             <Link
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+            <Link
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
               href="/history"
               className="inline-block bg-green-600 text-white px-6 py-3 rounded-md hover:bg-green-700 transition-colors"
             >
               Back to Order History
 <<<<<<< HEAD
+<<<<<<< HEAD
             </a>
 =======
             </Link>
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+            </Link>
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
           </div>
         </div>
       </div>

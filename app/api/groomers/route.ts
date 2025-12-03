@@ -24,6 +24,7 @@ type GroomerResponse = {
   reviews: ReviewWithUser[];
 };
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 
 
@@ -37,6 +38,11 @@ export async function GET() {
   try {
     const dbGroomers = (await prisma.groomer.findMany({
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+export async function GET() {
+  try {
+    const dbGroomers = (await prisma.groomer.findMany({
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
       include: {
         reviews: {
           include: {
@@ -49,11 +55,14 @@ export async function GET() {
       },
       orderBy: { name: "asc" },
 <<<<<<< HEAD
+<<<<<<< HEAD
     });
 
   
     const formattedFromDb: GroomerResponse[] = dbGroomers.map((g: any) => {
 =======
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
     })) as GroomerWithReviews[];
 
     type GroomerWithReviews = {
@@ -66,17 +75,24 @@ export async function GET() {
     type GroomerReview = ReviewWithUser;
 
     const formattedFromDb: GroomerResponse[] = dbGroomers.map((g: GroomerWithReviews) => {
+<<<<<<< HEAD
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
       const totalReviews: number = g.reviews.length;
 
       const averageRating: number =
         totalReviews > 0
           ? g.reviews.reduce(
 <<<<<<< HEAD
+<<<<<<< HEAD
               (sum: number, r: { rating: number }) => sum + r.rating,
 =======
               (sum: number, r: GroomerReview) => sum + r.rating,
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+              (sum: number, r: GroomerReview) => sum + r.rating,
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
               0
             ) / totalReviews
           : 0;
@@ -89,10 +105,14 @@ export async function GET() {
         totalReviews,
         averageRating: parseFloat(averageRating.toFixed(1)),
 <<<<<<< HEAD
+<<<<<<< HEAD
         reviews: g.reviews.map((r: any): ReviewWithUser => ({
 =======
         reviews: g.reviews.map((r: GroomerReview): ReviewWithUser => ({
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+        reviews: g.reviews.map((r: GroomerReview): ReviewWithUser => ({
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
           id: r.id,
           rating: r.rating,
           comment: r.comment,
@@ -109,9 +129,12 @@ export async function GET() {
     });
 
 <<<<<<< HEAD
+<<<<<<< HEAD
  
 =======
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
     if (formattedFromDb.length > 0) {
       return NextResponse.json(formattedFromDb, { status: 200 });
     }
@@ -122,18 +145,24 @@ export async function GET() {
     });
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     const uniqueNames: string[] = Array.from(
       new Set<string>(
         appointments
           .map((a: { groomer: string }) => a.groomer?.trim() || "")
 =======
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
     type AppointmentGroomer = { groomer: string | null };
 
     const uniqueNames: string[] = Array.from(
       new Set<string>(
         appointments
           .map((a: AppointmentGroomer) => a.groomer?.trim() || "")
+<<<<<<< HEAD
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
           .filter((name: string) => name.length > 0)
       )
     ).sort();

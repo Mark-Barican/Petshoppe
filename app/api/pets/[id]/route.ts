@@ -7,12 +7,15 @@ import { cookies } from "next/headers";
 import jwt, { TokenExpiredError, JsonWebTokenError } from "jsonwebtoken";
 import prisma from "@/lib/prisma";
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 if (!JWT_SECRET) {
   throw new Error("Missing JWT_SECRET in environment variables");
 }
 =======
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
 import { getJwtSecret } from "@/lib/env";
 
 type PetUpdateData = {
@@ -22,7 +25,10 @@ type PetUpdateData = {
   sex?: string | null;
   dob?: Date | null;
 };
+<<<<<<< HEAD
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
 
 // GET route to fetch a single pet
 export async function GET(
@@ -36,8 +42,11 @@ export async function GET(
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     const decoded = jwt.verify(token, JWT_SECRET) as {
 =======
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
     const jwtSecret = getJwtSecret();
     if (!jwtSecret) {
       return NextResponse.json(
@@ -47,7 +56,10 @@ export async function GET(
     }
 
     const decoded = jwt.verify(token, jwtSecret) as {
+<<<<<<< HEAD
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
       id: number;
       email?: string;
       role?: string;
@@ -104,8 +116,11 @@ export async function PUT(
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     const decoded = jwt.verify(token, JWT_SECRET) as {
 =======
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
     const jwtSecret = getJwtSecret();
     if (!jwtSecret) {
       return NextResponse.json(
@@ -115,7 +130,10 @@ export async function PUT(
     }
 
     const decoded = jwt.verify(token, jwtSecret) as {
+<<<<<<< HEAD
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
       id: number;
       email?: string;
       role?: string;
@@ -147,10 +165,14 @@ export async function PUT(
 
     // Build update data based on provided fields
 <<<<<<< HEAD
+<<<<<<< HEAD
     const updateData: any = {};
 =======
     const updateData: PetUpdateData = {};
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+    const updateData: PetUpdateData = {};
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
     if (name !== undefined) updateData.name = name;
     if (species !== undefined) updateData.species = species;
     if (breed !== undefined) updateData.breed = breed;
@@ -194,8 +216,11 @@ export async function DELETE(
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     const decoded = jwt.verify(token, JWT_SECRET) as {
 =======
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
     const jwtSecret = getJwtSecret();
     if (!jwtSecret) {
       return NextResponse.json(
@@ -205,7 +230,10 @@ export async function DELETE(
     }
 
     const decoded = jwt.verify(token, jwtSecret) as {
+<<<<<<< HEAD
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
       id: number;
       email?: string;
       role?: string;

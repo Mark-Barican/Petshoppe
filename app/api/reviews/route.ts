@@ -2,10 +2,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import jwt from "jsonwebtoken";
 =======
 import jwt, { JwtPayload } from "jsonwebtoken";
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+import jwt, { JwtPayload } from "jsonwebtoken";
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
 
 const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
 
@@ -40,6 +44,7 @@ export async function POST(req: NextRequest) {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     let decoded: any;
     try {
       decoded = jwt.verify(token, JWT_SECRET);
@@ -48,6 +53,11 @@ export async function POST(req: NextRequest) {
     try {
       decoded = jwt.verify(token, JWT_SECRET) as JwtPayload & { id: number };
 >>>>>>> f4c0b518f790dd226d4a428698a44b109e98390f
+=======
+    let decoded: (JwtPayload & { id: number }) | null = null;
+    try {
+      decoded = jwt.verify(token, JWT_SECRET) as JwtPayload & { id: number };
+>>>>>>> d7e1328f736a776113c8a92ee9221726aeb22ee3
     } catch {
       return NextResponse.json(
         { error: "Invalid or expired token" },
