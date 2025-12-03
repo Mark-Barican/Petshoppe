@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../../../hooks/useAuth";
 import AdminSidebar from "../../../components/AdminSidebar";
@@ -24,6 +24,16 @@ interface Appointment {
     name: string;
     species: string;
     breed: string;
+    owner?: {
+      id: number;
+      name: string | null;
+      email: string;
+    };
+  };
+  user?: {
+    id: number;
+    name: string | null;
+    email: string;
   };
 }
 
@@ -36,6 +46,27 @@ const AdminAppointmentsPage = () => {
   // Define the correct type for the auth user
   const typedAuthUser = authUser as AuthUser | null;
 
+  const fetchData = useCallback(async (showLoader = false) => {
+    if (showLoader) {
+      setLoadingData(true);
+    }
+
+    try {
+      const appointmentsRes = await fetch("/api/appointments");
+
+      if (appointmentsRes.ok) {
+        const appointmentsData = await appointmentsRes.json();
+        setAppointments(appointmentsData || []);
+      }
+    } catch (error) {
+      console.error("Error fetching appointments:", error);
+    } finally {
+      if (showLoader) {
+        setLoadingData(false);
+      }
+    }
+  }, []);
+
   useEffect(() => {
     if (!loading) {
       if (!typedAuthUser) {
@@ -43,26 +74,24 @@ const AdminAppointmentsPage = () => {
       } else if (typedAuthUser.role !== "ADMIN") {
         router.push("/"); // Redirect non-admins to home
       } else {
-        fetchData();
+        fetchData(true);
       }
     }
-  }, [typedAuthUser, loading, router]);
+  }, [typedAuthUser, loading, router, fetchData]);
 
-  const fetchData = async () => {
-    try {
-      const appointmentsRes = await fetch("/api/appointments");
+  useEffect(() => {
+    if (!typedAuthUser || typedAuthUser.role !== "ADMIN") return;
+    if (typeof window === "undefined") return;
 
-      if (appointmentsRes.ok) {
-        const appointmentsData = await appointmentsRes.json();
-        // The API returns appointments directly, not wrapped in another property
-        setAppointments(appointmentsData || []);
-      }
-    } catch (error) {
-      console.error("Error fetching appointments:", error);
-    } finally {
-      setLoadingData(false);
-    }
-  };
+    const handleRefresh = () => fetchData(false);
+    window.addEventListener("appointments:refresh", handleRefresh);
+    const intervalId = window.setInterval(() => fetchData(false), 15000);
+
+    return () => {
+      window.removeEventListener("appointments:refresh", handleRefresh);
+      window.clearInterval(intervalId);
+    };
+  }, [typedAuthUser, fetchData]);
 
   const updateAppointmentStatus = async (id: number, newStatus: string) => {
     try {
@@ -158,6 +187,9 @@ const AdminAppointmentsPage = () => {
                         Groomer
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-[#0d1b12] uppercase tracking-wider">
+                        Customer
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-[#0d1b12] uppercase tracking-wider">
                         Date
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-[#0d1b12] uppercase tracking-wider">
@@ -182,6 +214,12 @@ const AdminAppointmentsPage = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-[#0d1b12]">
                           {appointment.groomer}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-[#0d1b12]">
+                          {appointment.user?.name ||
+                            appointment.user?.email ||
+                            appointment.pet?.owner?.name ||
+                            "N/A"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-[#0d1b12]">
                           {new Date(appointment.date).toLocaleString()}

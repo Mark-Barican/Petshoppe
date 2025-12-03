@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import type { Order, Appointment } from "../../types";
 
@@ -14,20 +14,22 @@ export default function OrderHistoryPage() {
   const [hasLoadedOrders, setHasLoadedOrders] = useState(false);
   const [hasLoadedAppointments, setHasLoadedAppointments] = useState(false);
 
-  useEffect(() => {
-    const fetchHistory = async () => {
+  const fetchHistory = useCallback(
+    async (showLoader = false) => {
       if (!user) {
         setOrders([]);
         setAppointments([]);
-        setLoadingOrders(false);
-        setLoadingAppointments(false);
         setHasLoadedOrders(true);
         setHasLoadedAppointments(true);
+        setLoadingOrders(false);
+        setLoadingAppointments(false);
         return;
       }
 
-      setLoadingOrders(true);
-      setLoadingAppointments(true);
+      if (showLoader) {
+        setLoadingOrders(true);
+        setLoadingAppointments(true);
+      }
 
       try {
         const response = await fetch("/api/orders", {
@@ -42,7 +44,9 @@ export default function OrderHistoryPage() {
       } catch (error) {
         console.error("Error fetching orders:", error);
       } finally {
-        setLoadingOrders(false);
+        if (showLoader) {
+          setLoadingOrders(false);
+        }
         setHasLoadedOrders(true);
       }
 
@@ -59,13 +63,32 @@ export default function OrderHistoryPage() {
       } catch (error) {
         console.error("Error fetching appointments:", error);
       } finally {
-        setLoadingAppointments(false);
+        if (showLoader) {
+          setLoadingAppointments(false);
+        }
         setHasLoadedAppointments(true);
       }
-    };
+    },
+    [user]
+  );
 
-    fetchHistory();
-  }, [user]);
+  useEffect(() => {
+    fetchHistory(true);
+  }, [fetchHistory]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const handleRefresh = () => fetchHistory(false);
+
+    window.addEventListener("appointments:refresh", handleRefresh);
+    const intervalId = window.setInterval(() => fetchHistory(false), 15000);
+
+    return () => {
+      window.removeEventListener("appointments:refresh", handleRefresh);
+      window.clearInterval(intervalId);
+    };
+  }, [fetchHistory]);
 
   if (loading || loadingOrders || loadingAppointments) {
     return (
@@ -235,12 +258,15 @@ export default function OrderHistoryPage() {
               <div className="flex justify-between items-start mb-4">
                 <div>
                   <p className="text-sm text-gray-500">
+                    <span className="font-semibold text-gray-800">
+                      Appointment Date:
+                    </span>{" "}
                     {new Date(appointment.date).toLocaleString(undefined, {
                       dateStyle: "medium",
                       timeStyle: "short",
                     })}
                   </p>
-                  <p className="text-lg font-semibold capitalize">
+                  <p className="text-lg font-semibold capitalize mt-1">
                     {appointment.service.replace(/_/g, " ")}
                   </p>
                 </div>
